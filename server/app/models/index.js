@@ -26,9 +26,13 @@ db.sequelize = sequelize;
 db.user = require("../models/user.model.js")(sequelize, Sequelize);
 db.role = require("../models/role.model.js")(sequelize, Sequelize);
 
+// this will be the DATABASE Schema
+
+// role can be owned by multiple user
 db.role.hasMany(db.user, {
     as: "users"
 });
+// user can have only ONE role
 db.user.belongsTo(db.role, {
     as: "role",
     foreignKey: "roleId"

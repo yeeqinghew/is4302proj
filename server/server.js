@@ -1,11 +1,11 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const cors = require("cors");
+const express = require("express"); // for building rest apis
+const bodyParser = require("body-parser"); // helps to parse the request and create the req.body
+const cors = require("cors"); // provides Express middle to enable CORS
 const app = express();
 const db = require("./app/models");
 const Role = db.role;
 var corsOptions = {
-    origin: "http://localhost:8081"
+    origin: "http://localhost:3000"
 };
 
 app.use(cors(corsOptions));
@@ -18,7 +18,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // simple route
 app.get("/", (req, res) => {
-    res.json({ message: "Welcome to bezkoder application." });
+    res.json({ message: "Welcome to IS4302 application." });
 });
 
 db.sequelize.sync({ force: true }).then(() => {
@@ -61,7 +61,9 @@ function initial() {
         name: "healthcare_analyst"
     });
 }
-db.sequelize.sync();
+
+// For production: this is to avoid droppping data 
+// db.sequelize.sync();
 
 // routes
 require('./app/routes/auth.routes')(app);
