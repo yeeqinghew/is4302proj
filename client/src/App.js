@@ -91,13 +91,13 @@ const App = () => {
 
   useEffect(() => {
     if (currentUser) {
-      setShowAdminBoard(currentUser.roles === "ROLE_ADMIN");
-      setShowHealthcareProviderBoard(currentUser.roles === "ROLE_HEALTHCARE_PROVIDER");
-      setShowFinancialInstitutionBoard(currentUser.roles === "ROLE_FINANCIAL_INSTITUTION");
-      setShowDoctorBoard(currentUser.roles === "ROLE_DOCTOR");
-      setShowNurseBoard(currentUser.roles === "ROLE_NURSE");
-      setShowHealthcareAnalystBoard(currentUser.roles === "ROLE_HEALTHCARE_ANALYST");
-      setShowPatientBoard(currentUser.roles === "ROLE_PATIENT");
+      setShowAdminBoard(currentUser.role === "ROLE_ADMIN");
+      setShowHealthcareProviderBoard(currentUser.role === "ROLE_HEALTHCARE_PROVIDER");
+      setShowFinancialInstitutionBoard(currentUser.role === "ROLE_FINANCIAL_INSTITUTION");
+      setShowDoctorBoard(currentUser.role === "ROLE_DOCTOR");
+      setShowNurseBoard(currentUser.role === "ROLE_NURSE");
+      setShowHealthcareAnalystBoard(currentUser.role === "ROLE_HEALTHCARE_ANALYST");
+      setShowPatientBoard(currentUser.role === "ROLE_PATIENT");
 
     }
   }, [currentUser]);
@@ -121,7 +121,7 @@ const App = () => {
       <div>
         <nav className="navbar navbar-expand navbar-dark bg-dark">
           <Link to={"/"} className="navbar-brand">
-            bezKoder
+            IS4302
           </Link>
           <div className="navbar-nav mr-auto">
             {/* <li className="nav-item">

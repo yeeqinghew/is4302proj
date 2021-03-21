@@ -4,6 +4,7 @@ const cors = require("cors"); // provides Express middle to enable CORS
 const app = express();
 const db = require("./app/models");
 const Role = db.role;
+const Users = db.user;
 var corsOptions = {
     origin: "http://localhost:3000"
 };
@@ -28,14 +29,13 @@ db.sequelize.sync({ force: true }).then(() => {
 function initial() {
     Role.create({
         id: 1,
-        name: "patient"
+        name: "admin"
     });
 
     Role.create({
         id: 2,
-        name: "admin"
+        name: "patient"
     });
-
     Role.create({
         id: 3,
         name: "healthcare_provider"
@@ -59,6 +59,14 @@ function initial() {
     Role.create({
         id: 7,
         name: "healthcare_analyst"
+    });
+
+    Users.create({
+        role: "admin",
+        username: "admin",
+        email: "admin@gmail.com",
+        password: "$2a$08$c83jezBZVCgjEwqpg54dVuPiwxZdGjWgztybLxDh8.sj2PeYSpGnG",
+        roleId: 1
     });
 }
 

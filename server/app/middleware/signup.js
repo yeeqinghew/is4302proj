@@ -34,12 +34,12 @@ checkDuplicateUsernameOrEmail = (req, res, next) => {
     });
 };
 
-checkRolesExisted = (req, res, next) => {
-    console.log("********* Roles", req.body.roles);
-    if (req.body.roles) {
-        if (!ROLES.includes(req.body.roles)) {
+checkRoleExisted = (req, res, next) => {
+    console.log("********* Role", req.body.role);
+    if (req.body.role) {
+        if (!ROLES.includes(req.body.role)) {
             res.status(400).send({
-                message: "Failed! Role does not exist = " + req.body.roles
+                message: "Failed! Role does not exist = " + req.body.role
             });
             return;
         }
@@ -49,7 +49,7 @@ checkRolesExisted = (req, res, next) => {
 
 const signup = {
     checkDuplicateUsernameOrEmail: checkDuplicateUsernameOrEmail,
-    checkRolesExisted: checkRolesExisted
+    checkRoleExisted: checkRoleExisted
 };
 
 module.exports = signup;

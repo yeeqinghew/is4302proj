@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
+import Select from "react-validation/build/select";
 import CheckButton from "react-validation/build/button";
 import { isEmail } from "validator";
 
@@ -52,6 +53,7 @@ const Register = () => {
     const form = useRef();
     const checkBtn = useRef();
 
+    const [role, setRole] = useState("");
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -59,6 +61,11 @@ const Register = () => {
 
     const { message } = useSelector(state => state.message);
     const dispatch = useDispatch();
+
+    const onChangeRole = (e) => {
+        const role = e.target.value;
+        setRole(role);
+    }
 
     const onChangeUsername = (e) => {
         const username = e.target.value;
@@ -83,7 +90,7 @@ const Register = () => {
         form.current.validateAll();
 
         if (checkBtn.current.context._errors.length === 0) {
-            dispatch(register(username, email, password))
+            dispatch(register(role, username, email, password))
                 .then(() => {
                     setSuccessful(true);
                 })
@@ -105,6 +112,23 @@ const Register = () => {
                 <Form onSubmit={handleRegister} ref={form}>
                     {!successful && (
                         <div>
+                            <div className="form-group">
+                                <label htmlFor="role">Role</label>
+                                <Select
+                                    name="role"
+                                    className="form-control"
+                                    value={role}
+                                    onChange={onChangeRole}
+                                    validations={[required]}>
+                                    <option value="">Select one</option>
+                                    <option value="patient">Patient</option>
+                                    <option value="doctor">Doctor</option>
+                                    <option value="nurse">Nurse</option>
+                                    <option value="healthcare_analyst">Healthcare Analyst</option>
+                                    <option value="healthcare_provider">Healthcare Provider</option>
+                                    <option value="financial_institution">Financial Institution</option>
+                                </Select>
+                            </div>
                             <div className="form-group">
                                 <label htmlFor="username">Username</label>
                                 <Input

@@ -2,7 +2,7 @@ module.exports = {
     HOST: "localhost",
     USER: "postgres",
     PASSWORD: "password",
-    DB: "rtruffle", // this will be the database name
+    DB: "is4302", // this will be the database name
     dialect: "postgres",
     pool: {
         max: 5, // mac number of connection in pool

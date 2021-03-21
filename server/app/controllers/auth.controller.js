@@ -16,11 +16,11 @@ exports.signup = (req, res) => {
         password: bcrypt.hashSync(req.body.password, 8)
     })
         .then(user => {
-            console.log("########## Auth Roles: ", req.body.roles);
-            if (req.body.roles) {
+            console.log("########## Auth Role: ", req.body.role);
+            if (req.body.role) {
                 Role.findOne({
                     where: {
-                        name: req.body.roles
+                        name: req.body.role
                     }
                 }).then(role => {
                     console.log("Found Role:::::::::", role);
@@ -67,7 +67,7 @@ exports.signin = (req, res) => {
                     id: user.id,
                     username: user.username,
                     email: user.email,
-                    roles: role.name,
+                    role: role.name,
                     accessToken: token
                 });
             });

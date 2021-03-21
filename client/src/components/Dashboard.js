@@ -28,7 +28,7 @@ const Dashboard = () => {
             </p>
             <strong>Authorities:</strong>
             <ul>
-                {currentUser.roles}
+                {currentUser.role}
             </ul>
         </div>
     );
