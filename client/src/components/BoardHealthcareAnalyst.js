@@ -1,35 +1,44 @@
-import React, { useState, useEffect } from "react";
+
+import React, { Component } from "react";
 
 import UserService from "../services/user.service";
 
-const BoardUser = () => {
-    const [content, setContent] = useState("");
+export default class BoardHealthcareAnalyst extends Component {
+    constructor(props) {
+        super(props);
 
-    useEffect(() => {
+        this.state = {
+            content: ""
+        };
+    }
+
+    componentDidMount() {
         UserService.getHealthcareAnalystBoard().then(
-            (response) => {
-                setContent(response.data);
+            response => {
+                this.setState({
+                    content: response.data
+                });
             },
-            (error) => {
-                const _content =
-                    (error.response &&
-                        error.response.data &&
-                        error.response.data.message) ||
-                    error.message ||
-                    error.toString();
-
-                setContent(_content);
+            error => {
+                this.setState({
+                    content:
+                        (error.response &&
+                            error.response.data &&
+                            error.response.data.message) ||
+                        error.message ||
+                        error.toString()
+                });
             }
         );
-    }, []);
+    }
 
-    return (
-        <div className="container">
-            <header className="jumbotron">
-                <h3>{content}</h3>
-            </header>
-        </div>
-    );
-};
-
-export default BoardUser;
+    render() {
+        return (
+            <div className="container">
+                <header className="jumbotron">
+                    <h3>{this.state.content}</h3>
+                </header>
+            </div>
+        );
+    }
+}

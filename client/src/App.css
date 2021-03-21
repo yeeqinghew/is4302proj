@@ -29,9 +29,9 @@ label {
 .card-container.card {
   max-width: 350px !important;
   padding: 40px 40px;
-  background: "url('https://png.pngtree.com/thumb_back/fw800/back_our/20190621/ourmid/pngtree-health-medical-hospital-medicine-blue-banner-advertisement-image_177364.jpg') no-repeat center center fixed";
-  background-size: cover;
+  
 }
+
 
 .card {
   background-color: #f7f7f7;
