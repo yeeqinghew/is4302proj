@@ -1,7 +1,7 @@
 // import React, { Component } from "react";
 // import SimpleStorageContract from "./contracts/SimpleStorage.json";
 // import getWeb3 from "./getWeb3";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Router, Switch, Route, Link } from "react-router-dom";
 
@@ -91,13 +91,13 @@ const App = () => {
 
   useEffect(() => {
     if (currentUser) {
-      setShowAdminBoard(currentUser.role === "ROLE_ADMIN");
-      setShowHealthcareProviderBoard(currentUser.role === "ROLE_HEALTHCARE_PROVIDER");
-      setShowFinancialInstitutionBoard(currentUser.role === "ROLE_FINANCIAL_INSTITUTION");
-      setShowDoctorBoard(currentUser.role === "ROLE_DOCTOR");
-      setShowNurseBoard(currentUser.role === "ROLE_NURSE");
-      setShowHealthcareAnalystBoard(currentUser.role === "ROLE_HEALTHCARE_ANALYST");
-      setShowPatientBoard(currentUser.role === "ROLE_PATIENT");
+      setShowAdminBoard(currentUser.role === "admin");
+      setShowHealthcareProviderBoard(currentUser.role === "healthcare_provider");
+      setShowFinancialInstitutionBoard(currentUser.role === "financial_institution");
+      setShowDoctorBoard(currentUser.role === "doctor");
+      setShowNurseBoard(currentUser.role === "nurse");
+      setShowHealthcareAnalystBoard(currentUser.role === "healthcare_analyst");
+      setShowPatientBoard(currentUser.role === "patient");
 
     }
   }, [currentUser]);
@@ -125,25 +125,25 @@ const App = () => {
           </Link>
           <div className="navbar-nav mr-auto">
             {/* <li className="nav-item">
-              <Link to={"/home"} className="nav-link">
+              <Link to={"/dashboard"} className="nav-link">
                 Home
               </Link>
             </li> */}
 
             {showPatientBoard && (
-              <li className="nav-item">
+              <Fragment> <li className="nav-item">
                 <Link to={"/patient"} className="nav-link">
                   Patient Board
                 </Link>
               </li>
-            )}
+                <li className="nav-item">
+                  <Link to={"/all"} className="nav-link">
+                    All
+                </Link>
+                </li></Fragment>
 
-            {showHealthcareProviderBoard && (
-              <li className="nav-item">
-                <Link to={"/patient"} className="nav-link">
-                  Patient Board
-                </Link>
-              </li>
+
+
             )}
 
             {showAdminBoard && (

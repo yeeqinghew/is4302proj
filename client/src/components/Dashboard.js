@@ -26,7 +26,7 @@ const Dashboard = () => {
             <p>
                 <strong>Email:</strong> {currentUser.email}
             </p>
-            <strong>Authorities:</strong>
+            <strong>Role:</strong>
             <ul>
                 {currentUser.role}
             </ul>

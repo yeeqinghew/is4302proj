@@ -6,7 +6,7 @@ const BoardPatient = () => {
     const [content, setContent] = useState("");
 
     useEffect(() => {
-        UserService.getUserBoard().then(
+        UserService.getPatientBoard().then(
             (response) => {
                 setContent(response.data);
             },

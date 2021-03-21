@@ -35,8 +35,6 @@ const getHealthcareAnalystBoard = () => {
     return axios.get(API_URL + "healthcareAnalyst", { headers: authHeader() });
 };
 
-
-
 export default {
     getPatientBoard,
     getAdminBoard,
