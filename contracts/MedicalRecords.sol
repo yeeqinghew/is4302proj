@@ -8,7 +8,7 @@ contract MedicalRecords{
         address patient;
         bytes32 details;
         address doctorInCharge;
-        mapping(uint256 => bool) viewerAccess;
+        address[] viewerAccess; // change to mapping
         uint256 cost;
         
     }
@@ -57,5 +57,7 @@ contract MedicalRecords{
     }
 
     // function to remove user access for this record
-    function ungrantAccess(address user) public {}
+    function ungrantAccess(address user, uint256 medicalRecordId) public {
+        require(medicalRecords[medicalRecordId].viewerAccess[msg.sender].exists == true, "Already not authorised to view medical record.");
+    }
 }
