@@ -3,9 +3,16 @@
 contract Users{
 
     // user structure
+    mapping(address => bool) patients;
+    mapping(address => bool) analysts;
+    mapping(address => bool) doctors;
+    mapping(address => bool) healthcareProviders;
+    mapping(address => bool) nurses;
+    mapping(address => bool) financialInstitutes;
+    mapping(address => mapping(address => bool)) fullAccess;
 
     // user events
-
+    event registered
     // user modifiers
 
     // user functions

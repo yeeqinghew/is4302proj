@@ -8,59 +8,72 @@ contract MedicalRecords{
         address patient;
         bytes32 details;
         address doctorInCharge;
-        address[] viewerAccess; // change to mapping
         uint256 cost;
         
     }
 
     uint256 public numMedicalRecords = 0;
     mapping(uint256 => medicalRecord) public medicalRecords;
+    mapping(uint256 => mapping(address => bool)) public access;
 
     // medical record events
     event createdMedicalRecord(uint256 medicalRecordId);
-
+    event grantAccess(uint256 medicalRecordId, address user);
+    event ungrantAccess(uint256 medicalRecordId, address user);
 
     // medical record modifiers
+    modifier patientOnly(uint256 medicalRecordId, address patient, address doctor) {
+        require(msg.sender == medicalRecords[medicalRecordId].patient, "Only patient can perform this function.");
+        _;
+    }
 
+    // add modifier for doctor once user.sol is done
+    modifier doctorOnly(uint256 medicalRecordId, address doctor) {
+        require(, "Only doctor can perform this function.");
+    }
+
+    modifier hasAccess(uint256 medicalRecordId, address user) {
+        require(access[medicalRecordId][user] == true, "No access to medical record.");
+    }
 
     // medical record functions
-
     // function to create medical record (check that he is a dr and that patient exists)
     function createRecord(address patient, bytes32 details, uint256 cost) public returns(uint256) {
-        
-        address[] memory viewerAccess;
         medicalRecord memory newMedicalRecord = medicalRecord(
             patient,
             details, 
             msg.sender,
-            viewerAccess,
             cost
         );
 
         uint256 newMedicalRecordId = numMedicalRecords++;
         medicalRecords[newMedicalRecordId] = newMedicalRecord;
+        access[newMedicalRecordId][patient] = true; // granting patient access
+        access[newMedicalRecordId][msg.sender] = true; // granting doctor access
+
         emit createdMedicalRecord(newMedicalRecordId);
         return newMedicalRecordId; 
     }
 
     // function to view medical record (if inside viewaccess)
-    function viewRecord(uint256 medicalRecordId) public view returns(address, bytes32, address, uint256) {
-        require(medicalRecords[medicalRecordId].viewerAccess[msg.sender].exists == true, "Not authorised to view medical record.");
-
+    function viewRecord(uint256 medicalRecordId) public view hasAccess(medicalRecordId, msg.sender) returns(address, bytes32, address, uint256) {
         return (medicalRecords[medicalRecordId].patient, medicalRecords[medicalRecordId].details, medicalRecords[medicalRecordId].doctorInCharge, medicalRecords[medicalRecordId].cost);
     }
 
-    // function to grant user access for this record 
-    function grantAccess(address user, uint256 medicalRecordId) public {
-        require(medicalRecords[medicalRecordId].viewerAccess[msg.sender].exists == false, "Already authorised to view medical record.");
-        medicalRecords[medicalRecordId].viewerAccess.push(user);
+    // function to grant user access for this record (patient or dr can give access)
+    function grantAccess(address user, uint256 medicalRecordId) public patientOnly(medicalRecordId, msg.sender) {
+        require(access[medicalRecordId][user] == false, "Already authorised to view medical record.");
+
+        access[medicalRecordId][msg.sender] = true;
+        emit grantAccess(user, medicalRecordId);
     }
 
-    // function to remove user access for this record
-    function ungrantAccess(address user, uint256 medicalRecordId) public {
-        require(medicalRecords[medicalRecordId].viewerAccess[msg.sender].exists == true, "Already not authorised to view medical record.");
-        // remove mapping
+    // function to remove user access for this record (patient or dr can remove access)
+    function ungrantAccess(address user, uint256 medicalRecordId) public patientOnly(medicalRecordId, msg.sender) {
+        require(access[medicalRecordId][msg.sender] == true, "Already not authorised to view medical record.");
+
+        delete access[medicalRecordId][user];
+        emit ungrantAccess(user, medicalRecordId);
     }
 
-    // change all array components to mapping, 
 }
