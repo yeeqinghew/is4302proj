@@ -185,5 +185,5 @@ contract Users{
     }
 
     // function to get information of that certain address (actually idt it should be onchain anymore)
-    function getInfo(address user) public {}
+    // function getInfo(address user) public {}
 }
