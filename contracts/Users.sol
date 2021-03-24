@@ -19,7 +19,7 @@ contract Users{
         uint256 amount;
     }
 
-    mapping(uint256 => transaction) transactions
+    mapping(uint256 => transaction) transactions;
 
     // user events
     event registeredPatient(address patient);
@@ -34,6 +34,9 @@ contract Users{
     event unregisteredNurse(address nurse);
     event unregisteredFinancialInstitute(address financialInstitute);
 
+    event grantedFullAccess(address patient, address user);
+    event ungrantedFullAccess(address patient, address user);
+
     // user modifiers
     modifier adminOnly(address user) {
         require(user == admin, "Only admin can perform this function.");
@@ -45,6 +48,10 @@ contract Users{
         _;
     }
 
+    modifier patientOnly(address user) {
+        require(patients[patient] == true, "Only patients can perform this function.");
+        _;
+    }
     
 
     // user functions
@@ -160,10 +167,17 @@ contract Users{
     function viewTransaction(int transactionId) public {}
 
     // function to grant address access to all records
-    function grantFullAccess(address user) public {}
+    function grantFullAccess(address user) public patientOnly(msg.sender) {
+        fullAccess[msg.sender][user] = true;
+        emit grantedFullAccess(msg.sender, user);
+    }
 
     // function to remove access to all records
-    function ungrantFullAccess(address user) public {}
+    function ungrantFullAccess(address user) public patientOnly(msg.sender) {
+        require(fullAccess[msg.sender][user] == true, "User already does not have access.");
+        delete fullAccess[msg.sender][user];
+        emit ungrantedFullAccess(msg.sender, user);
+    }
 
     // function to get information of that certain address (actually idt it should be onchain anymore)
     function getInfo(address user) public {}

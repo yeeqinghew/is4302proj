@@ -58,7 +58,7 @@ contract MedicalRecords{
         return newMedicalRecordId; 
     }
 
-    // function to view medical record (if inside viewaccess)
+    // function to view medical record (if inside viewaccess) (need to check for global access)
     function viewRecord(uint256 medicalRecordId) public view hasAccess(medicalRecordId, msg.sender) returns(address, bytes32, address, uint256) {
         return (medicalRecords[medicalRecordId].patient, medicalRecords[medicalRecordId].details, medicalRecords[medicalRecordId].doctorInCharge, medicalRecords[medicalRecordId].cost);
     }
