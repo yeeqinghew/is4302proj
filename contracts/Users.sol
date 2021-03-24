@@ -1,6 +1,10 @@
 //pragma solidity ^0.5.0;
+import "./MediToken.sol";
 
 contract Users{
+    
+    MediToken tokenContract;
+
 
     // user structure
     address admin = address(this);
