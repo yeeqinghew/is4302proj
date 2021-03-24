@@ -39,6 +39,7 @@ contract Users{
     event unregisteredFinancialInstitute(address financialInstitute);
 
     event createdTransaction(uint256 transactionId);
+    event madePayment(uint256 transactionId, address payer);
 
     event grantedFullAccess(address patient, address user);
     event ungrantedFullAccess(address patient, address user);
@@ -180,10 +181,16 @@ contract Users{
     }
 
     // function to make payment (need to settle coin 1st)
-    function makePayment(address patient, address receiver) public {
+    function makePayment(uint256 transactionId) public {
+        require(transactionId <= numTransactions, "Transaction does not exist.");
+        uint256 payment = transactions[transactionId].amount;
+        // PAY PERSON HERE
+        
+        emit madePayment(transactionId, msg.sender);
+
     }
 
-    // function to make payment on behalf on a payment (need to settle coin 1st)
+    // function to make payment on behalf on a payment (need to settle coin 1st, we might not need this)
     function makePaymentFor(address sender, address receiver) public {}
 
     // function to view specific transaction 
