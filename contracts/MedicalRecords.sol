@@ -62,6 +62,10 @@ contract MedicalRecords{
 
     // function to view medical record (if inside viewaccess) (need to check for global access)
     function viewRecord(uint256 medicalRecordId) public view returns(address, bytes32, address, uint256) {
+        // check if medical record exists
+        require(medicalRecordId <= numMedicalRecords, "Medical record does not exist.");
+
+        
         if (userContract.hasFullAccess(medicalRecords[medicalRecordId].patient, msg.sender) == true) {
             return (medicalRecords[medicalRecordId].patient, medicalRecords[medicalRecordId].details, medicalRecords[medicalRecordId].doctorInCharge, medicalRecords[medicalRecordId].cost);
         }

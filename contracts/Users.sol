@@ -31,6 +31,7 @@ contract Users{
     event registeredHealthcareProvider(address healthcareProvider);
     event registeredNurse(address nurse);
     event registeredFinancialInstitute(address financialInstitute);
+
     event unregisteredAnalyst(address analyst);
     event unregisteredDoctor(address doctor);
     event unregisteredHealthcareProvider(address healthcareProvider);
@@ -185,8 +186,11 @@ contract Users{
     // function to make payment on behalf on a payment (need to settle coin 1st)
     function makePaymentFor(address sender, address receiver) public {}
 
-    // function to view specific transaction (need to settle coin 1st)
-    function viewTransaction(int transactionId) public {}
+    // function to view specific transaction 
+    function viewTransaction(uint256 transactionId) public view returns(address, address, uint256, bool) {
+        require(transactionId <= numTransactions, "Transaction does not exist.");
+        return (transactions[transactionId].sender, transactions[transactionId].receiver, transactions[transactionId].amount, transactions[transactionId].complete);
+    }
 
     // function to grant address access to all records
     function grantFullAccess(address user) public patientOnly(msg.sender) {
