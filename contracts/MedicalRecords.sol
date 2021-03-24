@@ -59,5 +59,8 @@ contract MedicalRecords{
     // function to remove user access for this record
     function ungrantAccess(address user, uint256 medicalRecordId) public {
         require(medicalRecords[medicalRecordId].viewerAccess[msg.sender].exists == true, "Already not authorised to view medical record.");
+        // remove mapping
     }
+
+    // change all array components to mapping, 
 }
