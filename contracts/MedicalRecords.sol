@@ -21,11 +21,11 @@ contract MedicalRecords{
 
     // medical record events
     event createdMedicalRecord(uint256 medicalRecordId);
-    event grantAccess(uint256 medicalRecordId, address user);
-    event ungrantAccess(uint256 medicalRecordId, address user);
+    event grantedAccess(uint256 medicalRecordId, address user);
+    event ungrantedAccess(uint256 medicalRecordId, address user);
 
     // medical record modifiers
-    modifier patientOnly(uint256 medicalRecordId, address patient, address doctor) {
+    modifier patientOnly(uint256 medicalRecordId, address patient) {
         require(msg.sender == medicalRecords[medicalRecordId].patient, "Only patient can perform this function.");
         _;
     }
@@ -68,7 +68,7 @@ contract MedicalRecords{
         require(access[medicalRecordId][user] == false, "Already authorised to view medical record.");
 
         access[medicalRecordId][msg.sender] = true;
-        emit grantAccess(user, medicalRecordId);
+        emit grantedAccess(medicalRecordId, user);
     }
 
     // function to remove user access for this record (patient or dr can remove access)
@@ -76,7 +76,7 @@ contract MedicalRecords{
         require(access[medicalRecordId][msg.sender] == true, "Already not authorised to view medical record.");
 
         delete access[medicalRecordId][user];
-        emit ungrantAccess(user, medicalRecordId);
+        emit ungrantedAccess(medicalRecordId, user);
     }
 
 }

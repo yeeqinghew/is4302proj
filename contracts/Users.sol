@@ -12,6 +12,15 @@ contract Users{
     mapping(address => bool) public financialInstitutes;
     mapping(address => mapping(address => bool)) public fullAccess;
 
+
+    struct transaction {
+        address sender;
+        address receiver;
+        uint256 amount;
+    }
+
+    mapping(uint256 => transaction) transactions
+
     // user events
     event registeredPatient(address patient);
     event registeredAnalyst(address analyst);
@@ -141,13 +150,13 @@ contract Users{
         return financialInstitutes[user];
     }
 
-    // function to make payment
+    // function to make payment (need to settle coin 1st)
     function makePayment(address patient, address receiver) public {}
 
-    // function to make payment on behalf on a payment
+    // function to make payment on behalf on a payment (need to settle coin 1st)
     function makePaymentFor(address sender, address receiver) public {}
 
-    // function to view specific transaction
+    // function to view specific transaction (need to settle coin 1st)
     function viewTransaction(int transactionId) public {}
 
     // function to grant address access to all records
