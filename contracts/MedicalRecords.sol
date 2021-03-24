@@ -32,10 +32,12 @@ contract MedicalRecords{
     // add modifier for doctor once user.sol is done
     modifier doctorOnly(uint256 medicalRecordId, address doctor) {
         require(userContract.isDoctor(msg.sender) == true, "Only doctor can perform this function.");
+        _;
     }
 
     modifier hasAccess(uint256 medicalRecordId, address user) {
         require(access[medicalRecordId][user] == true, "No access to medical record.");
+        _;
     }
 
     // medical record functions
