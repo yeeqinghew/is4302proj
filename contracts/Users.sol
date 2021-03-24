@@ -2,9 +2,7 @@
 import "./MediToken.sol";
 
 contract Users{
-    
     MediToken tokenContract;
-
 
     // user structure
     address admin = address(this);
@@ -16,11 +14,12 @@ contract Users{
     mapping(address => bool) public financialInstitutes;
     mapping(address => mapping(address => bool)) public fullAccess;
 
-
+    uint256 public numTransactions = 0;
     struct transaction {
         address sender;
         address receiver;
         uint256 amount;
+        bool complete;
     }
 
     mapping(uint256 => transaction) transactions;
@@ -38,6 +37,8 @@ contract Users{
     event unregisteredNurse(address nurse);
     event unregisteredFinancialInstitute(address financialInstitute);
 
+    event createdTransaction(uint256 transactionId);
+
     event grantedFullAccess(address patient, address user);
     event ungrantedFullAccess(address patient, address user);
 
@@ -53,7 +54,7 @@ contract Users{
     }
 
     modifier patientOnly(address user) {
-        require(patients[patient] == true, "Only patients can perform this function.");
+        require(patients[user] == true, "Only patients can perform this function.");
         _;
     }
     
@@ -161,8 +162,25 @@ contract Users{
         return financialInstitutes[user];
     }
 
+
+    // function to make a transaction
+    function makeTransactionRequest(address sender, address receiver, uint256 amount) public returns(uint256) {
+        transaction memory newTransaction = transaction(
+            sender,
+            receiver,
+            amount,
+            false
+        );
+
+        uint256 newTransactionId = numTransactions++;
+        transactions[newTransactionId] = newTransaction;
+        emit createdTransaction(newTransactionId);
+        return newTransactionId; //make transaction event
+    }
+
     // function to make payment (need to settle coin 1st)
-    function makePayment(address patient, address receiver) public {}
+    function makePayment(address patient, address receiver) public {
+    }
 
     // function to make payment on behalf on a payment (need to settle coin 1st)
     function makePaymentFor(address sender, address receiver) public {}

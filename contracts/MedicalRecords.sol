@@ -12,7 +12,6 @@ contract MedicalRecords{
         bytes32 details;
         address doctorInCharge;
         uint256 cost;
-        
     }
 
     uint256 public numMedicalRecords = 0;
@@ -48,6 +47,9 @@ contract MedicalRecords{
             msg.sender,
             cost
         );
+
+        // making transaction request at Users.sol (get doctor's hospital (hcp) and change receiver to that)
+        userContract.makeTransactionRequest(patient, msg.sender, cost);
 
         uint256 newMedicalRecordId = numMedicalRecords++;
         medicalRecords[newMedicalRecordId] = newMedicalRecord;
