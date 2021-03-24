@@ -1,6 +1,9 @@
 //pragma solidity ^0.5.0;
+import "./Users.sol";
 
 contract MedicalRecords{
+
+    Users userContract;
 
     // medical record structure
 
@@ -29,7 +32,7 @@ contract MedicalRecords{
 
     // add modifier for doctor once user.sol is done
     modifier doctorOnly(uint256 medicalRecordId, address doctor) {
-        require(, "Only doctor can perform this function.");
+        require(userContract.isDoctor(msg.sender) == true, "Only doctor can perform this function.");
     }
 
     modifier hasAccess(uint256 medicalRecordId, address user) {
