@@ -59,8 +59,16 @@ contract MedicalRecords{
     }
 
     // function to view medical record (if inside viewaccess) (need to check for global access)
-    function viewRecord(uint256 medicalRecordId) public view hasAccess(medicalRecordId, msg.sender) returns(address, bytes32, address, uint256) {
-        return (medicalRecords[medicalRecordId].patient, medicalRecords[medicalRecordId].details, medicalRecords[medicalRecordId].doctorInCharge, medicalRecords[medicalRecordId].cost);
+    function viewRecord(uint256 medicalRecordId) public view returns(address, bytes32, address, uint256) {
+        if (userContract.hasFullAccess(medicalRecords[medicalRecordId].patient, msg.sender) == true) {
+            return (medicalRecords[medicalRecordId].patient, medicalRecords[medicalRecordId].details, medicalRecords[medicalRecordId].doctorInCharge, medicalRecords[medicalRecordId].cost);
+        }
+
+        else {
+            require(access[medicalRecordId][msg.sender] == true, "No access to medical record.");
+            return (medicalRecords[medicalRecordId].patient, medicalRecords[medicalRecordId].details, medicalRecords[medicalRecordId].doctorInCharge, medicalRecords[medicalRecordId].cost);
+        }
+        
     }
 
     // function to grant user access for this record (patient or dr can give access)

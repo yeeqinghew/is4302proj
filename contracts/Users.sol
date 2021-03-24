@@ -179,6 +179,11 @@ contract Users{
         emit ungrantedFullAccess(msg.sender, user);
     }
 
+    // function to check if user has full access to records
+    function hasFullAccess(address patient, address user) public view returns(bool) {
+        return fullAccess[patient][user];
+    }
+
     // function to get information of that certain address (actually idt it should be onchain anymore)
     function getInfo(address user) public {}
 }
