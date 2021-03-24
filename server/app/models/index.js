@@ -25,7 +25,7 @@ db.sequelize = sequelize;
 
 db.user = require("../models/user.model.js")(sequelize, Sequelize);
 db.role = require("../models/role.model.js")(sequelize, Sequelize);
-
+// db.patient = require("../models/patient.model.js")(sequelize, Sequelize);
 // this will be the DATABASE Schema
 
 // role can be owned by multiple user

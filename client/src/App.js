@@ -44,7 +44,6 @@ class App extends Component {
 
   componentDidMount() {
     const user = this.props.user;
-    console.log("userrrr", user);
 
     if (user) {
       this.setState({
