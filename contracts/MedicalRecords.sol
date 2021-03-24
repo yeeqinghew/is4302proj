@@ -41,6 +41,7 @@ contract MedicalRecords{
     // medical record functions
     // function to create medical record (check that he is a dr and that patient exists)
     function createRecord(address patient, bytes32 details, uint256 cost) public returns(uint256) {
+
         medicalRecord memory newMedicalRecord = medicalRecord(
             patient,
             details, 
@@ -49,7 +50,8 @@ contract MedicalRecords{
         );
 
         // making transaction request at Users.sol (get doctor's hospital (hcp) and change receiver to that)
-        userContract.makeTransactionRequest(patient, msg.sender, cost);
+        address healthcareInstitute = userContract.getInstitute(msg.sender);
+        userContract.makeTransactionRequest(patient, healthcareInstitute, cost);
 
         uint256 newMedicalRecordId = numMedicalRecords++;
         medicalRecords[newMedicalRecordId] = newMedicalRecord;
@@ -65,7 +67,7 @@ contract MedicalRecords{
         // check if medical record exists
         require(medicalRecordId <= numMedicalRecords, "Medical record does not exist.");
 
-        
+
         if (userContract.hasFullAccess(medicalRecords[medicalRecordId].patient, msg.sender) == true) {
             return (medicalRecords[medicalRecordId].patient, medicalRecords[medicalRecordId].details, medicalRecords[medicalRecordId].doctorInCharge, medicalRecords[medicalRecordId].cost);
         }

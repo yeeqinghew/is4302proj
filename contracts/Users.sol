@@ -9,6 +9,7 @@ contract Users{
     mapping(address => bool) public patients;
     mapping(address => bool) public analysts;
     mapping(address => bool) public doctors;
+    mapping(address => address) public doctorsHealthcareProvider;
     mapping(address => bool) public healthcareProviders;
     mapping(address => bool) public nurses;
     mapping(address => bool) public financialInstitutes;
@@ -64,7 +65,7 @@ contract Users{
     // user functions
 
     // function to register patient (only by dr/nurse)
-    function registerPatient(address patient) public adminOnly(msg.sender) {
+    function registerPatient(address patient) public healthcareProviderOnly(msg.sender) {
         patients[patient] = true;
         emit registeredPatient(patient);
     }
@@ -78,6 +79,7 @@ contract Users{
     // function to register doctor (only by hcp)
     function registerDoctor(address doctor) public healthcareProviderOnly(msg.sender) {
         doctors[doctor] = true;
+        doctorsHealthcareProvider[doctor] = msg.sender;
         emit registeredDoctor(doctor);
     }
 
@@ -110,6 +112,7 @@ contract Users{
     function unregisterDoctor(address doctor) public healthcareProviderOnly(msg.sender) {
         require(doctors[doctor] == true, "No such doctor.");
         delete doctors[doctor];
+        delete doctorsHealthcareProvider[doctor];
         emit unregisteredDoctor(doctor);
     }
 
@@ -164,6 +167,11 @@ contract Users{
         return financialInstitutes[user];
     }
 
+    // function to get doctor's healthcare institute
+    function getInstitute(address doctor) public view returns(address) {
+        require(doctors[doctor] == true, "Doctor does not exist.");
+        return doctorsHealthcareProvider[doctor];
+    }
 
     // function to make a transaction
     function makeTransactionRequest(address sender, address receiver, uint256 amount) public returns(uint256) {
@@ -184,14 +192,18 @@ contract Users{
     function makePayment(uint256 transactionId) public {
         require(transactionId <= numTransactions, "Transaction does not exist.");
         uint256 payment = transactions[transactionId].amount;
-        // PAY PERSON HERE
-        
+        address receiver = transactions[transactionId].receiver;
+
+        // payment
+        tokenContract.approve(msg.sender, receiver, payment);
+        tokenContract.transferFrom(msg.sender, receiver, payment);
+
         emit madePayment(transactionId, msg.sender);
 
     }
 
     // function to make payment on behalf on a payment (need to settle coin 1st, we might not need this)
-    function makePaymentFor(address sender, address receiver) public {}
+    // function makePaymentFor(address sender, address receiver) public {}
 
     // function to view specific transaction 
     function viewTransaction(uint256 transactionId) public view returns(address, address, uint256, bool) {
