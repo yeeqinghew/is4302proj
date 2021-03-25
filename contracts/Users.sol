@@ -106,7 +106,7 @@ contract Users{
         financialInstitutes[institute] = true;
         emit registeredFinancialInstitute(institute);
     }
-
+ 
     // function to unregister analyst
     function unregisterAnalyst(address analyst) public healthcareProviderOnly(msg.sender) {
         require(analysts[analyst] == true, "No such analyst.");
@@ -203,6 +203,7 @@ contract Users{
         // payment
         tokenContract.approve(msg.sender, receiver, payment);
         tokenContract.transferFrom(msg.sender, receiver, payment);
+        transactions[transactionId].complete = true;
 
         emit madePayment(transactionId, msg.sender);
 
