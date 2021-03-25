@@ -5,6 +5,11 @@ contract MedicalRecords{
 
     Users userContract;
 
+    //constructor for usercontract
+    constructor(Users usersAddress) public {
+      userContract = usersAddress;
+    }
+
     // medical record structure
 
     struct medicalRecord {

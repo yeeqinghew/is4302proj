@@ -4,6 +4,10 @@ import "./MediToken.sol";
 contract Users{
     MediToken tokenContract;
 
+    constructor(MediToken tokenAddress) public {
+        tokenContract = tokenAddress;
+    }
+
     // user structure
     address admin = address(this);
     mapping(address => bool) public patients;
@@ -22,6 +26,8 @@ contract Users{
         uint256 amount;
         bool complete;
     }
+
+    // do structures for people (doctors)
 
     mapping(uint256 => transaction) transactions;
 
@@ -65,7 +71,7 @@ contract Users{
     // user functions
 
     // function to register patient (only by dr/nurse)
-    function registerPatient(address patient) public healthcareProviderOnly(msg.sender) {
+    function registerPatient(address patient) public (msg.sender) {
         patients[patient] = true;
         emit registeredPatient(patient);
     }
