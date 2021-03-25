@@ -71,7 +71,7 @@ contract Users{
     // user functions
 
     // function to register patient (only by dr/nurse)
-    function registerPatient(address patient) public (msg.sender) {
+    function registerPatient(address patient) public {
         patients[patient] = true;
         emit registeredPatient(patient);
     }
