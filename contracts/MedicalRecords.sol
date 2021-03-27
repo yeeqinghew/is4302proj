@@ -16,7 +16,6 @@ contract MedicalRecords{
         address patient;
         bytes32 details;
         address doctorInCharge;
-        uint256 cost;
     }
 
     uint256 public numMedicalRecords = 0;
@@ -34,12 +33,13 @@ contract MedicalRecords{
         _;
     }
 
-    // add modifier for doctor once user.sol is done
+    //modifier for doctor 
     modifier doctorOnly(uint256 medicalRecordId, address doctor) {
         require(userContract.isDoctor(msg.sender) == true, "Only doctor can perform this function.");
         _;
     }
 
+    // modifier to ensure only patient can view
     modifier hasAccess(uint256 medicalRecordId, address user) {
         require(access[medicalRecordId][user] == true, "No access to medical record.");
         _;

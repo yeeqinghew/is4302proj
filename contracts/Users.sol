@@ -1,241 +1,125 @@
 //pragma solidity ^0.5.0;
-import "./MediToken.sol";
 
 contract Users{
-    MediToken tokenContract;
+    address admin;
 
-    constructor(MediToken tokenAddress) public {
-        tokenContract = tokenAddress;
+    constructor() public {
+        admin = msg.sender;
+    }
+    // patient structure
+    struct patient {
+        uint256 patientId;
+        address patientAddress;
+        uint256 recordNumber;
+        // TODO: add more structure
+    }
+
+    // doctor structure
+    struct doctor {
+        uint256 doctorId;
+        address doctorAddress;
+        uint256 penaltyScore;
+        uint256 appraisalScore;
+        bool blacklisted;
+        // TODO: add more structure
     }
 
     // user structure
-    address admin = address(this);
-    mapping(address => bool) public patients;
-    mapping(address => bool) public analysts;
-    mapping(address => bool) public doctors;
-    mapping(address => address) public doctorsHealthcareProvider;
-    mapping(address => bool) public healthcareProviders;
-    mapping(address => bool) public nurses;
-    mapping(address => bool) public financialInstitutes;
-    mapping(address => mapping(address => bool)) public fullAccess;
-
-    uint256 public numTransactions = 0;
-    struct transaction {
-        address sender;
-        address receiver;
-        uint256 amount;
-        bool complete;
-    }
-
-    // do structures for people (doctors)
-
-    mapping(uint256 => transaction) transactions;
+    uint256 public numPatients;
+    uint256 public numDoctors;
+    mapping(uint256 => patient) public patients;
+    mapping(address => bool) public patientExists;
+    mapping(uint256 => doctor) public doctors;
+    mapping(address => bool) public doctorExists;
 
     // user events
     event registeredPatient(address patient);
-    event registeredAnalyst(address analyst);
     event registeredDoctor(address doctor);
-    event registeredHealthcareProvider(address healthcareProvider);
-    event registeredNurse(address nurse);
-    event registeredFinancialInstitute(address financialInstitute);
-
-    event unregisteredAnalyst(address analyst);
-    event unregisteredDoctor(address doctor);
-    event unregisteredHealthcareProvider(address healthcareProvider);
-    event unregisteredNurse(address nurse);
-    event unregisteredFinancialInstitute(address financialInstitute);
-
-    event createdTransaction(uint256 transactionId);
-    event madePayment(uint256 transactionId, address payer);
-
-    event grantedFullAccess(address patient, address user);
-    event ungrantedFullAccess(address patient, address user);
 
     // user modifiers
-    modifier adminOnly(address user) {
-        require(user == admin, "Only admin can perform this function.");
+    modifier adminOnly() { // we might have to add more admins later
+        require(msg.sender == admin, "Only admin can perform this function.");
         _;
     }
 
-    modifier healthcareProviderOnly(address user) {
-        require(healthcareProviders[user] == true, "Only healthcare providers can perform this function.");
+    modifier doctorExist(uint256 doctorId) {
+        require(numDoctors >= doctorId == true, "Doctor does not exist.");
         _;
     }
 
-    modifier patientOnly(address user) {
-        require(patients[user] == true, "Only patients can perform this function.");
+    modifier patientExist(uint256 patientId) {
+        require(numPatients >= patientId == true, "Patient does not exist.");
         _;
     }
-    
 
     // user functions
 
-    // function to register patient (only by dr/nurse)
-    function registerPatient(address patient) public {
-        patients[patient] = true;
-        emit registeredPatient(patient);
+    // function to add and register patient
+    function registerPatient() public returns(uint256) {
+        require(patientExists[msg.sender] != true, "Address is already a patient.");
+        uint256 newPatientId = numPatients++;
+
+        patient memory newPatient = patient(
+            newPatientId,
+            msg.sender,
+            0
+        );
+        
+        patients[newPatientId] = newPatient;
+        patientExists[msg.sender] = true;
+        emit registeredPatient(msg.sender);
     }
 
-    // function to register analyst (only by hcp)
-    function registerAnalyst(address analyst) public healthcareProviderOnly(msg.sender) {
-        analysts[analyst] = true;
-        emit registeredAnalyst(analyst);
-    }
 
-    // function to register doctor (only by hcp)
-    function registerDoctor(address doctor) public healthcareProviderOnly(msg.sender) {
-        doctors[doctor] = true;
-        doctorsHealthcareProvider[doctor] = msg.sender;
-        emit registeredDoctor(doctor);
-    }
+    // function for add and register doctor
+    function registerDoctor(address doctorAddress) public adminOnly() returns(uint256) {
+        uint256 newDoctorId = numDoctors++;
 
-    // function to register healthcare provider (only by admin)
-    function registerHealthcareProvider(address provider) public adminOnly(msg.sender) {
-        healthcareProviders[provider] = true;
-        emit registeredHealthcareProvider(provider);
-    }
-
-    // function to register nurse (only by hcp)
-    function registerNurse(address nurse) public healthcareProviderOnly(msg.sender) {
-        nurses[nurse] = true;
-        emit registeredNurse(nurse);
-    }
-
-    // function to register financial institute (only by admin)
-    function registerFinancialInstitute(address institute) public adminOnly(msg.sender) {
-        financialInstitutes[institute] = true;
-        emit registeredFinancialInstitute(institute);
-    }
- 
-    // function to unregister analyst
-    function unregisterAnalyst(address analyst) public healthcareProviderOnly(msg.sender) {
-        require(analysts[analyst] == true, "No such analyst.");
-        delete analysts[analyst];
-        emit unregisteredAnalyst(analyst);
-    }
-
-    // function to unregister doctor
-    function unregisterDoctor(address doctor) public healthcareProviderOnly(msg.sender) {
-        require(doctors[doctor] == true, "No such doctor.");
-        delete doctors[doctor];
-        delete doctorsHealthcareProvider[doctor];
-        emit unregisteredDoctor(doctor);
-    }
-
-    // function to unregister healthcare provider
-    function unregisterHealthcareProvider(address provider) public adminOnly(msg.sender) {
-        require(healthcareProviders[provider] == true, "No such healthcare provider.");
-        delete healthcareProviders[provider];
-        emit unregisteredHealthcareProvider(provider);
-    }
-
-    // function to unregister nurse
-    function unregisterNurse(address nurse) public healthcareProviderOnly(msg.sender) {
-        require(nurses[nurse] == true, "No such nurse.");
-        delete nurses[nurse];
-        emit unregisteredNurse(nurse);
-    }
-
-    // function to unregister financial institute
-    function unregisterFinancialInstitute(address institute) public adminOnly(msg.sender) {
-        require(financialInstitutes[institute] == true, "No such financial institute.");
-        delete financialInstitutes[institute];
-        emit unregisteredFinancialInstitute(institute);
-    }
-
-    // function to check if address is patient
-    function isPatient(address user) public view returns(bool) {
-        return patients[user];
-    }
-
-    // function to check if address is analyst
-    function isAnalyst(address user) public view returns(bool) {
-        return analysts[user];
-    }
-
-    // function to check if address is doctor
-    function isDoctor(address user) public view returns(bool) {
-        return doctors[user];
-    }
-
-    // function to check if address is healthcare provider
-    function isHealthcareProvider(address user) public view returns(bool) {
-        return healthcareProviders[user];
-    }
-
-    // function to check if address is nurse
-    function isNurse(address user) public view returns(bool) {
-        return nurses[user];
-    }
-
-    // function to check if address is financial institute
-    function isFinancialInstitute(address user) public view returns(bool) {
-        return financialInstitutes[user];
-    }
-
-    // function to get doctor's healthcare institute
-    function getInstitute(address doctor) public view returns(address) {
-        require(doctors[doctor] == true, "Doctor does not exist.");
-        return doctorsHealthcareProvider[doctor];
-    }
-
-    // function to make a transaction
-    function makeTransactionRequest(address sender, address receiver, uint256 amount) public returns(uint256) {
-        transaction memory newTransaction = transaction(
-            sender,
-            receiver,
-            amount,
+        doctor memory newDoctor = doctor(
+            newDoctorId,
+            doctorAddress,
+            0,
+            0,
             false
         );
 
-        uint256 newTransactionId = numTransactions++;
-        transactions[newTransactionId] = newTransaction;
-        emit createdTransaction(newTransactionId);
-        return newTransactionId; //make transaction event
+        doctors[newDoctorId] = newDoctor;
+        doctorExists[doctorAddress] = true;
+        emit registeredDoctor(doctorAddress);
     }
 
-    // function to make payment (need to settle coin 1st)
-    function makePayment(uint256 transactionId) public {
-        require(transactionId <= numTransactions, "Transaction does not exist.");
-        uint256 payment = transactions[transactionId].amount;
-        address receiver = transactions[transactionId].receiver;
+    // function to check patient's number of records
+    function getRecordNumber(uint256 patientId) public view patientExist(patientId) returns(uint256) {
+        // not sure if this requirement is too strict
+        require(patients[patientId].patientAddress == msg.sender, "Not authorised to view.");
 
-        // payment
-        tokenContract.approve(msg.sender, receiver, payment);
-        tokenContract.transferFrom(msg.sender, receiver, payment);
-        transactions[transactionId].complete = true;
-
-        emit madePayment(transactionId, msg.sender);
-
+        return patients[patientId].recordNumber;
     }
 
-    // function to make payment on behalf on a payment (need to settle coin 1st, we might not need this)
-    // function makePaymentFor(address sender, address receiver) public {}
-
-    // function to view specific transaction 
-    function viewTransaction(uint256 transactionId) public view returns(address, address, uint256, bool) {
-        require(transactionId <= numTransactions, "Transaction does not exist.");
-        return (transactions[transactionId].sender, transactions[transactionId].receiver, transactions[transactionId].amount, transactions[transactionId].complete);
+    // function to check doctor's penalty score
+    function getPenaltyScore(uint256 doctorId) public view doctorExist(doctorId) returns(uint256) {
+        return doctors[doctorId].penaltyScore;
     }
 
-    // function to grant address access to all records
-    function grantFullAccess(address user) public patientOnly(msg.sender) {
-        fullAccess[msg.sender][user] = true;
-        emit grantedFullAccess(msg.sender, user);
+    // function to check doctor's appraisal score
+    function getAppraisalScore(uint256 doctorId) public view doctorExist(doctorId) returns(uint256) {
+        return doctors[doctorId].appraisalScore;
     }
 
-    // function to remove access to all records
-    function ungrantFullAccess(address user) public patientOnly(msg.sender) {
-        require(fullAccess[msg.sender][user] == true, "User already does not have access.");
-        delete fullAccess[msg.sender][user];
-        emit ungrantedFullAccess(msg.sender, user);
+    // function to add penalty score
+    function addPenaltyScore(uint256 doctorId, uint256 score) public adminOnly() doctorExist(doctorId) {
+        doctors[doctorId].penaltyScore += score;
     }
 
-    // function to check if user has full access to records
-    function hasFullAccess(address patient, address user) public view returns(bool) {
-        return fullAccess[patient][user];
+    // function to add appraisal score
+    function addAppraisalScore(uint256 doctorId, uint256 score) public adminOnly() doctorExist(doctorId) {
+        doctors[doctorId].appraisalScore += score;
     }
 
-    // function to get information of that certain address (actually idt it should be onchain anymore)
-    // function getInfo(address user) public {}
+    // function to blacklist doctor
+    function blacklistDoctor(uint256 doctorId) public adminOnly() doctorExist(doctorId) {
+        doctors[doctorId].blacklisted = true;
+    }
+
+    
 }
