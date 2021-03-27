@@ -30,6 +30,7 @@ contract Users{
     mapping(uint256 => patient) public patients;
     mapping(address => bool) public patientExists;
     mapping(uint256 => doctor) public doctors;
+    mapping(address => doctor) public doctorsByAddress;
     mapping(address => bool) public doctorExists;
 
     // user events
@@ -68,6 +69,7 @@ contract Users{
         patients[newPatientId] = newPatient;
         patientExists[msg.sender] = true;
         emit registeredPatient(msg.sender);
+        return newPatientId;
     }
 
 
@@ -85,7 +87,44 @@ contract Users{
 
         doctors[newDoctorId] = newDoctor;
         doctorExists[doctorAddress] = true;
+        doctorsByAddress[doctorAddress] = newDoctor;
         emit registeredDoctor(doctorAddress);
+    }
+
+    // function to see if address is a patient
+    function isPatient(address user) public view returns(bool) {
+        return patientExists[user];
+    }
+
+    // function to see if address is a doctor
+    function isDoctor(address user) public view returns(bool) {
+        return doctorExists[user];
+    }
+
+    // function to see if patient exists
+    function isExistingPatient(uint256 patientId) public view patientExist(patientId) returns(bool) {
+        return patientId <= numPatients;
+    }
+
+    // function to see if doctor exists
+    function isExistingDoctor(uint256 doctorId) public view doctorExist(doctorId) returns(bool) {
+        return doctorId <= numDoctors;
+    }
+
+    // function to get patient
+    function getPatientAddress(uint256 patientId) public view patientExist(patientId) returns(address) {
+        return patients[patientId].patientAddress;
+    }
+
+    // function to get doctor
+    function getDoctorAddress(uint256 doctorId) public view doctorExist(doctorId) returns(address) {
+        return doctors[doctorId].doctorAddress;
+    }
+
+    // function to get doctor id by address
+    function getDoctorId(address user) public view returns(uint256) {
+        require(doctorExists[user] == true, "User is not a doctor.");
+        return doctorsByAddress[user].doctorId;
     }
 
     // function to check patient's number of records
@@ -106,14 +145,19 @@ contract Users{
         return doctors[doctorId].appraisalScore;
     }
 
+    // function to add medical record count to patient
+    function addRecordCount(uint256 patientId) public {
+        patients[patientId].recordNumber += 1;
+    }
+
     // function to add penalty score
     function addPenaltyScore(uint256 doctorId, uint256 score) public adminOnly() doctorExist(doctorId) {
         doctors[doctorId].penaltyScore += score;
     }
 
     // function to add appraisal score
-    function addAppraisalScore(uint256 doctorId, uint256 score) public adminOnly() doctorExist(doctorId) {
-        doctors[doctorId].appraisalScore += score;
+    function addAppraisalScore(uint256 doctorId) public adminOnly() doctorExist(doctorId) {
+        doctors[doctorId].appraisalScore += 1;
     }
 
     // function to blacklist doctor
@@ -121,5 +165,5 @@ contract Users{
         doctors[doctorId].blacklisted = true;
     }
 
-    
+
 }

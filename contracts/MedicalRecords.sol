@@ -13,93 +13,127 @@ contract MedicalRecords{
     // medical record structure
 
     struct medicalRecord {
-        address patient;
+        uint256 patient;
         bytes32 details;
-        address doctorInCharge;
+        uint256 doctorInCharge;
+        bool patientVerified;
+        bool doctorVerified;
     }
 
     uint256 public numMedicalRecords = 0;
     mapping(uint256 => medicalRecord) public medicalRecords;
-    mapping(uint256 => mapping(address => bool)) public access;
+    mapping(uint256 => medicalRecord) public flaggedRecords;
+    mapping(uint256 => medicalRecord) public badRecords;
+    mapping(uint256 => mapping(uint256 => uint256)) public doctorVerifications;
+    
 
     // medical record events
     event createdMedicalRecord(uint256 medicalRecordId);
-    event grantedAccess(uint256 medicalRecordId, address user);
-    event ungrantedAccess(uint256 medicalRecordId, address user);
 
     // medical record modifiers
-    modifier patientOnly(uint256 medicalRecordId, address patient) {
-        require(msg.sender == medicalRecords[medicalRecordId].patient, "Only patient can perform this function.");
-        _;
-    }
-
-    //modifier for doctor 
-    modifier doctorOnly(uint256 medicalRecordId, address doctor) {
-        require(userContract.isDoctor(msg.sender) == true, "Only doctor can perform this function.");
-        _;
-    }
-
-    // modifier to ensure only patient can view
-    modifier hasAccess(uint256 medicalRecordId, address user) {
-        require(access[medicalRecordId][user] == true, "No access to medical record.");
-        _;
-    }
 
     // medical record functions
-    // function to create medical record (check that he is a dr and that patient exists)
-    function createRecord(address patient, bytes32 details, uint256 cost) public returns(uint256) {
+    // function to create medical record
+    function createRecord(uint256 patientId, uint256 doctorId, bytes32 details) public returns(uint256) {
+        require(userContract.isExistingPatient(patientId) == true, "No such patient exists.");
+        require(userContract.isExistingDoctor(doctorId) == true, "No such doctor exists.");
+        require(userContract.isDoctor(msg.sender) == true, "Not authorised to make medical record.");
+        // add blacklisted doctor requirement
 
         medicalRecord memory newMedicalRecord = medicalRecord(
-            patient,
+            patientId,
             details, 
-            msg.sender,
-            cost
+            doctorId,
+            false,
+            false
         );
-
-        // making transaction request at Users.sol (get doctor's hospital (hcp) and change receiver to that)
-        address healthcareInstitute = userContract.getInstitute(msg.sender);
-        userContract.makeTransactionRequest(patient, healthcareInstitute, cost);
 
         uint256 newMedicalRecordId = numMedicalRecords++;
         medicalRecords[newMedicalRecordId] = newMedicalRecord;
-        access[newMedicalRecordId][patient] = true; // granting patient access
-        access[newMedicalRecordId][msg.sender] = true; // granting doctor access
-
+        userContract.addRecordCount(patientId);
         emit createdMedicalRecord(newMedicalRecordId);
         return newMedicalRecordId; 
     }
 
     // function to view medical record (if inside viewaccess) (need to check for global access)
-    function viewRecord(uint256 medicalRecordId) public view returns(address, bytes32, address, uint256) {
-        // check if medical record exists
+    function viewRecord(uint256 medicalRecordId) public view returns(uint256, bytes32, uint256, bool, bool) {
         require(medicalRecordId <= numMedicalRecords, "Medical record does not exist.");
-
-
-        if (userContract.hasFullAccess(medicalRecords[medicalRecordId].patient, msg.sender) == true) {
-            return (medicalRecords[medicalRecordId].patient, medicalRecords[medicalRecordId].details, medicalRecords[medicalRecordId].doctorInCharge, medicalRecords[medicalRecordId].cost);
-        }
-
-        else {
-            require(access[medicalRecordId][msg.sender] == true, "No access to medical record.");
-            return (medicalRecords[medicalRecordId].patient, medicalRecords[medicalRecordId].details, medicalRecords[medicalRecordId].doctorInCharge, medicalRecords[medicalRecordId].cost);
-        }
         
+        // requirement that only patient can view this record if the msg.sender is a patient
+        if (userContract.isPatient(msg.sender) == true) {
+            require(userContract.getPatientAddress(medicalRecords[medicalRecordId].patient) == msg.sender,
+            "Medical record does not belong to this patient.");
+        } else {
+            require(userContract.isDoctor(msg.sender) == true, "Not patient or doctor, not authorised.");
+            // TODO: might need to add require for admin to view
+            // add blacklisted doctor requirement
+        }
+
+        return (medicalRecords[medicalRecordId].patient, medicalRecords[medicalRecordId].details,
+        medicalRecords[medicalRecordId].doctorInCharge, medicalRecords[medicalRecordId].patientVerified,
+        medicalRecords[medicalRecordId].doctorVerified);
     }
 
-    // function to grant user access for this record (patient or dr can give access)
-    function grantAccess(address user, uint256 medicalRecordId) public patientOnly(medicalRecordId, msg.sender) {
-        require(access[medicalRecordId][user] == false, "Already authorised to view medical record.");
+    // function for patient to verify that medical record has no problems
+    function patientVerify(uint256 medicalRecordId) public {
+        require(userContract.getPatientAddress(medicalRecords[medicalRecordId].patient) == msg.sender,
+        "Medical record does not belong to this address."); // make sure that only that patient verify his own medical record
 
-        access[medicalRecordId][msg.sender] = true;
-        emit grantedAccess(medicalRecordId, user);
+        medicalRecords[medicalRecordId].patientVerified = true;
     }
 
-    // function to remove user access for this record (patient or dr can remove access)
-    function ungrantAccess(address user, uint256 medicalRecordId) public patientOnly(medicalRecordId, msg.sender) {
-        require(access[medicalRecordId][msg.sender] == true, "Already not authorised to view medical record.");
+    // function for doctor to verify that medical record has no problems
+    function doctorVerify(uint256 medicalRecordId) public {
+        require(userContract.isDoctor(msg.sender) == true, "Not doctor, not authorised to verify.");
+        // maybe need to add admin requirement as well
+        // add blacklisted doctor requirement
+        // add requirements that doctor cannot constantly verify the same other doctor's stuff, idk what threshold to set
 
-        delete access[medicalRecordId][user];
-        emit ungrantedAccess(medicalRecordId, user);
+        medicalRecords[medicalRecordId].doctorVerified = true;
+        doctorVerifications[userContract.getDoctorId(msg.sender)][medicalRecords[medicalRecordId].doctorInCharge] += 1;
+        userContract.addAppraisalScore(userContract.getDoctorId(msg.sender));
     }
 
+    // function for patient to whistleblow
+    function patientReport(uint256 medicalRecordId) public {
+        require(userContract.getPatientAddress(medicalRecords[medicalRecordId].patient) == msg.sender,
+        "Medical record does not belong to this address."); // make sure that only that patient verify his own medical record
+
+        flaggedRecords[medicalRecordId] = medicalRecords[medicalRecordId];
+    }
+
+    // function for verifying doctor to whistleblow
+    function doctorReport(uint256 medicalRecordId) public {
+        require(userContract.isDoctor(msg.sender) == true, "Not doctor, not authorised to verify.");
+        // add blacklisted doctor requirement
+        // maybe need to add admin requirement as well
+
+        flaggedRecords[medicalRecordId] = medicalRecords[medicalRecordId];
+        doctorVerifications[userContract.getDoctorId(msg.sender)][medicalRecords[medicalRecordId].doctorInCharge] += 1;
+    }
+
+    // function for admin to classify flagged record as bad record
+    function punish(uint256 medicalRecordId, uint256 score) public {
+        // admin requirement
+        // requirement that medicalRecord must already be flagged
+
+        badRecords[medicalRecordId] = flaggedRecords[medicalRecordId];
+        userContract.addPenaltyScore(medicalRecords[medicalRecordId].doctorInCharge, score);
+        // TODO: might have to change threshold
+        if (userContract.getPenaltyScore(medicalRecords[medicalRecordId].doctorInCharge) > 10) {
+            userContract.blacklistDoctor(medicalRecords[medicalRecordId].doctorInCharge);
+        }
+        delete flaggedRecords[medicalRecordId];
+
+    }
+
+    // function for admin to waive wrongly accused flagged record
+    function waive(uint256 medicalRecordId) public {
+        // admin requirement
+        // requirement that medicalRecord must already be flagged
+
+        delete flaggedRecords[medicalRecordId];
+        medicalRecords[medicalRecordId].patientVerified = true;
+        medicalRecords[medicalRecordId].doctorVerified = true;
+    }
 }
