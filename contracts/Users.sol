@@ -130,6 +130,11 @@ contract Users{
         return doctorExists[user];
     }
 
+    // function to see if address is an admin
+    function isAdmin(address user) public view returns(bool) {
+        return adminExists[user];
+    }
+    
     // function to see if patient exists
     function isExistingPatient(uint256 patientId) public view patientExist(patientId) returns(bool) {
         return patientId <= numPatients;
