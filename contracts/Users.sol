@@ -134,7 +134,7 @@ contract Users{
     function isAdmin(address user) public view returns(bool) {
         return adminExists[user];
     }
-    
+
     // function to see if patient exists
     function isExistingPatient(uint256 patientId) public view patientExist(patientId) returns(bool) {
         return patientId <= numPatients;
@@ -199,5 +199,9 @@ contract Users{
         doctors[doctorId].blacklisted = true;
     }
 
+    // function to check if doctor is blacklisted
+    function isBlacklisted(uint256 doctorId) public view doctorExist(doctorId) returns(bool) {
+        return doctors[doctorId].blacklisted;
+    }
 
 }
