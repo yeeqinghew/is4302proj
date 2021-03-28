@@ -38,14 +38,50 @@ contract MedicalRecords{
     event wronglyAccusedReport(uint256 medicalRecordId);
 
     // medical record modifiers
+    modifier isPatient(uint256 patientId) {
+        require(userContract.isExistingPatient(patientId) == true, "No such patient exists.");
+        _;
+    }
+
+    modifier isPatientFromRecord(uint256 medicalRecordId) {
+        require(userContract.getPatientAddress(medicalRecords[medicalRecordId].patient) == msg.sender,
+        "Medical record does not belong to this address.");
+        _;
+    }
+
+    modifier isDoctor(uint256 doctorId) {
+        require(userContract.isExistingDoctor(doctorId) == true, "No such doctor exists.");
+        _;
+    }
+
+    modifier isDoctorAddress() {
+        require(userContract.isDoctor(msg.sender) == true, "Not doctor, not authorised to verify.");
+        _;
+    }
+
+    modifier isAdmin() {
+        require(userContract.isAdmin(msg.sender) == true, "Only admins can execute this function.");
+        _;
+    }
+
+    modifier blacklistedId(uint256 doctorId) {
+        require(userContract.isBlacklisted(doctorId), "Not authorised as doctor is blacklisted.");
+        _;
+    }
+
+    modifier blacklistedAddress() {
+        require(userContract.isBlacklisted(userContract.getDoctorId(msg.sender)), "Not authorised as doctor is blacklisted.");
+        _;
+    }
+
+    modifier flaggedRecord(uint256 medicalRecordId) {
+        require(isFlaggedRecords[medicalRecordId] = true, "Record is not a flagged one.");
+        _;
+    }
 
     // medical record functions
     // function to create medical record
-    function createRecord(uint256 patientId, uint256 doctorId, bytes32 details) public returns(uint256) {
-        require(userContract.isExistingPatient(patientId) == true, "No such patient exists.");
-        require(userContract.isExistingDoctor(doctorId) == true, "No such doctor exists.");
-        require(userContract.isDoctor(msg.sender) == true, "Not authorised to make medical record.");
-        require(userContract.isBlacklisted(doctorId), "Not authorised as doctor is blacklisted.");
+    function createRecord(uint256 patientId, uint256 doctorId, bytes32 details) public isPatient(patientId) isDoctor(doctorId) blacklistedId(doctorId) returns(uint256) {
 
         medicalRecord memory newMedicalRecord = medicalRecord(
             patientId,
@@ -82,19 +118,15 @@ contract MedicalRecords{
     }
 
     // function for patient to verify that medical record has no problems
-    function patientVerify(uint256 medicalRecordId) public {
-        require(userContract.getPatientAddress(medicalRecords[medicalRecordId].patient) == msg.sender,
-        "Medical record does not belong to this address."); // make sure that only that patient verify his own medical record
+    function patientVerify(uint256 medicalRecordId) public isPatientFromRecord(medicalRecordId) {
 
         medicalRecords[medicalRecordId].patientVerified = true;
         emit patientVerified(medicalRecordId);
     }
 
     // function for doctor to verify that medical record has no problems
-    function doctorVerify(uint256 medicalRecordId) public {
-        require(userContract.isDoctor(msg.sender) == true, "Not doctor, not authorised to verify.");
-        require(userContract.isBlacklisted(userContract.getDoctorId(msg.sender)), "Not authorised as doctor is blacklisted.");
-        // add requirements that doctor cannot constantly verify the same other doctor's stuff, idk what threshold to set
+    function doctorVerify(uint256 medicalRecordId) public isDoctorAddress() blacklistedAddress() {
+        // TODO: change threshold
 
         medicalRecords[medicalRecordId].doctorVerified = true;
         doctorVerifications[userContract.getDoctorId(msg.sender)][medicalRecords[medicalRecordId].doctorInCharge] += 1;
@@ -103,9 +135,7 @@ contract MedicalRecords{
     }
 
     // function for patient to whistleblow
-    function patientReport(uint256 medicalRecordId) public {
-        require(userContract.getPatientAddress(medicalRecords[medicalRecordId].patient) == msg.sender,
-        "Medical record does not belong to this address."); // make sure that only that patient verify his own medical record
+    function patientReport(uint256 medicalRecordId) public isPatientFromRecord(medicalRecordId) {
 
         flaggedRecords[medicalRecordId] = medicalRecords[medicalRecordId];
         isFlaggedRecords[medicalRecordId] = true;
@@ -113,9 +143,7 @@ contract MedicalRecords{
     }
 
     // function for verifying doctor to whistleblow
-    function doctorReport(uint256 medicalRecordId) public {
-        require(userContract.isDoctor(msg.sender) == true, "Not doctor, not authorised to verify.");
-        require(userContract.isBlacklisted(userContract.getDoctorId(msg.sender)), "Not authorised as doctor is blacklisted.");
+    function doctorReport(uint256 medicalRecordId) public isDoctorAddress() blacklistedAddress() {
 
         flaggedRecords[medicalRecordId] = medicalRecords[medicalRecordId];
         isFlaggedRecords[medicalRecordId] = true;
@@ -124,9 +152,7 @@ contract MedicalRecords{
     }
 
     // function for admin to classify flagged record as bad record
-    function punish(uint256 medicalRecordId, uint256 score) public {
-        require(userContract.isAdmin(msg.sender) == true, "Only admins can execute this function.");
-        require(isFlaggedRecords[medicalRecordId] = true, "Record is not a flagged one.");
+    function punish(uint256 medicalRecordId, uint256 score) public isAdmin() flaggedRecord(medicalRecordId) {
 
         badRecords[medicalRecordId] = flaggedRecords[medicalRecordId];
         userContract.addPenaltyScore(medicalRecords[medicalRecordId].doctorInCharge, score);
@@ -140,9 +166,7 @@ contract MedicalRecords{
     }
 
     // function for admin to waive wrongly accused flagged record
-    function waive(uint256 medicalRecordId) public {
-        require(userContract.isAdmin(msg.sender) == true, "Only admins can execute this function.");
-        require(isFlaggedRecords[medicalRecordId] = true, "Record is not a flagged one.");
+    function waive(uint256 medicalRecordId) public isAdmin() flaggedRecord(medicalRecordId) {
 
         delete flaggedRecords[medicalRecordId];
         delete isFlaggedRecords[medicalRecordId];
