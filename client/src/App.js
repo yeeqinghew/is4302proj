@@ -10,11 +10,7 @@ import Register from "./components/Register";
 import Dashboard from "./components/Dashboard";
 import BoardAdmin from "./components/BoardAdmin";
 import BoardPatient from "./components/BoardPatient";
-import BoardHealthcareProvider from "./components/BoardHealthcareProvider";
-import BoardFinancialInstitution from "./components/BoardFinancialInstitution";
 import BoardDoctor from "./components/BoardDoctor";
-import BoardNurse from "./components/BoardNurse";
-import BoardHealthcareAnalyst from "./components/BoardHealthcareAnalyst";
 
 import { logout } from "./actions/auth";
 import { clearMessage } from "./actions/message";
@@ -29,11 +25,7 @@ class App extends Component {
     this.state = {
       showAdminBoard: false,
       showPatientBoard: false,
-      showHealthcareProviderBoard: false,
-      showFinancialInstitutionBoard: false,
       showDoctorBoard: false,
-      showNurseBoard: false,
-      showHealthcareAnalystBoard: false,
       currentUser: undefined,
     };
 
@@ -49,11 +41,7 @@ class App extends Component {
       this.setState({
         currentUser: user,
         showAdminBoard: user.role === "admin",
-        showHealthcareProviderBoard: user.role === "healthcare_provider",
-        showFinancialInstitutionBoard: user.role === "financial_institution",
         showDoctorBoard: user.role === "doctor",
-        showNurseBoard: user.role === "nurse",
-        showHealthcareAnalystBoard: user.role === "healthcare_analyst",
         showPatientBoard: user.role === "patient"
       });
     }
@@ -64,7 +52,7 @@ class App extends Component {
   }
 
   render() {
-    const { currentUser, showPatientBoard, showAdminBoard, showHealthcareProviderBoard, showDoctorBoard, showNurseBoard, showFinancialInstitutionBoard, showHealthcareAnalystBoard } = this.state;
+    const { currentUser, showPatientBoard, showAdminBoard, showDoctorBoard } = this.state;
 
     return (
       <Router history={history}>
@@ -97,42 +85,10 @@ class App extends Component {
                 </li>
               )}
 
-              {showHealthcareProviderBoard && (
-                <li className="nav-item">
-                  <Link to={"/healthcareProvider"} className="nav-link">
-                    Healthcare Provider Board
-                </Link>
-                </li>
-              )}
-
-              {showFinancialInstitutionBoard && (
-                <li className="nav-item">
-                  <Link to={"/financialInstitution"} className="nav-link">
-                    Financial Institution Board
-                </Link>
-                </li>
-              )}
-
               {showDoctorBoard && (
                 <li className="nav-item">
                   <Link to={"/doctor"} className="nav-link">
                     Doctor Board
-                </Link>
-                </li>
-              )}
-
-              {showNurseBoard && (
-                <li className="nav-item">
-                  <Link to={"/nurse"} className="nav-link">
-                    Nurse Board
-                </Link>
-                </li>
-              )}
-
-              {showHealthcareAnalystBoard && (
-                <li className="nav-item">
-                  <Link to={"/healthcareAnalyst"} className="nav-link">
-                    healthcare Analyst Board
                 </Link>
                 </li>
               )}
@@ -178,11 +134,7 @@ class App extends Component {
               <Route exact path="/dashboard" component={Dashboard} />
               <Route path="/patient" component={BoardPatient} />
               <Route path="/admin" component={BoardAdmin} />
-              <Route path="/healthcareProvider" component={BoardHealthcareProvider} />
-              <Route path="/financialInstitution" component={BoardFinancialInstitution} />
               <Route path="/doctor" component={BoardDoctor} />
-              <Route path="/nurse" component={BoardNurse} />
-              <Route path="/healthcareAnalyst" component={BoardHealthcareAnalyst} />
             </Switch>
           </div>
         </div>

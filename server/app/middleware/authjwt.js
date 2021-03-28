@@ -55,39 +55,6 @@ isAdmin = (req, res, next) => {
     });
 };
 
-isHealthcareProvider = (req, res, next) => {
-    User.findByPk(req.userId).then(user => {
-        user.getRole().then(role => {
-            if (role.name === "healthcare_provider") {
-                next();
-                return;
-            }
-
-            res.status(403).send({
-                message: "Require Healthcare Provider Role!"
-            });
-            return;
-        });
-    });
-};
-
-
-isFinancialInstitution = (req, res, next) => {
-    User.findByPk(req.userId).then(user => {
-        user.getRole().then(role => {
-            if (role.name === "financial_institution") {
-                next();
-                return;
-            }
-
-            res.status(403).send({
-                message: "Require Financial Institution Role!"
-            });
-            return;
-        });
-    });
-};
-
 isDoctor = (req, res, next) => {
     User.findByPk(req.userId).then(user => {
         user.getRole().then(role => {
@@ -98,38 +65,6 @@ isDoctor = (req, res, next) => {
 
             res.status(403).send({
                 message: "Require Doctor Role!"
-            });
-            return;
-        });
-    });
-};
-
-isNurse = (req, res, next) => {
-    User.findByPk(req.userId).then(user => {
-        user.getRole().then(role => {
-            if (role.name === "nurse") {
-                next();
-                return;
-            }
-
-            res.status(403).send({
-                message: "Require Nurse Role!"
-            });
-            return;
-        });
-    });
-};
-
-isHealthcareAnalyst = (req, res, next) => {
-    User.findByPk(req.userId).then(user => {
-        user.getRole().then(role => {
-            if (role.name === "healthcare_analyst") {
-                next();
-                return;
-            }
-
-            res.status(403).send({
-                message: "Require Healthcare Analyst Role!"
             });
             return;
         });
@@ -164,10 +99,6 @@ const authjwt = {
     verifyToken: verifyToken,
     isPatient: isPatient,
     isAdmin: isAdmin,
-    isHealthcareProvider: isHealthcareProvider,
-    isFinancialInstitution: isFinancialInstitution,
     isDoctor: isDoctor,
-    isNurse: isNurse,
-    isHealthcareAnalyst: isHealthcareAnalyst
 };
 module.exports = authjwt;

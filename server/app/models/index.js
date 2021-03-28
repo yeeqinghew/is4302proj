@@ -38,5 +38,5 @@ db.user.belongsTo(db.role, {
     foreignKey: "roleId"
 });
 
-db.ROLES = ["patient", "admin", "healthcare_provider", "financial_institution", "doctor", "nurse", "healthcare_analyst"];
+db.ROLES = ["patient", "admin", "doctor"];
 module.exports = db;

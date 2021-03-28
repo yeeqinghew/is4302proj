@@ -16,14 +16,14 @@ exports.signup = (req, res) => {
         password: bcrypt.hashSync(req.body.password, 8)
     })
         .then(user => {
-            console.log("########## Auth Role: ", req.body.role);
+            // console.log("########## Auth Role: ", req.body.role);
             if (req.body.role) {
                 Role.findOne({
                     where: {
                         name: req.body.role
                     }
                 }).then(role => {
-                    console.log("Found Role:::::::::", role);
+                    // console.log("Found Role:::::::::", role);
                     user.setRole(role).then(() => {
                         res.send({ message: "User was registered successfully!" });
                     });
