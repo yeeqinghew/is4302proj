@@ -55,7 +55,7 @@ contract MedicalRecords{
         return newMedicalRecordId; 
     }
 
-    // function to view medical record (if inside viewaccess) (need to check for global access)
+    // function to view medical record 
     function viewRecord(uint256 medicalRecordId) public view returns(uint256, bytes32, uint256, bool, bool) {
         require(medicalRecordId <= numMedicalRecords, "Medical record does not exist.");
         
@@ -64,8 +64,7 @@ contract MedicalRecords{
             require(userContract.getPatientAddress(medicalRecords[medicalRecordId].patient) == msg.sender,
             "Medical record does not belong to this patient.");
         } else {
-            require(userContract.isDoctor(msg.sender) == true, "Not patient or doctor, not authorised.");
-            // TODO: might need to add require for admin to view
+            require(userContract.isDoctor(msg.sender) == true || userContract.isAdmin(msg.sender) == true, "Not patient, doctor or admin, not authorised.");
             // add blacklisted doctor requirement
         }
 
@@ -85,7 +84,6 @@ contract MedicalRecords{
     // function for doctor to verify that medical record has no problems
     function doctorVerify(uint256 medicalRecordId) public {
         require(userContract.isDoctor(msg.sender) == true, "Not doctor, not authorised to verify.");
-        // maybe need to add admin requirement as well
         // add blacklisted doctor requirement
         // add requirements that doctor cannot constantly verify the same other doctor's stuff, idk what threshold to set
 
@@ -106,7 +104,6 @@ contract MedicalRecords{
     function doctorReport(uint256 medicalRecordId) public {
         require(userContract.isDoctor(msg.sender) == true, "Not doctor, not authorised to verify.");
         // add blacklisted doctor requirement
-        // maybe need to add admin requirement as well
 
         flaggedRecords[medicalRecordId] = medicalRecords[medicalRecordId];
         doctorVerifications[userContract.getDoctorId(msg.sender)][medicalRecords[medicalRecordId].doctorInCharge] += 1;
@@ -114,7 +111,7 @@ contract MedicalRecords{
 
     // function for admin to classify flagged record as bad record
     function punish(uint256 medicalRecordId, uint256 score) public {
-        // admin requirement
+        require(userContract.isAdmin(msg.sender) == true, "Only admins can execute this function.");
         // requirement that medicalRecord must already be flagged
 
         badRecords[medicalRecordId] = flaggedRecords[medicalRecordId];
@@ -129,7 +126,7 @@ contract MedicalRecords{
 
     // function for admin to waive wrongly accused flagged record
     function waive(uint256 medicalRecordId) public {
-        // admin requirement
+        require(userContract.isAdmin(msg.sender) == true, "Only admins can execute this function.");
         // requirement that medicalRecord must already be flagged
 
         delete flaggedRecords[medicalRecordId];
