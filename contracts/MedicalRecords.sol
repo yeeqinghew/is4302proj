@@ -30,6 +30,12 @@ contract MedicalRecords{
 
     // medical record events
     event createdMedicalRecord(uint256 medicalRecordId);
+    event patientVerified(uint256 medicalRecordId);
+    event doctorVerified(uint256 medicalRecordId);
+    event patientReported(uint256 medicalRecordId);
+    event doctorReported(uint256 medicalRecordId);
+    event fraudulentReport(uint256 medicalRecordId);
+    event wronglyAccusedReport(uint256 medicalRecordId);
 
     // medical record modifiers
 
@@ -81,6 +87,7 @@ contract MedicalRecords{
         "Medical record does not belong to this address."); // make sure that only that patient verify his own medical record
 
         medicalRecords[medicalRecordId].patientVerified = true;
+        emit patientVerified(medicalRecordId);
     }
 
     // function for doctor to verify that medical record has no problems
@@ -92,6 +99,7 @@ contract MedicalRecords{
         medicalRecords[medicalRecordId].doctorVerified = true;
         doctorVerifications[userContract.getDoctorId(msg.sender)][medicalRecords[medicalRecordId].doctorInCharge] += 1;
         userContract.addAppraisalScore(userContract.getDoctorId(msg.sender));
+        emit doctorVerified(medicalRecordId);
     }
 
     // function for patient to whistleblow
@@ -101,6 +109,7 @@ contract MedicalRecords{
 
         flaggedRecords[medicalRecordId] = medicalRecords[medicalRecordId];
         isFlaggedRecords[medicalRecordId] = true;
+        emit patientReported(medicalRecordId);
     }
 
     // function for verifying doctor to whistleblow
@@ -111,6 +120,7 @@ contract MedicalRecords{
         flaggedRecords[medicalRecordId] = medicalRecords[medicalRecordId];
         isFlaggedRecords[medicalRecordId] = true;
         doctorVerifications[userContract.getDoctorId(msg.sender)][medicalRecords[medicalRecordId].doctorInCharge] += 1;
+        emit doctorReported(medicalRecordId);
     }
 
     // function for admin to classify flagged record as bad record
@@ -126,7 +136,7 @@ contract MedicalRecords{
         }
         delete flaggedRecords[medicalRecordId];
         delete isFlaggedRecords[medicalRecordId];
-
+        emit fraudulentReport(medicalRecordId);
     }
 
     // function for admin to waive wrongly accused flagged record
@@ -138,5 +148,6 @@ contract MedicalRecords{
         delete isFlaggedRecords[medicalRecordId];
         medicalRecords[medicalRecordId].patientVerified = true;
         medicalRecords[medicalRecordId].doctorVerified = true;
+        emit wronglyAccusedReport(medicalRecordId);
     }
 }
