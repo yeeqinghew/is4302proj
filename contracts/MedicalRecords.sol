@@ -23,6 +23,7 @@ contract MedicalRecords{
     uint256 public numMedicalRecords = 0;
     mapping(uint256 => medicalRecord) public medicalRecords;
     mapping(uint256 => medicalRecord) public flaggedRecords;
+    mapping(uint256 => bool) public isFlaggedRecords;
     mapping(uint256 => medicalRecord) public badRecords;
     mapping(uint256 => mapping(uint256 => uint256)) public doctorVerifications;
     
@@ -99,6 +100,7 @@ contract MedicalRecords{
         "Medical record does not belong to this address."); // make sure that only that patient verify his own medical record
 
         flaggedRecords[medicalRecordId] = medicalRecords[medicalRecordId];
+        isFlaggedRecords[medicalRecordId] = true;
     }
 
     // function for verifying doctor to whistleblow
@@ -107,13 +109,14 @@ contract MedicalRecords{
         require(userContract.isBlacklisted(userContract.getDoctorId(msg.sender)), "Not authorised as doctor is blacklisted.");
 
         flaggedRecords[medicalRecordId] = medicalRecords[medicalRecordId];
+        isFlaggedRecords[medicalRecordId] = true;
         doctorVerifications[userContract.getDoctorId(msg.sender)][medicalRecords[medicalRecordId].doctorInCharge] += 1;
     }
 
     // function for admin to classify flagged record as bad record
     function punish(uint256 medicalRecordId, uint256 score) public {
         require(userContract.isAdmin(msg.sender) == true, "Only admins can execute this function.");
-        // requirement that medicalRecord must already be flagged
+        require(isFlaggedRecords[medicalRecordId] = true, "Record is not a flagged one.");
 
         badRecords[medicalRecordId] = flaggedRecords[medicalRecordId];
         userContract.addPenaltyScore(medicalRecords[medicalRecordId].doctorInCharge, score);
@@ -122,15 +125,17 @@ contract MedicalRecords{
             userContract.blacklistDoctor(medicalRecords[medicalRecordId].doctorInCharge);
         }
         delete flaggedRecords[medicalRecordId];
+        delete isFlaggedRecords[medicalRecordId];
 
     }
 
     // function for admin to waive wrongly accused flagged record
     function waive(uint256 medicalRecordId) public {
         require(userContract.isAdmin(msg.sender) == true, "Only admins can execute this function.");
-        // requirement that medicalRecord must already be flagged
+        require(isFlaggedRecords[medicalRecordId] = true, "Record is not a flagged one.");
 
         delete flaggedRecords[medicalRecordId];
+        delete isFlaggedRecords[medicalRecordId];
         medicalRecords[medicalRecordId].patientVerified = true;
         medicalRecords[medicalRecordId].doctorVerified = true;
     }
