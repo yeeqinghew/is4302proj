@@ -38,7 +38,7 @@ contract MedicalRecords{
         require(userContract.isExistingPatient(patientId) == true, "No such patient exists.");
         require(userContract.isExistingDoctor(doctorId) == true, "No such doctor exists.");
         require(userContract.isDoctor(msg.sender) == true, "Not authorised to make medical record.");
-        // add blacklisted doctor requirement
+        require(userContract.isBlacklisted(doctorId), "Not authorised as doctor is blacklisted.");
 
         medicalRecord memory newMedicalRecord = medicalRecord(
             patientId,
@@ -63,9 +63,10 @@ contract MedicalRecords{
         if (userContract.isPatient(msg.sender) == true) {
             require(userContract.getPatientAddress(medicalRecords[medicalRecordId].patient) == msg.sender,
             "Medical record does not belong to this patient.");
+        } else if (userContract.isDoctor(msg.sender) == true){
+            require(userContract.isBlacklisted(userContract.getDoctorId(msg.sender)), "Not authorised as doctor is blacklisted.");
         } else {
-            require(userContract.isDoctor(msg.sender) == true || userContract.isAdmin(msg.sender) == true, "Not patient, doctor or admin, not authorised.");
-            // add blacklisted doctor requirement
+            require(userContract.isAdmin(msg.sender) == true, "Not patient, doctor or admin, not authorised.");
         }
 
         return (medicalRecords[medicalRecordId].patient, medicalRecords[medicalRecordId].details,
@@ -84,7 +85,7 @@ contract MedicalRecords{
     // function for doctor to verify that medical record has no problems
     function doctorVerify(uint256 medicalRecordId) public {
         require(userContract.isDoctor(msg.sender) == true, "Not doctor, not authorised to verify.");
-        // add blacklisted doctor requirement
+        require(userContract.isBlacklisted(userContract.getDoctorId(msg.sender)), "Not authorised as doctor is blacklisted.");
         // add requirements that doctor cannot constantly verify the same other doctor's stuff, idk what threshold to set
 
         medicalRecords[medicalRecordId].doctorVerified = true;
@@ -103,7 +104,7 @@ contract MedicalRecords{
     // function for verifying doctor to whistleblow
     function doctorReport(uint256 medicalRecordId) public {
         require(userContract.isDoctor(msg.sender) == true, "Not doctor, not authorised to verify.");
-        // add blacklisted doctor requirement
+        require(userContract.isBlacklisted(userContract.getDoctorId(msg.sender)), "Not authorised as doctor is blacklisted.");
 
         flaggedRecords[medicalRecordId] = medicalRecords[medicalRecordId];
         doctorVerifications[userContract.getDoctorId(msg.sender)][medicalRecords[medicalRecordId].doctorInCharge] += 1;
