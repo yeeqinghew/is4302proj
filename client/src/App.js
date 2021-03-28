@@ -21,6 +21,9 @@ import { clearMessage } from "./actions/message";
 
 import { history } from './helpers/history';
 
+// sol
+import SimpleStorageContract from "./contracts/SimpleStorage.json";
+import getWeb3 from "./getWeb3";
 class App extends Component {
   constructor(props) {
     super(props);
@@ -35,6 +38,7 @@ class App extends Component {
       showNurseBoard: false,
       showHealthcareAnalystBoard: false,
       currentUser: undefined,
+      storageValue: 0, web3: null, accounts: null, contract: null
     };
 
     history.listen((location) => {
@@ -42,7 +46,7 @@ class App extends Component {
     });
   }
 
-  componentDidMount() {
+  componentDidMount = async () => {
     const user = this.props.user;
     console.log("userrrr", user);
 
@@ -58,7 +62,46 @@ class App extends Component {
         showPatientBoard: user.role === "patient"
       });
     }
+
+    try {
+      // Get network provider and web3 instance.
+      const web3 = await getWeb3();
+
+      // Use web3 to get the user's accounts.
+      const accounts = await web3.eth.getAccounts();
+
+      // Get the contract instance.
+      const networkId = await web3.eth.net.getId();
+      const deployedNetwork = SimpleStorageContract.networks[networkId];
+      const instance = new web3.eth.Contract(
+        SimpleStorageContract.abi,
+        deployedNetwork && deployedNetwork.address,
+      );
+
+      // Set web3, accounts, and contract to the state, and then proceed with an
+      // example of interacting with the contract's methods.
+      this.setState({ web3, accounts, contract: instance }, this.runExample);
+    } catch (error) {
+      // Catch any errors for any of the above operations.
+      alert(
+        `Failed to load web3, accounts, or contract. Check console for details.`,
+      );
+      console.error(error);
+    }
   }
+
+  runExample = async () => {
+    const { accounts, contract } = this.state;
+
+    // Stores a given value, 5 by default.
+    await contract.methods.set(1).send({ from: accounts[0] });
+
+    // Get the value from the contract to prove it worked.
+    const response = await contract.methods.get().call();
+
+    // Update state with the result.
+    this.setState({ storageValue: response });
+  };
 
   logOut() {
     this.props.dispatch(logout());
