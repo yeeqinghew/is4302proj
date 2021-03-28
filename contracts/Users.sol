@@ -1,17 +1,17 @@
 //pragma solidity ^0.5.0;
 
 contract Users{
-    address admin;
+    address masterAdminAddress;
 
     constructor() public {
-        admin = msg.sender;
+        masterAdminAddress = msg.sender;
     }
+
     // patient structure
     struct patient {
         uint256 patientId;
         address patientAddress;
         uint256 recordNumber;
-        // TODO: add more structure
     }
 
     // doctor structure
@@ -21,25 +21,39 @@ contract Users{
         uint256 penaltyScore;
         uint256 appraisalScore;
         bool blacklisted;
-        // TODO: add more structure
+    }
+
+    // admin structure
+    struct admin {
+        uint256 adminId;
+        address adminAddress;
     }
 
     // user structure
-    uint256 public numPatients;
-    uint256 public numDoctors;
+    uint256 public numPatients = 0;
+    uint256 public numDoctors = 0;
+    uint256 public numAdmins = 0;
+
+    mapping(uint256 => admin) public admins;
+    mapping(address => bool) public adminExists; 
+
+    uint256 masterAdminId = registerAdmin(masterAdminAddress);
+
     mapping(uint256 => patient) public patients;
     mapping(address => bool) public patientExists;
     mapping(uint256 => doctor) public doctors;
     mapping(address => doctor) public doctorsByAddress;
     mapping(address => bool) public doctorExists;
+    
 
     // user events
     event registeredPatient(address patient);
     event registeredDoctor(address doctor);
+    event registeredAdmin(address admin);
 
     // user modifiers
     modifier adminOnly() { // we might have to add more admins later
-        require(msg.sender == admin, "Only admin can perform this function.");
+        require(adminExists[msg.sender] == true, "Only admin can perform this function.");
         _;
     }
 
@@ -72,8 +86,7 @@ contract Users{
         return newPatientId;
     }
 
-
-    // function for add and register doctor
+    // function to add and register doctor
     function registerDoctor(address doctorAddress) public adminOnly() returns(uint256) {
         uint256 newDoctorId = numDoctors++;
 
@@ -89,6 +102,22 @@ contract Users{
         doctorExists[doctorAddress] = true;
         doctorsByAddress[doctorAddress] = newDoctor;
         emit registeredDoctor(doctorAddress);
+        return newDoctorId;
+    }
+
+    //function to add and register admin
+    function registerAdmin(address adminAddress) public adminOnly() returns(uint256) {
+        uint256 newAdminId = numAdmins++;
+
+        admin memory newAdmin = admin(
+            newAdminId,
+            adminAddress
+        );
+
+        admins[newAdminId] = newAdmin;
+        adminExists[adminAddress] = true;
+        emit registeredAdmin(adminAddress);
+        return newAdminId;
     }
 
     // function to see if address is a patient
