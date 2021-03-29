@@ -36,6 +36,7 @@ contract MedicalRecords{
     event doctorReported(uint256 medicalRecordId);
     event fraudulentReport(uint256 medicalRecordId);
     event wronglyAccusedReport(uint256 medicalRecordId);
+    event randomFlaggedReport(uint256 MedicalRecordId);
 
     // medical record modifiers
     modifier isPatient(uint256 patientId) {
@@ -95,6 +96,15 @@ contract MedicalRecords{
         medicalRecords[newMedicalRecordId] = newMedicalRecord;
         userContract.addRecordCount(patientId);
         emit createdMedicalRecord(newMedicalRecordId);
+
+        // randomly adds medical record to flaggedRecords so random spotchecks can be done
+        uint8 randomFlag = (uint8)((block.timestamp * (newMedicalRecordId + 1)) % 10) + 1;
+        if (randomFlag == 10) {
+            flaggedRecords[newMedicalRecordId] = medicalRecords[newMedicalRecordId];
+            isFlaggedRecords[newMedicalRecordId] = true;
+            emit randomFlaggedReport(newMedicalRecordId);
+        }
+
         return newMedicalRecordId; 
     }
 
