@@ -36,29 +36,10 @@ function initial() {
         id: 2,
         name: "patient"
     });
+
     Role.create({
         id: 3,
-        name: "healthcare_provider"
-    });
-
-    Role.create({
-        id: 4,
-        name: "financial_institution"
-    });
-
-    Role.create({
-        id: 5,
         name: "doctor"
-    });
-
-    Role.create({
-        id: 6,
-        name: "nurse"
-    });
-
-    Role.create({
-        id: 7,
-        name: "healthcare_analyst"
     });
 
     Users.create({

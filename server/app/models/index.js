@@ -25,7 +25,7 @@ db.sequelize = sequelize;
 
 db.user = require("../models/user.model.js")(sequelize, Sequelize);
 db.role = require("../models/role.model.js")(sequelize, Sequelize);
-
+// db.patient = require("../models/patient.model.js")(sequelize, Sequelize);
 // this will be the DATABASE Schema
 
 // role can be owned by multiple user
@@ -38,5 +38,5 @@ db.user.belongsTo(db.role, {
     foreignKey: "roleId"
 });
 
-db.ROLES = ["patient", "admin", "healthcare_provider", "financial_institution", "doctor", "nurse", "healthcare_analyst"];
+db.ROLES = ["patient", "admin", "doctor"];
 module.exports = db;

@@ -148,10 +148,6 @@ class Register extends Component {
                                         <option value="">Select one</option>
                                         <option value="patient">Patient</option>
                                         <option value="doctor">Doctor</option>
-                                        <option value="nurse">Nurse</option>
-                                        <option value="healthcare_analyst">Healthcare Analyst</option>
-                                        <option value="healthcare_provider">Healthcare Provider</option>
-                                        <option value="financial_institution">Financial Institution</option>
                                     </Select>
                                 </div>
                                 <div className="form-group">

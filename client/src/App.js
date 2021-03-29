@@ -10,11 +10,7 @@ import Register from "./components/Register";
 import Dashboard from "./components/Dashboard";
 import BoardAdmin from "./components/BoardAdmin";
 import BoardPatient from "./components/BoardPatient";
-import BoardHealthcareProvider from "./components/BoardHealthcareProvider";
-import BoardFinancialInstitution from "./components/BoardFinancialInstitution";
 import BoardDoctor from "./components/BoardDoctor";
-import BoardNurse from "./components/BoardNurse";
-import BoardHealthcareAnalyst from "./components/BoardHealthcareAnalyst";
 
 import { logout } from "./actions/auth";
 import { clearMessage } from "./actions/message";
@@ -24,6 +20,7 @@ import { history } from './helpers/history';
 // sol
 import SimpleStorageContract from "./contracts/SimpleStorage.json";
 import getWeb3 from "./getWeb3";
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -32,11 +29,7 @@ class App extends Component {
     this.state = {
       showAdminBoard: false,
       showPatientBoard: false,
-      showHealthcareProviderBoard: false,
-      showFinancialInstitutionBoard: false,
       showDoctorBoard: false,
-      showNurseBoard: false,
-      showHealthcareAnalystBoard: false,
       currentUser: undefined,
       storageValue: 0, web3: null, accounts: null, contract: null
     };
@@ -48,17 +41,12 @@ class App extends Component {
 
   componentDidMount = async () => {
     const user = this.props.user;
-    console.log("userrrr", user);
 
     if (user) {
       this.setState({
         currentUser: user,
         showAdminBoard: user.role === "admin",
-        showHealthcareProviderBoard: user.role === "healthcare_provider",
-        showFinancialInstitutionBoard: user.role === "financial_institution",
         showDoctorBoard: user.role === "doctor",
-        showNurseBoard: user.role === "nurse",
-        showHealthcareAnalystBoard: user.role === "healthcare_analyst",
         showPatientBoard: user.role === "patient"
       });
     }
@@ -66,13 +54,17 @@ class App extends Component {
     try {
       // Get network provider and web3 instance.
       const web3 = await getWeb3();
+      console.log("web3: ", web3);
 
       // Use web3 to get the user's accounts.
       const accounts = await web3.eth.getAccounts();
+      console.log("Accounts: ", accounts);
 
       // Get the contract instance.
       const networkId = await web3.eth.net.getId();
+      console.log("Network ID: ", networkId);
       const deployedNetwork = SimpleStorageContract.networks[networkId];
+      console.log("DeployedNetwork: ", deployedNetwork);
       const instance = new web3.eth.Contract(
         SimpleStorageContract.abi,
         deployedNetwork && deployedNetwork.address,
@@ -94,11 +86,11 @@ class App extends Component {
     const { accounts, contract } = this.state;
 
     // Stores a given value, 5 by default.
-    await contract.methods.set(1).send({ from: accounts[0] });
+    await contract.methods.set(2).send({ from: accounts[0] });
 
     // Get the value from the contract to prove it worked.
     const response = await contract.methods.get().call();
-
+    console.log("response: ", response);
     // Update state with the result.
     this.setState({ storageValue: response });
   };
@@ -108,7 +100,7 @@ class App extends Component {
   }
 
   render() {
-    const { currentUser, showPatientBoard, showAdminBoard, showHealthcareProviderBoard, showDoctorBoard, showNurseBoard, showFinancialInstitutionBoard, showHealthcareAnalystBoard } = this.state;
+    const { currentUser, showPatientBoard, showAdminBoard, showDoctorBoard } = this.state;
 
     return (
       <Router history={history}>
@@ -116,7 +108,7 @@ class App extends Component {
           rel="stylesheet"
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
-          crossorigin="anonymous"
+          crossOrigin="anonymous"
         />
         <div>
           <nav className="navbar navbar-expand navbar-dark bg-dark">
@@ -141,42 +133,10 @@ class App extends Component {
                 </li>
               )}
 
-              {showHealthcareProviderBoard && (
-                <li className="nav-item">
-                  <Link to={"/healthcareProvider"} className="nav-link">
-                    Healthcare Provider Board
-                </Link>
-                </li>
-              )}
-
-              {showFinancialInstitutionBoard && (
-                <li className="nav-item">
-                  <Link to={"/financialInstitution"} className="nav-link">
-                    Financial Institution Board
-                </Link>
-                </li>
-              )}
-
               {showDoctorBoard && (
                 <li className="nav-item">
                   <Link to={"/doctor"} className="nav-link">
                     Doctor Board
-                </Link>
-                </li>
-              )}
-
-              {showNurseBoard && (
-                <li className="nav-item">
-                  <Link to={"/nurse"} className="nav-link">
-                    Nurse Board
-                </Link>
-                </li>
-              )}
-
-              {showHealthcareAnalystBoard && (
-                <li className="nav-item">
-                  <Link to={"/healthcareAnalyst"} className="nav-link">
-                    healthcare Analyst Board
                 </Link>
                 </li>
               )}
@@ -222,11 +182,7 @@ class App extends Component {
               <Route exact path="/dashboard" component={Dashboard} />
               <Route path="/patient" component={BoardPatient} />
               <Route path="/admin" component={BoardAdmin} />
-              <Route path="/healthcareProvider" component={BoardHealthcareProvider} />
-              <Route path="/financialInstitution" component={BoardFinancialInstitution} />
               <Route path="/doctor" component={BoardDoctor} />
-              <Route path="/nurse" component={BoardNurse} />
-              <Route path="/healthcareAnalyst" component={BoardHealthcareAnalyst} />
             </Switch>
           </div>
         </div>

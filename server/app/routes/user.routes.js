@@ -24,33 +24,10 @@ module.exports = function (app) {
         controller.adminBoard
     );
 
-    app.get(
-        "/api/test/healthcareProvider",
-        [authjwt.verifyToken, authjwt.isHealthcareProvider],
-        controller.healthcareProviderBoard
-    );
 
     app.get(
         "/api/test/doctor",
         [authjwt.verifyToken, authjwt.isDoctor],
         controller.doctorBoard
-    );
-
-    app.get(
-        "/api/test/nurse",
-        [authjwt.verifyToken, authjwt.isNurse],
-        controller.nurseBoard
-    );
-
-    app.get(
-        "/api/test/financialInstitution",
-        [authjwt.verifyToken, authjwt.isFinancialInstitution],
-        controller.financialInstitutionBoard
-    );
-
-    app.get(
-        "/api/test/healthcareAnalyst",
-        [authjwt.verifyToken, authjwt.isHealthcareAnalyst],
-        controller.healthcareAnalystBoard
     );
 };
