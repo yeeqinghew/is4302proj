@@ -1,6 +1,7 @@
 //pragma solidity ^0.5.0;
+pragma solidity >=0.4.21 <0.7.0; // version 6 is required for truffle build
 
-contract Users{
+contract Users {
     address masterAdminAddress;
 
     constructor() public {
@@ -35,7 +36,7 @@ contract Users{
     uint256 public numAdmins = 0;
 
     mapping(uint256 => admin) public admins;
-    mapping(address => bool) public adminExists; 
+    mapping(address => bool) public adminExists;
 
     uint256 masterAdminId = registerAdmin(masterAdminAddress);
 
@@ -44,7 +45,6 @@ contract Users{
     mapping(uint256 => doctor) public doctors;
     mapping(address => doctor) public doctorsByAddress;
     mapping(address => bool) public doctorExists;
-    
 
     // user events
     event registeredPatient(address patient);
@@ -52,8 +52,12 @@ contract Users{
     event registeredAdmin(address admin);
 
     // user modifiers
-    modifier adminOnly() { // we might have to add more admins later
-        require(adminExists[msg.sender] == true, "Only admin can perform this function.");
+    modifier adminOnly() {
+        // we might have to add more admins later
+        require(
+            adminExists[msg.sender] == true,
+            "Only admin can perform this function."
+        );
         _;
     }
 
@@ -70,16 +74,15 @@ contract Users{
     // user functions
 
     // function to add and register patient
-    function registerPatient() public returns(uint256) {
-        require(patientExists[msg.sender] != true, "Address is already a patient.");
+    function registerPatient() public returns (uint256) {
+        require(
+            patientExists[msg.sender] != true,
+            "Address is already a patient."
+        );
         uint256 newPatientId = numPatients++;
 
-        patient memory newPatient = patient(
-            newPatientId,
-            msg.sender,
-            0
-        );
-        
+        patient memory newPatient = patient(newPatientId, msg.sender, 0);
+
         patients[newPatientId] = newPatient;
         patientExists[msg.sender] = true;
         emit registeredPatient(msg.sender);
@@ -87,16 +90,15 @@ contract Users{
     }
 
     // function to add and register doctor
-    function registerDoctor(address doctorAddress) public adminOnly() returns(uint256) {
+    function registerDoctor(address doctorAddress)
+        public
+        adminOnly()
+        returns (uint256)
+    {
         uint256 newDoctorId = numDoctors++;
 
-        doctor memory newDoctor = doctor(
-            newDoctorId,
-            doctorAddress,
-            0,
-            0,
-            false
-        );
+        doctor memory newDoctor =
+            doctor(newDoctorId, doctorAddress, 0, 0, false);
 
         doctors[newDoctorId] = newDoctor;
         doctorExists[doctorAddress] = true;
@@ -106,13 +108,14 @@ contract Users{
     }
 
     //function to add and register admin
-    function registerAdmin(address adminAddress) public adminOnly() returns(uint256) {
+    function registerAdmin(address adminAddress)
+        public
+        adminOnly()
+        returns (uint256)
+    {
         uint256 newAdminId = numAdmins++;
 
-        admin memory newAdmin = admin(
-            newAdminId,
-            adminAddress
-        );
+        admin memory newAdmin = admin(newAdminId, adminAddress);
 
         admins[newAdminId] = newAdmin;
         adminExists[adminAddress] = true;
@@ -121,61 +124,99 @@ contract Users{
     }
 
     // function to see if address is a patient
-    function isPatient(address user) public view returns(bool) {
+    function isPatient(address user) public view returns (bool) {
         return patientExists[user];
     }
 
     // function to see if address is a doctor
-    function isDoctor(address user) public view returns(bool) {
+    function isDoctor(address user) public view returns (bool) {
         return doctorExists[user];
     }
 
     // function to see if address is an admin
-    function isAdmin(address user) public view returns(bool) {
+    function isAdmin(address user) public view returns (bool) {
         return adminExists[user];
     }
 
     // function to see if patient exists
-    function isExistingPatient(uint256 patientId) public view patientExist(patientId) returns(bool) {
+    function isExistingPatient(uint256 patientId)
+        public
+        view
+        patientExist(patientId)
+        returns (bool)
+    {
         return patientId <= numPatients;
     }
 
     // function to see if doctor exists
-    function isExistingDoctor(uint256 doctorId) public view doctorExist(doctorId) returns(bool) {
+    function isExistingDoctor(uint256 doctorId)
+        public
+        view
+        doctorExist(doctorId)
+        returns (bool)
+    {
         return doctorId <= numDoctors;
     }
 
     // function to get patient
-    function getPatientAddress(uint256 patientId) public view patientExist(patientId) returns(address) {
+    function getPatientAddress(uint256 patientId)
+        public
+        view
+        patientExist(patientId)
+        returns (address)
+    {
         return patients[patientId].patientAddress;
     }
 
     // function to get doctor
-    function getDoctorAddress(uint256 doctorId) public view doctorExist(doctorId) returns(address) {
+    function getDoctorAddress(uint256 doctorId)
+        public
+        view
+        doctorExist(doctorId)
+        returns (address)
+    {
         return doctors[doctorId].doctorAddress;
     }
 
     // function to get doctor id by address
-    function getDoctorId(address user) public view returns(uint256) {
+    function getDoctorId(address user) public view returns (uint256) {
         require(doctorExists[user] == true, "User is not a doctor.");
         return doctorsByAddress[user].doctorId;
     }
 
     // function to check patient's number of records
-    function getRecordNumber(uint256 patientId) public view patientExist(patientId) returns(uint256) {
+    function getRecordNumber(uint256 patientId)
+        public
+        view
+        patientExist(patientId)
+        returns (uint256)
+    {
         // not sure if this requirement is too strict
-        require(patients[patientId].patientAddress == msg.sender, "Not authorised to view.");
+        require(
+            patients[patientId].patientAddress == msg.sender,
+            "Not authorised to view."
+        );
 
         return patients[patientId].recordNumber;
     }
 
     // function to check doctor's penalty score
-    function getPenaltyScore(uint256 doctorId) public view doctorExist(doctorId) returns(uint256) {
+    function getPenaltyScore(uint256 doctorId)
+        public
+        view
+        doctorExist(doctorId)
+        returns (uint256)
+    {
         return doctors[doctorId].penaltyScore;
     }
 
     // function to check doctor's appraisal score
-    function getAppraisalScore(uint256 doctorId) public view doctorExist(doctorId) returns(uint256) {
+    function getAppraisalScore(uint256 doctorId)
+        public
+        view
+        doctorExist(doctorId)
+        returns (uint256)
+    {
         return doctors[doctorId].appraisalScore;
     }
 
@@ -185,23 +226,39 @@ contract Users{
     }
 
     // function to add penalty score
-    function addPenaltyScore(uint256 doctorId, uint256 score) public adminOnly() doctorExist(doctorId) {
+    function addPenaltyScore(uint256 doctorId, uint256 score)
+        public
+        adminOnly()
+        doctorExist(doctorId)
+    {
         doctors[doctorId].penaltyScore += score;
     }
 
     // function to add appraisal score
-    function addAppraisalScore(uint256 doctorId) public adminOnly() doctorExist(doctorId) {
+    function addAppraisalScore(uint256 doctorId)
+        public
+        adminOnly()
+        doctorExist(doctorId)
+    {
         doctors[doctorId].appraisalScore += 1;
     }
 
     // function to blacklist doctor
-    function blacklistDoctor(uint256 doctorId) public adminOnly() doctorExist(doctorId) {
+    function blacklistDoctor(uint256 doctorId)
+        public
+        adminOnly()
+        doctorExist(doctorId)
+    {
         doctors[doctorId].blacklisted = true;
     }
 
     // function to check if doctor is blacklisted
-    function isBlacklisted(uint256 doctorId) public view doctorExist(doctorId) returns(bool) {
+    function isBlacklisted(uint256 doctorId)
+        public
+        view
+        doctorExist(doctorId)
+        returns (bool)
+    {
         return doctors[doctorId].blacklisted;
     }
-
 }

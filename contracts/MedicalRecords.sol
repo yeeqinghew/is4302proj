@@ -1,13 +1,13 @@
-//pragma solidity ^0.5.0;
+// pragma solidity ^0.5.0;
+pragma solidity >=0.4.21 <0.7.0; // version 6 is required for truffle build
 import "./Users.sol";
 
-contract MedicalRecords{
-
+contract MedicalRecords {
     Users userContract;
 
     //constructor for usercontract
     constructor(Users usersAddress) public {
-      userContract = usersAddress;
+        userContract = usersAddress;
     }
 
     // medical record structure
@@ -26,7 +26,6 @@ contract MedicalRecords{
     mapping(uint256 => bool) public isFlaggedRecords;
     mapping(uint256 => medicalRecord) public badRecords;
     mapping(uint256 => mapping(uint256 => uint256)) public doctorVerifications;
-    
 
     // medical record events
     event createdMedicalRecord(uint256 medicalRecordId);
@@ -40,57 +39,86 @@ contract MedicalRecords{
 
     // medical record modifiers
     modifier isPatient(uint256 patientId) {
-        require(userContract.isExistingPatient(patientId) == true, "No such patient exists.");
+        require(
+            userContract.isExistingPatient(patientId) == true,
+            "No such patient exists."
+        );
         _;
     }
 
     modifier isPatientFromRecord(uint256 medicalRecordId) {
-        require(userContract.getPatientAddress(medicalRecords[medicalRecordId].patient) == msg.sender,
-        "Medical record does not belong to this address.");
+        require(
+            userContract.getPatientAddress(
+                medicalRecords[medicalRecordId].patient
+            ) == msg.sender,
+            "Medical record does not belong to this address."
+        );
         _;
     }
 
     modifier isDoctor(uint256 doctorId) {
-        require(userContract.isExistingDoctor(doctorId) == true, "No such doctor exists.");
+        require(
+            userContract.isExistingDoctor(doctorId) == true,
+            "No such doctor exists."
+        );
         _;
     }
 
     modifier isDoctorAddress() {
-        require(userContract.isDoctor(msg.sender) == true, "Not doctor, not authorised to verify.");
+        require(
+            userContract.isDoctor(msg.sender) == true,
+            "Not doctor, not authorised to verify."
+        );
         _;
     }
 
     modifier isAdmin() {
-        require(userContract.isAdmin(msg.sender) == true, "Only admins can execute this function.");
+        require(
+            userContract.isAdmin(msg.sender) == true,
+            "Only admins can execute this function."
+        );
         _;
     }
 
     modifier blacklistedId(uint256 doctorId) {
-        require(userContract.isBlacklisted(doctorId), "Not authorised as doctor is blacklisted.");
+        require(
+            userContract.isBlacklisted(doctorId),
+            "Not authorised as doctor is blacklisted."
+        );
         _;
     }
 
     modifier blacklistedAddress() {
-        require(userContract.isBlacklisted(userContract.getDoctorId(msg.sender)), "Not authorised as doctor is blacklisted.");
+        require(
+            userContract.isBlacklisted(userContract.getDoctorId(msg.sender)),
+            "Not authorised as doctor is blacklisted."
+        );
         _;
     }
 
     modifier flaggedRecord(uint256 medicalRecordId) {
-        require(isFlaggedRecords[medicalRecordId] = true, "Record is not a flagged one.");
+        require(
+            isFlaggedRecords[medicalRecordId] = true,
+            "Record is not a flagged one."
+        );
         _;
     }
 
     // medical record functions
     // function to create medical record
-    function createRecord(uint256 patientId, uint256 doctorId, bytes32 details) public isPatient(patientId) isDoctor(doctorId) blacklistedId(doctorId) returns(uint256) {
-
-        medicalRecord memory newMedicalRecord = medicalRecord(
-            patientId,
-            details, 
-            doctorId,
-            false,
-            false
-        );
+    function createRecord(
+        uint256 patientId,
+        uint256 doctorId,
+        bytes32 details
+    )
+        public
+        isPatient(patientId)
+        isDoctor(doctorId)
+        blacklistedId(doctorId)
+        returns (uint256)
+    {
+        medicalRecord memory newMedicalRecord =
+            medicalRecord(patientId, details, doctorId, false, false);
 
         uint256 newMedicalRecordId = numMedicalRecords++;
         medicalRecords[newMedicalRecordId] = newMedicalRecord;
@@ -98,78 +126,142 @@ contract MedicalRecords{
         emit createdMedicalRecord(newMedicalRecordId);
 
         // randomly adds medical record to flaggedRecords so random spotchecks can be done
-        uint8 randomFlag = (uint8)((block.timestamp * (newMedicalRecordId + 1)) % 10) + 1;
+        uint8 randomFlag =
+            (uint8)((block.timestamp * (newMedicalRecordId + 1)) % 10) + 1;
         if (randomFlag == 10) {
-            flaggedRecords[newMedicalRecordId] = medicalRecords[newMedicalRecordId];
+            flaggedRecords[newMedicalRecordId] = medicalRecords[
+                newMedicalRecordId
+            ];
             isFlaggedRecords[newMedicalRecordId] = true;
             emit randomFlaggedReport(newMedicalRecordId);
         }
 
-        return newMedicalRecordId; 
+        return newMedicalRecordId;
     }
 
-    // function to view medical record 
-    function viewRecord(uint256 medicalRecordId) public view returns(uint256, bytes32, uint256, bool, bool) {
-        require(medicalRecordId <= numMedicalRecords, "Medical record does not exist.");
-        
+    // function to view medical record
+    function viewRecord(uint256 medicalRecordId)
+        public
+        view
+        returns (
+            uint256,
+            bytes32,
+            uint256,
+            bool,
+            bool
+        )
+    {
+        require(
+            medicalRecordId <= numMedicalRecords,
+            "Medical record does not exist."
+        );
+
         // requirement that only patient can view this record if the msg.sender is a patient
         if (userContract.isPatient(msg.sender) == true) {
-            require(userContract.getPatientAddress(medicalRecords[medicalRecordId].patient) == msg.sender,
-            "Medical record does not belong to this patient.");
-        } else if (userContract.isDoctor(msg.sender) == true){
-            require(userContract.isBlacklisted(userContract.getDoctorId(msg.sender)), "Not authorised as doctor is blacklisted.");
+            require(
+                userContract.getPatientAddress(
+                    medicalRecords[medicalRecordId].patient
+                ) == msg.sender,
+                "Medical record does not belong to this patient."
+            );
+        } else if (userContract.isDoctor(msg.sender) == true) {
+            require(
+                userContract.isBlacklisted(
+                    userContract.getDoctorId(msg.sender)
+                ),
+                "Not authorised as doctor is blacklisted."
+            );
         } else {
-            require(userContract.isAdmin(msg.sender) == true, "Not patient, doctor or admin, not authorised.");
+            require(
+                userContract.isAdmin(msg.sender) == true,
+                "Not patient, doctor or admin, not authorised."
+            );
         }
 
-        return (medicalRecords[medicalRecordId].patient, medicalRecords[medicalRecordId].details,
-        medicalRecords[medicalRecordId].doctorInCharge, medicalRecords[medicalRecordId].patientVerified,
-        medicalRecords[medicalRecordId].doctorVerified);
+        return (
+            medicalRecords[medicalRecordId].patient,
+            medicalRecords[medicalRecordId].details,
+            medicalRecords[medicalRecordId].doctorInCharge,
+            medicalRecords[medicalRecordId].patientVerified,
+            medicalRecords[medicalRecordId].doctorVerified
+        );
     }
 
     // function for patient to verify that medical record has no problems
-    function patientVerify(uint256 medicalRecordId) public isPatientFromRecord(medicalRecordId) {
-
+    function patientVerify(uint256 medicalRecordId)
+        public
+        isPatientFromRecord(medicalRecordId)
+    {
         medicalRecords[medicalRecordId].patientVerified = true;
         emit patientVerified(medicalRecordId);
     }
 
     // function for doctor to verify that medical record has no problems
-    function doctorVerify(uint256 medicalRecordId) public isDoctorAddress() blacklistedAddress() {
-        require(doctorVerifications[userContract.getDoctorId(msg.sender)][medicalRecords[medicalRecordId].doctorInCharge] <= 5, "This doctor has been verifying doctor in charge too many times.");
+    function doctorVerify(uint256 medicalRecordId)
+        public
+        isDoctorAddress()
+        blacklistedAddress()
+    {
+        require(
+            doctorVerifications[userContract.getDoctorId(msg.sender)][
+                medicalRecords[medicalRecordId].doctorInCharge
+            ] <= 5,
+            "This doctor has been verifying doctor in charge too many times."
+        );
         // TODO: change threshold
 
         medicalRecords[medicalRecordId].doctorVerified = true;
-        doctorVerifications[userContract.getDoctorId(msg.sender)][medicalRecords[medicalRecordId].doctorInCharge] += 1;
+        doctorVerifications[userContract.getDoctorId(msg.sender)][
+            medicalRecords[medicalRecordId].doctorInCharge
+        ] += 1;
         userContract.addAppraisalScore(userContract.getDoctorId(msg.sender));
         emit doctorVerified(medicalRecordId);
     }
 
     // function for patient to whistleblow
-    function patientReport(uint256 medicalRecordId) public isPatientFromRecord(medicalRecordId) {
-
+    function patientReport(uint256 medicalRecordId)
+        public
+        isPatientFromRecord(medicalRecordId)
+    {
         flaggedRecords[medicalRecordId] = medicalRecords[medicalRecordId];
         isFlaggedRecords[medicalRecordId] = true;
         emit patientReported(medicalRecordId);
     }
 
     // function for verifying doctor to whistleblow
-    function doctorReport(uint256 medicalRecordId) public isDoctorAddress() blacklistedAddress() {
-
+    function doctorReport(uint256 medicalRecordId)
+        public
+        isDoctorAddress()
+        blacklistedAddress()
+    {
         flaggedRecords[medicalRecordId] = medicalRecords[medicalRecordId];
         isFlaggedRecords[medicalRecordId] = true;
-        doctorVerifications[userContract.getDoctorId(msg.sender)][medicalRecords[medicalRecordId].doctorInCharge] += 1;
+        doctorVerifications[userContract.getDoctorId(msg.sender)][
+            medicalRecords[medicalRecordId].doctorInCharge
+        ] += 1;
         emit doctorReported(medicalRecordId);
     }
 
     // function for admin to classify flagged record as bad record
-    function punish(uint256 medicalRecordId, uint256 score) public isAdmin() flaggedRecord(medicalRecordId) {
-
+    function punish(uint256 medicalRecordId, uint256 score)
+        public
+        isAdmin()
+        flaggedRecord(medicalRecordId)
+    {
         badRecords[medicalRecordId] = flaggedRecords[medicalRecordId];
-        userContract.addPenaltyScore(medicalRecords[medicalRecordId].doctorInCharge, score);
+        userContract.addPenaltyScore(
+            medicalRecords[medicalRecordId].doctorInCharge,
+            score
+        );
         // TODO: might have to change threshold
-        if (userContract.getPenaltyScore(medicalRecords[medicalRecordId].doctorInCharge) > 10) {
-            userContract.blacklistDoctor(medicalRecords[medicalRecordId].doctorInCharge);
+        if (
+            userContract.getPenaltyScore(
+                medicalRecords[medicalRecordId].doctorInCharge
+            ) > 10
+        ) {
+            userContract.blacklistDoctor(
+                medicalRecords[medicalRecordId].doctorInCharge
+            );
         }
         delete flaggedRecords[medicalRecordId];
         delete isFlaggedRecords[medicalRecordId];
@@ -177,8 +269,11 @@ contract MedicalRecords{
     }
 
     // function for admin to waive wrongly accused flagged record
-    function waive(uint256 medicalRecordId) public isAdmin() flaggedRecord(medicalRecordId) {
-
+    function waive(uint256 medicalRecordId)
+        public
+        isAdmin()
+        flaggedRecord(medicalRecordId)
+    {
         delete flaggedRecords[medicalRecordId];
         delete isFlaggedRecords[medicalRecordId];
         medicalRecords[medicalRecordId].patientVerified = true;
