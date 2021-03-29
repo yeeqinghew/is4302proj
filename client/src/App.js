@@ -20,6 +20,7 @@ import { history } from './helpers/history';
 // sol
 import SimpleStorageContract from "./contracts/SimpleStorage.json";
 import getWeb3 from "./getWeb3";
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -53,13 +54,17 @@ class App extends Component {
     try {
       // Get network provider and web3 instance.
       const web3 = await getWeb3();
+      console.log("web3: ", web3);
 
       // Use web3 to get the user's accounts.
       const accounts = await web3.eth.getAccounts();
+      console.log("Accounts: ", accounts);
 
       // Get the contract instance.
       const networkId = await web3.eth.net.getId();
+      console.log("Network ID: ", networkId);
       const deployedNetwork = SimpleStorageContract.networks[networkId];
+      console.log("DeployedNetwork: ", deployedNetwork);
       const instance = new web3.eth.Contract(
         SimpleStorageContract.abi,
         deployedNetwork && deployedNetwork.address,
@@ -81,11 +86,11 @@ class App extends Component {
     const { accounts, contract } = this.state;
 
     // Stores a given value, 5 by default.
-    await contract.methods.set(1).send({ from: accounts[0] });
+    await contract.methods.set(2).send({ from: accounts[0] });
 
     // Get the value from the contract to prove it worked.
     const response = await contract.methods.get().call();
-
+    console.log("response: ", response);
     // Update state with the result.
     this.setState({ storageValue: response });
   };
@@ -103,7 +108,7 @@ class App extends Component {
           rel="stylesheet"
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
-          crossorigin="anonymous"
+          crossOrigin="anonymous"
         />
         <div>
           <nav className="navbar navbar-expand navbar-dark bg-dark">
