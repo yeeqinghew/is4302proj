@@ -136,6 +136,7 @@ contract MedicalRecords{
 
     // function for doctor to verify that medical record has no problems
     function doctorVerify(uint256 medicalRecordId) public isDoctorAddress() blacklistedAddress() {
+        require(doctorVerifications[userContract.getDoctorId(msg.sender)][medicalRecords[medicalRecordId].doctorInCharge] <= 5, "This doctor has been verifying doctor in charge too many times.");
         // TODO: change threshold
 
         medicalRecords[medicalRecordId].doctorVerified = true;
