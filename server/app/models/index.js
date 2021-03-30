@@ -42,30 +42,33 @@ db.user.belongsTo(db.role, {
 
 // user can only be owned by ONE patient
 db.user.hasOne(db.patient, {
-    as: "patient"
+    as: "patient",
+    foreignKey: "userId" 
 });
 // patient belongs to ONE user
-db.patient.belongsTo(db.user, {
+db.patient.user = db.patient.belongsTo(db.user, {
     as: "user",
     foreignKey: "userId" //add "userId" attribute to Patient
 });
 
 // user can only be owned by ONE doctor
 db.user.hasOne(db.doctor, {
-    as: "doctor"
+    as: "doctor",
+    foreignKey: "userId" 
 });
 // doctor belongs to ONE user
-db.doctor.belongsTo(db.user, {
+db.doctor.user = db.doctor.belongsTo(db.user, {
     as: "user",
     foreignKey: "userId" //add "userId" attribute to Doctor
 });
 
 // user can only be owned by ONE admin
 db.user.hasOne(db.admin, {
-    as: "admin"
+    as: "admin",
+    foreignKey: "userId" 
 });
 // admin belongs to ONE user
-db.admin.belongsTo(db.user, {
+db.admin.user = db.admin.belongsTo(db.user, {
     as: "user",
     foreignKey: "userId" //add "userId" attribute to Admin
 });
