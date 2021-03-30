@@ -3,17 +3,16 @@ module.exports = (sequelize, Sequelize) => {
         specialty: {
             type: Sequelize.STRING
         },
-        hospital: {
+        healthcare_institution: {
             type: Sequelize.STRING
         },
-        numOfServedPatients: {
-            type: Sequelize.INTEGER
-        },
+        // numOfServedPatients: {
+        //     type: Sequelize.INTEGER,
+        //     defaultValue: 0
+        // },
         reputation_score: {
-            type: Sequelize.INTEGER
-        },
-        date_joined: {
-            type: Sequelize.DATE
+            type: Sequelize.INTEGER,
+            defaultValue: 0
         }
     });
 
