@@ -37,8 +37,6 @@ contract Users{
     mapping(uint256 => admin) public admins;
     mapping(address => bool) public adminExists; 
 
-    //uint256 masterAdminId = registerAdmin(masterAdmin);
-
     mapping(uint256 => patient) public patients;
     mapping(address => bool) public patientExists;
     mapping(uint256 => doctor) public doctors;
