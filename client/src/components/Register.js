@@ -56,12 +56,16 @@ class Register extends Component {
         this.onChangeUsername = this.onChangeUsername.bind(this);
         this.onChangeEmail = this.onChangeEmail.bind(this);
         this.onChangePassword = this.onChangePassword.bind(this);
+        this.onChangeNric = this.onChangeNric.bind(this);
+        this.onChangeSpecialty = this.onChangeSpecialty.bind(this);
 
         this.state = {
             role: "",
             username: "",
             email: "",
             password: "",
+            nric: "",
+            specialty: "",
             successful: false,
         };
     }
@@ -87,6 +91,18 @@ class Register extends Component {
     onChangePassword(e) {
         this.setState({
             password: e.target.value,
+        });
+    }
+
+    onChangeNric(e) {
+        this.setState({
+            nric: e.target.value,
+        });
+    }
+
+    onChangeSpecialty(e) {
+        this.setState({
+            specialty: e.target.value,
         });
     }
 
@@ -185,7 +201,32 @@ class Register extends Component {
                                         validations={[required, vpassword]}
                                     />
                                 </div>
-
+                                {this.state.role === "patient"} : (
+                                <div className="form-group">
+                                    <label htmlFor="nric">NRIC</label>
+                                    <Input
+                                        type="text"
+                                        className="form-control"
+                                        name="nric"
+                                        value={this.state.nric}
+                                        onChange={this.onChangeNric}
+                                        validations={[required]}
+                                    />
+                                </div>
+                                ) ? (
+                                <div className="form-group">
+                                    <label htmlFor="specialty">Specialty</label>
+                                    <Input
+                                        type="text"
+                                        className="form-control"
+                                        name="specialty"
+                                        value={this.state.specialty}
+                                        onChange={this.onChangeSpecialty}
+                                        validations={[required]}
+                                    />
+                                </div>
+                                    )
+                                )
                                 <div className="form-group">
                                     <button className="btn btn-primary btn-block">Sign Up</button>
                                 </div>
