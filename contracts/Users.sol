@@ -1,10 +1,10 @@
 //pragma solidity ^0.5.0;
 
 contract Users{
-    address masterAdminAddress;
+    address masterAdmin;
 
     constructor() public {
-        masterAdminAddress = msg.sender;
+        masterAdmin = msg.sender;
     }
 
     // patient structure
@@ -37,7 +37,7 @@ contract Users{
     mapping(uint256 => admin) public admins;
     mapping(address => bool) public adminExists; 
 
-    uint256 masterAdminId = registerAdmin(masterAdminAddress);
+    //uint256 masterAdminId = registerAdmin(masterAdmin);
 
     mapping(uint256 => patient) public patients;
     mapping(address => bool) public patientExists;
@@ -53,7 +53,7 @@ contract Users{
 
     // user modifiers
     modifier adminOnly() { // we might have to add more admins later
-        require(adminExists[msg.sender] == true, "Only admin can perform this function.");
+        require(adminExists[msg.sender] == true || msg.sender == masterAdmin, "Only admin can perform this function.");
         _;
     }
 
@@ -107,6 +107,7 @@ contract Users{
 
     //function to add and register admin
     function registerAdmin(address adminAddress) public adminOnly() returns(uint256) {
+        
         uint256 newAdminId = numAdmins++;
 
         admin memory newAdmin = admin(
