@@ -70,7 +70,7 @@ function initial() {
         emergency_contact: "98765432",
         user: {
             username: "patient",
-            password: "$2a$08$c83jezBZVCgjEwqpg54dVuPiwxZdGjWgztybLxDh8.sj2PeYSpGnG",
+            password: "$2a$08$0taGxICOS60pcMcQBtYlte5vpmwC8UGx.YSzhB8OTJjBmc3xgw8lq",
             first_name: "Sally",
             last_name: "Lee",
             email: "patient@gmail.com",
@@ -90,7 +90,7 @@ function initial() {
         healthcare_institution: "Tan Tock Seng Hospital",
         user: {
             username: "doctor",
-            password: "$2a$08$c83jezBZVCgjEwqpg54dVuPiwxZdGjWgztybLxDh8.sj2PeYSpGnG",
+            password: "$2a$08$vd.7gkxv88xezScG9IbHI.Xvxil.uMSAhaBnI6eImzoYKsGtdItRG",
             first_name: "Patricia",
             last_name: "Ong",
             email: "doctor@gmail.com",
