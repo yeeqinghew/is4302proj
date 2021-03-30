@@ -201,32 +201,32 @@ class Register extends Component {
                                         validations={[required, vpassword]}
                                     />
                                 </div>
-                                {this.state.role === "patient"} : (
-                                <div className="form-group">
-                                    <label htmlFor="nric">NRIC</label>
-                                    <Input
-                                        type="text"
-                                        className="form-control"
-                                        name="nric"
-                                        value={this.state.nric}
-                                        onChange={this.onChangeNric}
-                                        validations={[required]}
-                                    />
-                                </div>
-                                ) ? (
-                                <div className="form-group">
-                                    <label htmlFor="specialty">Specialty</label>
-                                    <Input
-                                        type="text"
-                                        className="form-control"
-                                        name="specialty"
-                                        value={this.state.specialty}
-                                        onChange={this.onChangeSpecialty}
-                                        validations={[required]}
-                                    />
-                                </div>
-                                    )
-                                )
+                                {this.state.role === "patient" && (
+                                    <div className="form-group">
+                                        <label htmlFor="nric">NRIC</label>
+                                        <Input
+                                            type="text"
+                                            className="form-control"
+                                            name="nric"
+                                            value={this.state.nric}
+                                            onChange={this.onChangeNric}
+                                            validations={[required]}
+                                        />
+                                    </div>
+                                )}
+                                {this.state.role === "doctor" && (
+                                    <div className="form-group">
+                                        <label htmlFor="specialty">Specialty</label>
+                                        <Input
+                                            type="text"
+                                            className="form-control"
+                                            name="specialty"
+                                            value={this.state.specialty}
+                                            onChange={this.onChangeSpecialty}
+                                            validations={[required]}
+                                        />
+                                    </div>
+                                )}
                                 <div className="form-group">
                                     <button className="btn btn-primary btn-block">Sign Up</button>
                                 </div>
