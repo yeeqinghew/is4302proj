@@ -1,7 +1,6 @@
 var Users = artifacts.require("Users.sol");
 var MedicalRecords = artifacts.require("MedicalRecords.sol");
 const truffleAssertions = require("truffle-assertions");
-const web3 = require("web3");
 
 contract("MedicalRecords", accounts => {
     let usersInstance;
@@ -26,11 +25,11 @@ contract("MedicalRecords", accounts => {
     });
 
     it('Test 1: Creating Records', async() => {
-        let details = web3.utils.asciiToHex("Patient has fever of 38.9 degrees");
+        let details = medicalRecordsInstance.stringToBytes32("Patient has fever of 38.9 degrees");
 
         // Test 1A: Creating Records for invalid patient 
         try {
-            result = await medicalRecordsInstance.createRecord(0, 0, details);
+            result = await medicalRecordsInstance.createRecord(10, 0, details);
         } catch(error) {
             assert.include(error.message, "No such patient exists.");
         }
