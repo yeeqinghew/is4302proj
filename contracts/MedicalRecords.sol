@@ -196,6 +196,7 @@ contract MedicalRecords{
     assembly {
         result := mload(add(source, 32))
         }
+        return bytes32(result);
     }
 
     // function to convert bytes32 to string (to read details)
