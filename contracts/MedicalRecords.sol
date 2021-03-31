@@ -16,8 +16,8 @@ contract MedicalRecords{
         uint256 patient;
         bytes32 details;
         uint256 doctorInCharge;
-        bool patientVerified;
-        bool doctorVerified;
+        uint256 patientVerified;
+        uint256 doctorVerified;
     }
 
     uint256 public numMedicalRecords = 0;
@@ -88,8 +88,8 @@ contract MedicalRecords{
             patientId,
             details, 
             doctorId,
-            false,
-            false
+            0,
+            0
         );
 
         uint256 newMedicalRecordId = numMedicalRecords++;
@@ -109,7 +109,7 @@ contract MedicalRecords{
     }
 
     // function to view medical record 
-    function viewRecord(uint256 medicalRecordId) public view returns(uint256, bytes32, uint256, bool, bool) {
+    function viewRecord(uint256 medicalRecordId) public view returns(uint256, bytes32, uint256, uint256, uint256) {
         require(medicalRecordId <= numMedicalRecords, "Medical record does not exist.");
         
         // requirement that only patient can view this record if the msg.sender is a patient
@@ -130,7 +130,7 @@ contract MedicalRecords{
     // function for patient to verify that medical record has no problems
     function patientVerify(uint256 medicalRecordId) public isPatientFromRecord(medicalRecordId) {
 
-        medicalRecords[medicalRecordId].patientVerified = true;
+        medicalRecords[medicalRecordId].patientVerified = 1;
         emit patientVerified(medicalRecordId);
     }
 
@@ -139,7 +139,7 @@ contract MedicalRecords{
         require(doctorVerifications[userContract.getDoctorId(msg.sender)][medicalRecords[medicalRecordId].doctorInCharge] <= 5, "This doctor has been verifying doctor in charge too many times.");
         // TODO: change threshold
 
-        medicalRecords[medicalRecordId].doctorVerified = true;
+        medicalRecords[medicalRecordId].doctorVerified = 1;
         doctorVerifications[userContract.getDoctorId(msg.sender)][medicalRecords[medicalRecordId].doctorInCharge] += 1;
         userContract.addAppraisalScore(userContract.getDoctorId(msg.sender));
         emit doctorVerified(medicalRecordId);
@@ -150,6 +150,7 @@ contract MedicalRecords{
 
         flaggedRecords[medicalRecordId] = medicalRecords[medicalRecordId];
         isFlaggedRecords[medicalRecordId] = true;
+        medicalRecords[medicalRecordId].patientVerified = 2;
         emit patientReported(medicalRecordId);
     }
 
@@ -159,6 +160,7 @@ contract MedicalRecords{
         flaggedRecords[medicalRecordId] = medicalRecords[medicalRecordId];
         isFlaggedRecords[medicalRecordId] = true;
         doctorVerifications[userContract.getDoctorId(msg.sender)][medicalRecords[medicalRecordId].doctorInCharge] += 1;
+        medicalRecords[medicalRecordId].doctorVerified = 2;
         emit doctorReported(medicalRecordId);
     }
 
@@ -181,8 +183,8 @@ contract MedicalRecords{
 
         delete flaggedRecords[medicalRecordId];
         delete isFlaggedRecords[medicalRecordId];
-        medicalRecords[medicalRecordId].patientVerified = true;
-        medicalRecords[medicalRecordId].doctorVerified = true;
+        medicalRecords[medicalRecordId].patientVerified = 1;
+        medicalRecords[medicalRecordId].doctorVerified = 1;
         emit wronglyAccusedReport(medicalRecordId);
     }
 
