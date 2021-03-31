@@ -45,6 +45,7 @@ function initial() {
         name: "doctor"
     });
 
+    // username: admin; password: admin
     Admin.create({
         date_joined: new Date(),
         user: {
@@ -61,9 +62,10 @@ function initial() {
             roleId: 1
         }
     }, {
-        include: [ Admin.user ]
+        include: [Admin.user]
     });
 
+    // username: patient; password: patient
     Patient.create({
         nric: "S6153515B",
         home_address: "12 West Coast Rd Singapore 123456",
@@ -82,9 +84,10 @@ function initial() {
             roleId: 2
         }
     }, {
-        include: [ Patient.user ]
+        include: [Patient.user]
     })
 
+    // username: doctor; password: doctor
     Doctor.create({
         specialty: "Neurology",
         healthcare_institution: "Tan Tock Seng Hospital",
@@ -102,7 +105,7 @@ function initial() {
             roleId: 3
         }
     }, {
-        include: [ Doctor.user ]
+        include: [Doctor.user]
     })
 
     // Users.create({

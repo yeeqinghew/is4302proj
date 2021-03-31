@@ -9,6 +9,8 @@ class Dashboard extends Component {
 
         if (!currentUser) {
             return <Redirect to="/login" />;
+        } else {
+            console.log('currentuserssss', currentUser);
         }
 
         return (

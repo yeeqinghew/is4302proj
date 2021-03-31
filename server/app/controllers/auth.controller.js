@@ -2,37 +2,105 @@ const db = require("../models");
 const config = require("../config/auth.config");
 const User = db.user;
 const Role = db.role;
-
+const Patient = db.patient;
+const Doctor = db.doctor;
 const Op = db.Sequelize.Op;
 
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
+// const { patient } = require("../models");
 
 exports.signup = (req, res) => {
-    // Save User to Database
-    User.create({
-        username: req.body.username,
-        email: req.body.email,
-        password: bcrypt.hashSync(req.body.password, 8)
-    })
-        .then(user => {
-            // console.log("########## Auth Role: ", req.body.role);
-            if (req.body.role) {
+    var YEAR = req.body.dob.substring(0, 4);
+    var MONTH = req.body.dob.substring(4, 6);
+    var DATE = req.body.dob.substring(6, 8);
+
+
+    // Save Patient to Database
+    if (req.body.roleId === "2") {
+        User.create({
+            username: req.body.username,
+            email: req.body.email,
+            password: bcrypt.hashSync(req.body.password, 8),
+            first_name: req.body.firstName,
+            last_name: req.body.lastName,
+            contact_num: req.body.contactNum,
+            dob: new Date(YEAR, MONTH, DATE),
+            gender: req.body.gender,
+            nationality: req.body.nationality,
+            race: req.body.race
+        }).then(user => {
+            console.log("#### red body nric: ", req.body.nric);
+            console.log("#### user", user);
+            Patient.create({
+                nric: req.body.nric,
+                home_address: req.body.homeAddress,
+                emergency_contact: req.body.emergencyContact,
+                user: user
+            }, {
+                include: [Patient.user]
+            })
+
+            // console.log("********User", user)
+            if (req.body.roleId) {
                 Role.findOne({
                     where: {
-                        name: req.body.role
+                        id: req.body.roleId
                     }
-                }).then(role => {
-                    // console.log("Found Role:::::::::", role);
-                    user.setRole(role).then(() => {
+                }).then(roleId => {
+                    // console.log("Found Role:::::::::", roleId);
+                    user.setRole(roleId).then(() => {
+                        console.log("Successful");
                         res.send({ message: "User was registered successfully!" });
-                    });
-                });
+                    })
+                })
             }
-        })
-        .catch(err => {
+        }).catch(err => {
             res.status(500).send({ message: err.message });
         });
+    }
+
+
+    // Save User to Database
+    if (req.body.roleId === "3") {
+        User.create({
+            username: req.body.username,
+            email: req.body.email,
+            password: bcrypt.hashSync(req.body.password, 8),
+            first_name: req.body.firstName,
+            last_name: req.body.lastName,
+            contact_num: req.body.contactNum,
+            dob: new Date(YEAR, MONTH, DATE),
+            gender: req.body.gender,
+            nationality: req.body.nationality,
+            race: req.body.race
+        }).then(user => {
+            Doctor.create({
+                specialty: req.body.specialty,
+                healthcare_institution: req.body.healthcareInstitution,
+                user: user
+            }, {
+                include: [Doctor.user]
+            });
+
+            // console.log("********User", user)
+            if (req.body.roleId) {
+                Role.findOne({
+                    where: {
+                        id: req.body.roleId
+                    }
+                }).then(roleId => {
+                    // console.log("Found Role:::::::::", roleId);
+                    user.setRole(roleId).then(() => {
+                        console.log("Successful");
+                        res.send({ message: "User was registered successfully!" });
+                    });
+                })
+            }
+        }).catch(err => {
+            res.status(500).send({ message: err.message });
+        });
+    }
 };
 
 exports.signin = (req, res) => {
@@ -64,10 +132,17 @@ exports.signin = (req, res) => {
 
             user.getRole().then(role => {
                 res.status(200).send({
-                    id: user.id,
+                    id: user.userId,
                     username: user.username,
                     email: user.email,
                     role: role.name,
+                    first_name: user.first_name,
+                    last_name: user.last_name,
+                    contact_num: user.contact_num,
+                    dob: user.dob,
+                    gender: user.gender,
+                    nationality: user.nationality,
+                    race: user.race,
                     accessToken: token
                 });
             });
