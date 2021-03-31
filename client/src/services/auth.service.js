@@ -19,12 +19,40 @@ class AuthService {
         localStorage.removeItem("user");
     }
 
-    register(role, username, email, password) {
+    registerPatient(roleId, username, email, password, firstName, lastName, contactNum, dob, gender, nationality, race, nric, homeAddress, emergencyContact) {
         return axios.post(API_URL + "signup", {
-            role,
+            roleId,
             username,
             email,
             password,
+            firstName,
+            lastName,
+            contactNum,
+            dob,
+            gender,
+            nationality,
+            race,
+            nric,
+            homeAddress,
+            emergencyContact
+        });
+    }
+
+    registerDoctor(roleId, username, email, password, firstName, lastName, contactNum, dob, gender, nationality, race, specialty, financialInstitution) {
+        return axios.post(API_URL + "signup", {
+            roleId,
+            username,
+            email,
+            password,
+            firstName,
+            lastName,
+            contactNum,
+            dob,
+            gender,
+            nationality,
+            race,
+            specialty,
+            financialInstitution
         });
     }
 }

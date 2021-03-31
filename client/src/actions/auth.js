@@ -9,8 +9,49 @@ import {
 
 import AuthService from "../services/auth.service";
 
-export const register = (role, username, email, password) => (dispatch) => {
-    return AuthService.register(role, username, email, password).then(
+export const registerPatient = (
+    roleId, username, email, password, firstName, lastName, contactNum, dob, gender, nationality, race, nric, homeAddress, emergencyContact
+) => (dispatch) => {
+    return AuthService.registerPatient(roleId, username, email, password, firstName, lastName, contactNum, dob, gender, nationality, race, nric, homeAddress, emergencyContact)
+        .then(
+            (response) => {
+                dispatch({
+                    type: REGISTER_SUCCESS,
+                });
+
+                dispatch({
+                    type: SET_MESSAGE,
+                    payload: response.data.message,
+                });
+
+                return Promise.resolve();
+            },
+            (error) => {
+                const message =
+                    (error.response &&
+                        error.response.data &&
+                        error.response.data.message) ||
+                    error.message ||
+                    error.toString();
+
+                dispatch({
+                    type: REGISTER_FAIL,
+                });
+
+                dispatch({
+                    type: SET_MESSAGE,
+                    payload: message,
+                });
+
+                return Promise.reject();
+            }
+        );
+};
+
+export const registerDoctor = (
+    roleId, username, email, password, firstName, lastName, contactNum, dob, gender, nationality, race, specialty, financialInstitution
+) => (dispatch) => {
+    return AuthService.registerDoctor(roleId, username, email, password, firstName, lastName, contactNum, dob, gender, nationality, race, specialty, financialInstitution).then(
         (response) => {
             dispatch({
                 type: REGISTER_SUCCESS,

@@ -6,7 +6,20 @@ import CheckButton from "react-validation/build/button";
 import { isEmail } from "validator";
 
 import { connect } from "react-redux";
-import { register } from "../actions/auth";
+import { registerPatient } from "../actions/auth";
+import { registerDoctor } from "../actions/auth";
+
+// datepicker
+import DayPickerInput from 'react-day-picker/DayPickerInput';
+import { DateUtils } from 'react-day-picker';
+import 'react-day-picker/lib/style.css';
+
+import dateFnsFormat from 'date-fns/format';
+import dateFnsParse from 'date-fns/parse';
+
+// json
+import { Nationalities } from "../json/nationalities";
+import { Races } from "../json/races";
 
 const required = (value) => {
     if (!value) {
@@ -52,27 +65,63 @@ class Register extends Component {
     constructor(props) {
         super(props);
         this.handleRegister = this.handleRegister.bind(this);
-        this.onChangeRole = this.onChangeRole.bind(this);
+        this.onChangeRoleId = this.onChangeRoleId.bind(this);
+        this.onChangeFirstName = this.onChangeFirstName.bind(this);
+        this.onChangeLastName = this.onChangeLastName.bind(this);
         this.onChangeUsername = this.onChangeUsername.bind(this);
         this.onChangeEmail = this.onChangeEmail.bind(this);
         this.onChangePassword = this.onChangePassword.bind(this);
+        this.onChangeContactNum = this.onChangeContactNum.bind(this);
+        this.onChangeDob = this.onChangeDob.bind(this);
+        this.onChangeGender = this.onChangeGender.bind(this);
+        this.onChangeNationality = this.onChangeNationality.bind(this);
+        this.onChangeRace = this.onChangeRace.bind(this);
+
+        // for patient
         this.onChangeNric = this.onChangeNric.bind(this);
+        this.onChangeHomeAddress = this.onChangeHomeAddress.bind(this);
+        this.onChangeEmergencyContact = this.onChangeEmergencyContact.bind(this);
+
+        // for doctor
         this.onChangeSpecialty = this.onChangeSpecialty.bind(this);
+        this.onChangeHealthcareInstitution = this.onChangeHealthcareInstitution.bind(this);
 
         this.state = {
-            role: "",
+            roleId: "",
+            firstName: "",
+            lastName: "",
             username: "",
             email: "",
             password: "",
+            contactNum: "",
+            dob: "",
+            gender: "",
+            nationality: "",
+            race: "",
             nric: "",
+            homeAddress: "",
+            emergencyContact: "",
             specialty: "",
+            healthcareInstitution: "",
             successful: false,
         };
     }
 
-    onChangeRole(e) {
+    onChangeFirstName(e) {
         this.setState({
-            role: e.target.value,
+            firstName: e.target.value,
+        });
+    }
+
+    onChangeLastName(e) {
+        this.setState({
+            lastName: e.target.value,
+        });
+    }
+
+    onChangeRoleId(e) {
+        this.setState({
+            roleId: e.target.value,
         });
     }
 
@@ -94,9 +143,54 @@ class Register extends Component {
         });
     }
 
+    onChangeContactNum(e) {
+        this.setState({
+            contactNum: e.target.value,
+        });
+    }
+
+    onChangeDob(e) {
+        // console.log("dob", this.state.dob);
+        this.setState({
+            dob: e.target.value,
+        });
+        console.log("***********", e.target.value);
+
+    }
+
+    onChangeGender(e) {
+        this.setState({
+            gender: e.target.value,
+        });
+    }
+
+    onChangeNationality(e) {
+        this.setState({
+            nationality: e.target.value,
+        });
+    }
+
+    onChangeRace(e) {
+        this.setState({
+            race: e.target.value,
+        }); console.log("race", this.state.race);
+    }
+
     onChangeNric(e) {
         this.setState({
             nric: e.target.value,
+        });
+    }
+
+    onChangeHomeAddress(e) {
+        this.setState({
+            homeAddress: e.target.value,
+        });
+    }
+
+    onChangeEmergencyContact(e) {
+        this.setState({
+            emergencyContact: e.target.value,
         });
     }
 
@@ -104,6 +198,24 @@ class Register extends Component {
         this.setState({
             specialty: e.target.value,
         });
+    }
+
+    onChangeHealthcareInstitution(e) {
+        this.setState({
+            healthcareInstitution: e.target.value
+        })
+    }
+
+    parseDate(str, format, locale) {
+        const parsed = dateFnsParse(str, format, new Date(), { locale });
+        if (DateUtils.isDate(parsed)) {
+            return parsed;
+        }
+        return undefined;
+    }
+
+    formatDate(date, format, locale) {
+        return dateFnsFormat(date, format, { locale });
     }
 
     handleRegister(e) {
@@ -115,10 +227,54 @@ class Register extends Component {
 
         this.form.validateAll();
 
-        if (this.checkBtn.context._errors.length === 0) {
+        if (this.checkBtn.context._errors.length === 0 && this.state.roleId === "2") {
             this.props
                 .dispatch(
-                    register(this.state.role, this.state.username, this.state.email, this.state.password)
+                    registerPatient(
+                        this.state.roleId,
+                        this.state.username,
+                        this.state.email,
+                        this.state.password,
+                        this.state.firstName,
+                        this.state.lastName,
+                        this.state.contactNum,
+                        this.state.dob,
+                        this.state.gender,
+                        this.state.nationality,
+                        this.state.race,
+                        this.state.nric,
+                        this.state.homeAddress,
+                        this.state.emergencyContact
+                    )
+                )
+                .then(() => {
+                    this.setState({
+                        successful: true,
+                    });
+                })
+                .catch(() => {
+                    this.setState({
+                        successful: false,
+                    });
+                });
+        } else if (this.checkBtn.context._errors.length === 0 && this.state.roleId === "3") {
+            this.props
+                .dispatch(
+                    registerDoctor(
+                        this.state.roleId,
+                        this.state.username,
+                        this.state.email,
+                        this.state.password,
+                        this.state.firstName,
+                        this.state.lastName,
+                        this.state.contactNum,
+                        this.state.dob,
+                        this.state.gender,
+                        this.state.nationality,
+                        this.state.race,
+                        this.state.specialty,
+                        this.state.healthcareInstitution
+                    )
                 )
                 .then(() => {
                     this.setState({
@@ -132,10 +288,9 @@ class Register extends Component {
                 });
         }
     }
-
     render() {
         const { message } = this.props;
-
+        const FORMAT = 'yyyyMMdd';
         return (
             <div className="col-md-12">
                 <div className="card card-container">
@@ -154,16 +309,16 @@ class Register extends Component {
                         {!this.state.successful && (
                             <div>
                                 <div className="form-group">
-                                    <label htmlFor="role">Role</label>
+                                    <label htmlFor="roleId">Role</label>
                                     <Select
                                         className="form-control"
-                                        name="role"
-                                        value={this.state.role}
-                                        onChange={this.onChangeRole}
+                                        name="roleId"
+                                        value={this.state.roleId}
+                                        onChange={this.onChangeRoleId}
                                         validations={[required]}>
                                         <option value="">Select one</option>
-                                        <option value="patient">Patient</option>
-                                        <option value="doctor">Doctor</option>
+                                        <option value="2">Patient</option>
+                                        <option value="3">Doctor</option>
                                     </Select>
                                 </div>
                                 <div className="form-group">
@@ -177,7 +332,6 @@ class Register extends Component {
                                         validations={[required, vusername]}
                                     />
                                 </div>
-
                                 <div className="form-group">
                                     <label htmlFor="email">Email</label>
                                     <Input
@@ -189,7 +343,6 @@ class Register extends Component {
                                         validations={[required, email]}
                                     />
                                 </div>
-
                                 <div className="form-group">
                                     <label htmlFor="password">Password</label>
                                     <Input
@@ -201,30 +354,172 @@ class Register extends Component {
                                         validations={[required, vpassword]}
                                     />
                                 </div>
-                                {this.state.role === "patient" && (
-                                    <div className="form-group">
-                                        <label htmlFor="nric">NRIC</label>
-                                        <Input
-                                            type="text"
-                                            className="form-control"
-                                            name="nric"
-                                            value={this.state.nric}
-                                            onChange={this.onChangeNric}
-                                            validations={[required]}
-                                        />
+                                <div className="form-group">
+                                    <label htmlFor="firstName">First Name</label>
+                                    <Input
+                                        type="firstName"
+                                        className="form-control"
+                                        name="firstName"
+                                        value={this.state.firstName}
+                                        onChange={this.onChangeFirstName}
+                                        validations={[required]}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="lastName">Last Name</label>
+                                    <Input
+                                        type="lastName"
+                                        className="form-control"
+                                        name="lastName"
+                                        value={this.state.lastName}
+                                        onChange={this.onChangeLastName}
+                                        validations={[required]}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="contactNum">Contact No</label>
+                                    <Input
+                                        type="contactNum"
+                                        className="form-control"
+                                        name="contactNum"
+                                        value={this.state.contactNum}
+                                        onChange={this.onChangeContactNum}
+                                        validations={[required]}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="dob">Date of Birth</label>
+                                    <Input
+                                        type="dob"
+                                        className="form-control"
+                                        name="dob"
+                                        value={this.state.dob}
+                                        onChange={this.onChangeDob}
+                                        placeholder="YYYYMMDD"
+                                        validations={[required]}
+                                    />
+                                    {/* <label htmlFor="dob">Date of Birth</label>
+                                    <DayPickerInput
+                                        // classNames="form-control"
+                                        validations={[required]}
+                                        formatDate={this.formatDate}
+                                        format={FORMAT}
+                                        value={this.state.dob}
+                                        onDayChange={this.onChangeDob}
+                                        name="dob"
+                                        parseDate={this.parseDate}
+                                        placeholder={`${dateFnsFormat(new Date(), FORMAT)}`}
+                                        inputProps={{
+                                            style: {
+                                                color: "blue",
+                                                display: "block",
+                                                width: "140%",
+                                                height: "calc(1.5em + .75rem + 2px)",
+                                                padding: ".375rem .75rem",
+                                                fontSize: "1rem",
+                                                fontWeight: "400",
+                                                lineHeight: "1.5",
+                                                color: "#495057",
+                                                backgroundColor: "#fff",
+                                                backgroundClip: "padding-box",
+                                                border: "1px solid #ced4da",
+                                                borderRadius: ".25rem",
+                                                transition: "border-color .15s ease-in-out,box-shadow .15s ease-in-out"
+                                            }
+                                        }} />*/}
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="gender">Gender</label>
+                                    <Select
+                                        className="form-control"
+                                        name="gender"
+                                        value={this.state.gender}
+                                        onChange={this.onChangeGender}
+                                        validations={[required]}>
+                                        <option value="">Select one</option>
+                                        <option value="Female">Female</option>
+                                        <option value="Male">Male</option>
+                                    </Select>
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="nationality">Nationality</label>
+                                    <Select
+                                        className="form-control"
+                                        name="nationality"
+                                        value={this.state.nationality}
+                                        onChange={this.onChangeNationality}
+                                        validations={[required]}>
+                                        <option value="">Select one</option>
+                                        {Nationalities.nationalities && Nationalities.nationalities.map((nationality) => {
+                                            return <option value={nationality}>{nationality}</option>;
+                                        })}
+                                    </Select>
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="race">Race</label>
+                                    <Select
+                                        className="form-control"
+                                        name="race"
+                                        value={this.state.race}
+                                        onChange={this.onChangeRace}
+                                        validations={[required]}>
+                                        <option value="">Select one</option>
+                                        {Races.races && Races.races.map((race) => {
+                                            return <option value={race}>{race}</option>;
+                                        })}
+                                    </Select>
+                                </div>
+
+                                {this.state.roleId === "2" && (
+                                    <div>
+                                        <div className="form-group">
+                                            <label htmlFor="nric">NRIC</label>
+                                            <Input
+                                                type="text"
+                                                className="form-control"
+                                                name="nric"
+                                                value={this.state.nric}
+                                                onChange={this.onChangeNric}
+                                                validations={[required]}
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label htmlFor="homeAddress">Home Address</label>
+                                            <Input
+                                                type="text"
+                                                className="form-control"
+                                                name="homeAddress"
+                                                value={this.state.homeAddress}
+                                                onChange={this.onChangeHomeAddress}
+                                                validations={[required]}
+                                            />
+                                        </div>
                                     </div>
                                 )}
-                                {this.state.role === "doctor" && (
-                                    <div className="form-group">
-                                        <label htmlFor="specialty">Specialty</label>
-                                        <Input
-                                            type="text"
-                                            className="form-control"
-                                            name="specialty"
-                                            value={this.state.specialty}
-                                            onChange={this.onChangeSpecialty}
-                                            validations={[required]}
-                                        />
+                                {this.state.roleId === "3" && (
+                                    <div>
+                                        <div className="form-group">
+                                            <label htmlFor="specialty">Specialty</label>
+                                            <Input
+                                                type="text"
+                                                className="form-control"
+                                                name="specialty"
+                                                value={this.state.specialty}
+                                                onChange={this.onChangeSpecialty}
+                                                validations={[required]}
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label htmlFor="healthcareInstitution">Healthcare Institution</label>
+                                            <Input
+                                                type="text"
+                                                className="form-control"
+                                                name="healthcareInstitution"
+                                                value={this.state.healthcareInstitution}
+                                                onChange={this.onChangeHealthcareInstitution}
+                                                validations={[required]}
+                                            />
+                                        </div>
                                     </div>
                                 )}
                                 <div className="form-group">
