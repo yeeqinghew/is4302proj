@@ -30,10 +30,37 @@ class Dashboard extends Component {
                 <p>
                     <strong>Email:</strong> {currentUser.email}
                 </p>
-                <strong>Role:</strong>
-                <ul>
+                <p> <strong>Role: </strong>
                     {currentUser.role}
-                </ul>
+                </p>
+                <p> <strong>Date of Birth: </strong>
+                    {currentUser.dob}
+                </p>
+                <p> <strong>Contact Number: </strong>
+                    {currentUser.contactNum}
+                </p>
+                <p><strong>Gender: </strong>
+                    {currentUser.gender}
+                </p>
+                <p><strong>Nationality: </strong>
+                    {currentUser.nationality}
+                </p>
+                <p><strong>Race: </strong>
+                    {currentUser.race}
+                </p>
+                {currentUser.role === "patient" && <div>
+                    <p> <strong>NRIC: </strong>
+                        {currentUser.nric}
+                    </p>
+                    <p><strong>Home Address: </strong>
+                        {currentUser.home_address}
+                    </p>
+                    <p><strong>Emergency Contact: </strong>
+                        {currentUser.emergency_contact}
+                    </p>
+                </div>}
+
+
             </div>
         );
     }

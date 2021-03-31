@@ -108,29 +108,66 @@ exports.signin = (req, res) => {
         where: {
             username: req.body.username
         }
-    })
-        .then(user => {
-            if (!user) {
-                return res.status(404).send({ message: "User Not found." });
-            }
+    }).then(user => {
+        if (!user) {
+            return res.status(404).send({ message: "User Not found." });
+        }
 
-            var passwordIsValid = bcrypt.compareSync(
-                req.body.password,
-                user.password
-            );
+        var passwordIsValid = bcrypt.compareSync(
+            req.body.password,
+            user.password
+        );
 
-            if (!passwordIsValid) {
-                return res.status(401).send({
-                    accessToken: null,
-                    message: "Invalid Password!"
-                });
-            }
-
-            var token = jwt.sign({ id: user.id }, config.secret, {
-                expiresIn: 86400 // 24 hours
+        if (!passwordIsValid) {
+            return res.status(401).send({
+                accessToken: null,
+                message: "Invalid Password!"
             });
+        }
 
-            user.getRole().then(role => {
+        var token = jwt.sign({ id: user.id }, config.secret, {
+            expiresIn: 86400 // 24 hours
+        });
+
+
+        user.getRole().then(role => {
+            if (role === "patient") {
+
+                res.status(200).send({
+                    id: user.userId,
+                    username: user.username,
+                    email: user.email,
+                    role: role.name,
+                    first_name: user.first_name,
+                    last_name: user.last_name,
+                    contact_num: user.contact_num,
+                    dob: user.dob,
+                    gender: user.gender,
+                    nationality: user.nationality,
+                    race: user.race,
+                    nric: user.nric,
+                    home_address: user.home_address,
+                    emergency_contact: user.emergency_contact,
+                    accessToken: token
+                });
+            } else if (role === "doctor") {
+                res.status(200).send({
+                    id: user.userId,
+                    username: user.username,
+                    email: user.email,
+                    role: role.name,
+                    first_name: user.first_name,
+                    last_name: user.last_name,
+                    contact_num: user.contact_num,
+                    dob: user.dob,
+                    gender: user.gender,
+                    nationality: user.nationality,
+                    race: user.race,
+                    specialty: user.specialty,
+                    financial_institution: user.financial_institution,
+                    accessToken: token
+                });
+            } else {
                 res.status(200).send({
                     id: user.userId,
                     username: user.username,
@@ -145,8 +182,9 @@ exports.signin = (req, res) => {
                     race: user.race,
                     accessToken: token
                 });
-            });
-        })
+            }
+        });
+    })
         .catch(err => {
             res.status(500).send({ message: err.message });
         });
