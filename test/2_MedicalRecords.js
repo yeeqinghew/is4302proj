@@ -25,13 +25,13 @@ contract("MedicalRecords", accounts => {
     });
 
     it('Test 1: Creating Records', async() => {
-        let details = medicalRecordsInstance.stringToBytes32("Patient has fever of 38.9 degrees");
+        let details = "0xa5b9d60f32436310afebcfda832817a68921beb782fabf7915cc0460b443116a";
 
         // Test 1A: Creating Records for invalid patient 
         try {
             result = await medicalRecordsInstance.createRecord(10, 0, details);
         } catch(error) {
-            assert.include(error.message, "No such patient exists.");
+            assert.include(error.message, "Patient does not exist.");
         }
     });
 
