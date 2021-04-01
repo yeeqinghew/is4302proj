@@ -1,6 +1,7 @@
 var Users = artifacts.require("Users.sol");
 var MedicalRecords = artifacts.require("MedicalRecords.sol");
 const truffleAssertions = require("truffle-assertions");
+const web3 = require("web3");
 
 contract("MedicalRecords", accounts => {
     let usersInstance;
@@ -25,13 +26,27 @@ contract("MedicalRecords", accounts => {
     });
 
     it('Test 1: Creating Records', async() => {
-        let details = "0xa5b9d60f32436310afebcfda832817a68921beb782fabf7915cc0460b443116a";
+        let details = web3.utils.toHex("Patient has high fever");
 
         // Test 1A: Creating Records for invalid patient 
         try {
             result = await medicalRecordsInstance.createRecord(10, 0, details);
         } catch(error) {
             assert.include(error.message, "Patient does not exist.");
+        }
+
+        // Test 1B: Creating Records with invalid doctor
+        try {
+            result = await medicalRecordsInstance.createRecord(0, 5, details);
+        } catch(error) {
+            assert.include(error.message, "Doctor does not exist.");
+        }
+
+        // Test 1C: Creating Records with blacklisted doctor
+        try {
+            result = await medicalRecordsInstance.createRecord(0, 2, details);
+        } catch(error) {
+            assert.include(error.message, "Not authorised as doctor is blacklisted.");
         }
     });
 
