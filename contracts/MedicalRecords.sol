@@ -57,6 +57,7 @@ contract MedicalRecords{
 
     modifier isDoctorAddress() {
         require(userContract.isDoctor(msg.sender) == true, "Not doctor, not authorised to verify.");
+        // SJ thinks that should also ensure this doctor verifying is not the doctor who attended to the patient
         _;
     }
 
