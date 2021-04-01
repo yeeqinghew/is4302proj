@@ -66,7 +66,7 @@ contract MedicalRecords{
     }
 
     modifier blacklistedId(uint256 doctorId) {
-        require(userContract.isBlacklisted(doctorId), "Not authorised as doctor is blacklisted.");
+        require(userContract.isBlacklisted(doctorId) != true, "Not authorised as doctor is blacklisted.");
         _;
     }
 
