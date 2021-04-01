@@ -36,7 +36,7 @@ exports.signup = (req, res) => {
                 nric: req.body.nric,
                 home_address: req.body.homeAddress,
                 emergency_contact: req.body.emergencyContact,
-                user: user
+                users: user
             }, {
                 include: [Patient.user]
             })
@@ -55,6 +55,8 @@ exports.signup = (req, res) => {
                     })
                 })
             }
+
+
         }).catch(err => {
             res.status(500).send({ message: err.message });
         });
@@ -109,6 +111,7 @@ exports.signin = (req, res) => {
             username: req.body.username
         }
     }).then(user => {
+        console.log("I AM FUCKING IN USER");
         if (!user) {
             return res.status(404).send({ message: "User Not found." });
         }
@@ -130,26 +133,38 @@ exports.signin = (req, res) => {
         });
 
 
+        console.log("what is my role???????", user.getRole());
         user.getRole().then(role => {
-            if (role === "patient") {
+            console.log("what is my role???????", role);
 
-                res.status(200).send({
-                    id: user.userId,
-                    username: user.username,
-                    email: user.email,
-                    role: role.name,
-                    first_name: user.first_name,
-                    last_name: user.last_name,
-                    contact_num: user.contact_num,
-                    dob: user.dob,
-                    gender: user.gender,
-                    nationality: user.nationality,
-                    race: user.race,
-                    nric: user.nric,
-                    home_address: user.home_address,
-                    emergency_contact: user.emergency_contact,
-                    accessToken: token
-                });
+            if (role === "patient") {
+                console.log("roleeeee", role);
+                console.log("I AM FUCKING IN PATIENT");
+                Patient.findOne({
+                    where: {
+                        userId: user.id
+                    }
+                }).then((patient) => {
+                    console.log("*****Patient: ", patient);
+                    res.status(200).send({
+                        id: user.userId,
+                        username: user.username,
+                        email: user.email,
+                        role: role.name,
+                        first_name: user.first_name,
+                        last_name: user.last_name,
+                        contact_num: user.contact_num,
+                        dob: user.dob,
+                        gender: user.gender,
+                        nationality: user.nationality,
+                        race: user.race,
+                        nric: patient.nric,
+                        home_address: patient.home_address,
+                        emergency_contact: patient.emergency_contact,
+                        accessToken: token
+                    });
+                })
+
             } else if (role === "doctor") {
                 res.status(200).send({
                     id: user.userId,
