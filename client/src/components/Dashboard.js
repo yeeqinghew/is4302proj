@@ -46,6 +46,12 @@ class Dashboard extends Component {
                 <p><strong>Race: </strong>
                     {currentUser.race}
                 </p>
+                {currentUser.role === "admin" && <div>
+                    <p> <strong>Date Joined: </strong>
+                        {currentUser.date_joined}
+                    </p>
+
+                </div>}
                 {currentUser.role === "patient" && <div>
                     <p> <strong>NRIC: </strong>
                         {currentUser.nric}
