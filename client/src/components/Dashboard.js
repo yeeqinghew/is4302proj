@@ -35,7 +35,7 @@ class Dashboard extends Component {
                     {currentUser.dob}
                 </p>
                 <p> <strong>Contact Number: </strong>
-                    {currentUser.contactNum}
+                    {currentUser.contact_num}
                 </p>
                 <p><strong>Gender: </strong>
                     {currentUser.gender}
