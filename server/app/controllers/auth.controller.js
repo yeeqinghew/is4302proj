@@ -12,9 +12,8 @@ var bcrypt = require("bcryptjs");
 
 exports.signup = (req, res) => {
     var YEAR = req.body.dob.substring(0, 4);
-    var MONTH = req.body.dob.substring(4, 6);
+    var MONTH = req.body.dob.substring(4, 6) - 1;
     var DATE = req.body.dob.substring(6, 8);
-
 
     // Save Patient to Database
     if (req.body.roleId === "2") {
@@ -30,31 +29,49 @@ exports.signup = (req, res) => {
             nationality: req.body.nationality,
             race: req.body.race
         }).then(user => {
-            console.log("#### red body nric: ", req.body.nric);
-            console.log("#### user", user);
             Patient.create({
                 nric: req.body.nric,
                 home_address: req.body.homeAddress,
                 emergency_contact: req.body.emergencyContact,
-                user: user
+                users: user
             }, {
                 include: [Patient.user]
-            })
-
-            // console.log("********User", user)
-            if (req.body.roleId) {
-                Role.findOne({
-                    where: {
-                        id: req.body.roleId
-                    }
-                }).then(roleId => {
-                    // console.log("Found Role:::::::::", roleId);
-                    user.setRole(roleId).then(() => {
-                        console.log("Successful");
-                        res.send({ message: "User was registered successfully!" });
+            }).then((patient) => {
+                if (req.body.roleId) {
+                    Role.findOne({
+                        where: {
+                            id: req.body.roleId
+                        }
+                    }).then(roleId => {
+                        patient.setUser(user.userId).then(() => {
+                            console.log("Successful");
+                            // res.send({ message: "User was registered successfully!" });
+                        }).then(() => {
+                            user.setRole(roleId).then(() => {
+                                console.log("Successful");
+                                // res.send({ message: "User was registered successfully!" });
+                            })
+                        }).then(() => {
+                            res.send({ message: "User was registered successfully!" });
+                        })
                     })
-                })
-            }
+                }
+            });
+
+            // if (req.body.roleId) {
+            //     Role.findOne({
+            //         where: {
+            //             id: req.body.roleId
+            //         }
+            //     }).then(roleId => {
+            //         user.setRole(roleId).then(() => {
+            //             console.log("Successful");
+            //             res.send({ message: "User was registered successfully!" });
+            //         })
+            //     })
+            // }
+
+
         }).catch(err => {
             res.status(500).send({ message: err.message });
         });
@@ -83,14 +100,12 @@ exports.signup = (req, res) => {
                 include: [Doctor.user]
             });
 
-            // console.log("********User", user)
             if (req.body.roleId) {
                 Role.findOne({
                     where: {
                         id: req.body.roleId
                     }
                 }).then(roleId => {
-                    // console.log("Found Role:::::::::", roleId);
                     user.setRole(roleId).then(() => {
                         console.log("Successful");
                         res.send({ message: "User was registered successfully!" });
@@ -131,42 +146,55 @@ exports.signin = (req, res) => {
 
 
         user.getRole().then(role => {
-            if (role === "patient") {
+            if (role.dataValues.name === "patient") {
+                Patient.findOne({
+                    where: {
+                        userId: user.userId
+                    }
+                }).then((patient) => {
+                    res.status(200).send({
+                        id: user.userId,
+                        username: user.username,
+                        email: user.email,
+                        role: role.name,
+                        first_name: user.first_name,
+                        last_name: user.last_name,
+                        contact_num: user.contact_num,
+                        dob: user.dob,
+                        gender: user.gender,
+                        nationality: user.nationality,
+                        race: user.race,
+                        nric: patient.nric,
+                        home_address: patient.home_address,
+                        emergency_contact: patient.emergency_contact,
+                        accessToken: token
+                    });
+                })
 
-                res.status(200).send({
-                    id: user.userId,
-                    username: user.username,
-                    email: user.email,
-                    role: role.name,
-                    first_name: user.first_name,
-                    last_name: user.last_name,
-                    contact_num: user.contact_num,
-                    dob: user.dob,
-                    gender: user.gender,
-                    nationality: user.nationality,
-                    race: user.race,
-                    nric: user.nric,
-                    home_address: user.home_address,
-                    emergency_contact: user.emergency_contact,
-                    accessToken: token
-                });
-            } else if (role === "doctor") {
-                res.status(200).send({
-                    id: user.userId,
-                    username: user.username,
-                    email: user.email,
-                    role: role.name,
-                    first_name: user.first_name,
-                    last_name: user.last_name,
-                    contact_num: user.contact_num,
-                    dob: user.dob,
-                    gender: user.gender,
-                    nationality: user.nationality,
-                    race: user.race,
-                    specialty: user.specialty,
-                    financial_institution: user.financial_institution,
-                    accessToken: token
-                });
+            } else if (role.dataValues.name === "doctor") {
+                Doctor.findOne({
+                    where: {
+                        userId: user.userId
+                    }
+                }).then((doctor) => {
+                    res.status(200).send({
+                        id: user.userId,
+                        username: user.username,
+                        email: user.email,
+                        role: role.name,
+                        first_name: user.first_name,
+                        last_name: user.last_name,
+                        contact_num: user.contact_num,
+                        dob: user.dob,
+                        gender: user.gender,
+                        nationality: user.nationality,
+                        race: user.race,
+                        specialty: doctor.specialty,
+                        healthcare_institution: doctor.healthcare_institution,
+                        accessToken: token
+                    });
+                })
+
             } else {
                 res.status(200).send({
                     id: user.userId,

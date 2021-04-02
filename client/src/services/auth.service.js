@@ -38,7 +38,7 @@ class AuthService {
         });
     }
 
-    registerDoctor(roleId, username, email, password, firstName, lastName, contactNum, dob, gender, nationality, race, specialty, financialInstitution) {
+    registerDoctor(roleId, username, email, password, firstName, lastName, contactNum, dob, gender, nationality, race, specialty, healthcareInstitution) {
         return axios.post(API_URL + "signup", {
             roleId,
             username,
@@ -52,7 +52,7 @@ class AuthService {
             nationality,
             race,
             specialty,
-            financialInstitution
+            healthcareInstitution
         });
     }
 }
