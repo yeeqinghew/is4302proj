@@ -36,7 +36,6 @@ checkDuplicateUsernameOrEmail = (req, res, next) => {
 };
 
 checkRoleExisted = (req, res, next) => {
-    // console.log("********* Role", req.body.role);
     if (req.body.Id) {
         if (!Role.findOne({ id: req.body.roleId })) {
             res.status(400).send({

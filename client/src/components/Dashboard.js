@@ -9,8 +9,6 @@ class Dashboard extends Component {
 
         if (!currentUser) {
             return <Redirect to="/login" />;
-        } else {
-            console.log('currentuserssss', currentUser);
         }
 
         return (
@@ -57,6 +55,15 @@ class Dashboard extends Component {
                     </p>
                     <p><strong>Emergency Contact: </strong>
                         {currentUser.emergency_contact}
+                    </p>
+                </div>}
+
+                {currentUser.role === "doctor" && <div>
+                    <p> <strong>Specialty: </strong>
+                        {currentUser.specialty}
+                    </p>
+                    <p><strong>Healthcare Institution: </strong>
+                        {currentUser.healthcare_institution}
                     </p>
                 </div>}
 

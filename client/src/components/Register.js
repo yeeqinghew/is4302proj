@@ -154,8 +154,6 @@ class Register extends Component {
         this.setState({
             dob: e.target.value,
         });
-        console.log("***********", e.target.value);
-
     }
 
     onChangeGender(e) {
@@ -491,6 +489,17 @@ class Register extends Component {
                                                 name="homeAddress"
                                                 value={this.state.homeAddress}
                                                 onChange={this.onChangeHomeAddress}
+                                                validations={[required]}
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label htmlFor="emergencyContact">Emergency Contract</label>
+                                            <Input
+                                                type="text"
+                                                className="form-control"
+                                                name="emergencyContact"
+                                                value={this.state.emergencyContact}
+                                                onChange={this.onChangeEmergencyContact}
                                                 validations={[required]}
                                             />
                                         </div>
