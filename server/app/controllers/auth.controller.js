@@ -4,6 +4,7 @@ const User = db.user;
 const Role = db.role;
 const Patient = db.patient;
 const Doctor = db.doctor;
+const Admin = db.admin;
 const Op = db.Sequelize.Op;
 
 var jwt = require("jsonwebtoken");
@@ -196,20 +197,28 @@ exports.signin = (req, res) => {
                 })
 
             } else {
-                res.status(200).send({
-                    id: user.userId,
-                    username: user.username,
-                    email: user.email,
-                    role: role.name,
-                    first_name: user.first_name,
-                    last_name: user.last_name,
-                    contact_num: user.contact_num,
-                    dob: user.dob,
-                    gender: user.gender,
-                    nationality: user.nationality,
-                    race: user.race,
-                    accessToken: token
-                });
+                Admin.findOne({
+                    where: {
+                        userId: user.userId
+                    }
+                }).then((admin) => {
+                    res.status(200).send({
+                        id: user.userId,
+                        username: user.username,
+                        email: user.email,
+                        role: role.name,
+                        first_name: user.first_name,
+                        last_name: user.last_name,
+                        contact_num: user.contact_num,
+                        dob: user.dob,
+                        gender: user.gender,
+                        nationality: user.nationality,
+                        race: user.race,
+                        date_joined: admin.date_joined,
+                        accessToken: token
+                    });
+                })
+
             }
         });
     })
