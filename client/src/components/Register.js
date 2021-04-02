@@ -21,6 +21,11 @@ import dateFnsParse from 'date-fns/parse';
 import { Nationalities } from "../json/nationalities";
 import { Races } from "../json/races";
 
+// solidity
+import Users from "../contracts/Users.json";
+import getWeb3 from "../getWeb3";
+
+
 const required = (value) => {
     if (!value) {
         return (
@@ -104,9 +109,41 @@ class Register extends Component {
             specialty: "",
             healthcareInstitution: "",
             successful: false,
+            web3: null,
+            // accounts: null,
+            account: null,
+            contract: null
         };
     }
 
+    componentDidMount = async () => {
+        try {
+            console.log("I AM IN TRY CATCH NOW");
+            const web3 = await getWeb3();
+            console.log("********** web3: ", web3);
+
+            const accounts = await web3.eth.getAccounts();
+            console.log("********** Accounts", accounts);
+
+            const networkId = await web3.eth.net.getId();
+            console.log("********** Network ID: ", networkId);
+
+            const deployedNetwork = Users.networks[networkId];
+            console.log("********** DeployedNetwork: ", deployedNetwork);
+
+            const instance = new web3.eth.Contract(
+                Users.abi,
+                deployedNetwork && deployedNetwork.address
+            );
+            this.setState({ web3, account: accounts[0], contract: instance });
+            console.log("********** Instance:", instance);
+        } catch (error) {
+            alert(
+                `Failed to load web3, accounts, or contract. Check console for details.`,
+            );
+            console.error(error);
+        }
+    }
     onChangeFirstName(e) {
         this.setState({
             firstName: e.target.value,
@@ -216,6 +253,54 @@ class Register extends Component {
         return dateFnsFormat(date, format, { locale });
     }
 
+    regPatient = async () => {
+        const { account, contract } = this.state;
+        console.log("Contract *****", contract);
+        // await contract.methods.registerPatient().call({ from: accounts[0] }).then(function (res) {
+        //     console.log(res);
+        // }).catch(function (err) {
+        //     console.log(err);
+        // });
+        // contract.events.MyEvent({})
+        //     .on("connected", function (subscriptionId) {
+        //         console.log("ok", subscriptionId);
+        //     })
+        //     .on('data', function (event) {
+        //         console.log(event); // same results as the optional callback above
+        //     })
+        await contract.methods.registerPatient.call();
+        console.log('Account', account);
+        // console.log("**** RESPONSE", response.logs[0]);
+        const patientAddress = await contract.methods.isPatient(account).call();
+        console.log("Patient Address", patientAddress);
+        const patient1 = await contract.methods.getPatientAddress(0).call();
+        const patient2 = await contract.methods.getPatientAddress(1).call();
+        console.log("$$$$$$$Patient 1:", patient1);
+        console.log("$$$$$$$Patient 2:", patient2);
+
+        // response._parent.events.registeredPatient({})
+        //     .on('data', async function (event) {
+        //         console.log(event.returnValues);
+        //         // Do something here
+        //     })
+        //     .on('error', console.error);
+
+        // let res = response._parent.events.registeredPatient({});
+        // res.get((error, logs) => {
+        //     logs.forEach((log) => {
+        //         console.log(log.args);
+        //     })
+        // })
+        // console.log("**** Decoded", response.registeredPatient);
+        // console.log("**** Decoded", response.registeredPatient.returnValues);
+        // // console.log("**** Decoded", response.registeredPatient());
+        // console.log("**** RESPONSE", response._parent.events);
+        // console.log("**** RESPONSE", response._parent.events.registeredPatient);
+        // // console.log("**** RESPONSE", response._parent.events.registeredPatient[0]);
+        // console.log("**** RESPONSE", response._parent.events.registeredPatient[["BoundArgs"]]);
+
+    };
+
     handleRegister(e) {
         e.preventDefault();
 
@@ -244,17 +329,19 @@ class Register extends Component {
                         this.state.homeAddress,
                         this.state.emergencyContact
                     )
-                )
-                .then(() => {
+                ).then(() => {
+                    this.regPatient();
+                }).then(() => {
                     this.setState({
                         successful: true,
                     });
-                })
-                .catch(() => {
+                }).catch(() => {
                     this.setState({
                         successful: false,
                     });
                 });
+
+            // console.log("I AM INNNN ASYNC GET BC ADDRESS");
         } else if (this.checkBtn.context._errors.length === 0 && this.state.roleId === "3") {
             this.props
                 .dispatch(

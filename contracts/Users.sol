@@ -2,10 +2,10 @@
 pragma solidity >=0.4.21 <0.7.0; // version 6 is required for truffle build
 
 contract Users {
-    address masterAdminAddress;
+    address masterAdmin;
 
     constructor() public {
-        masterAdminAddress = msg.sender;
+        masterAdmin = msg.sender;
     }
 
     // patient structure
@@ -38,8 +38,6 @@ contract Users {
     mapping(uint256 => admin) public admins;
     mapping(address => bool) public adminExists;
 
-    uint256 masterAdminId = registerAdmin(masterAdminAddress);
-
     mapping(uint256 => patient) public patients;
     mapping(address => bool) public patientExists;
     mapping(uint256 => doctor) public doctors;
@@ -55,7 +53,7 @@ contract Users {
     modifier adminOnly() {
         // we might have to add more admins later
         require(
-            adminExists[msg.sender] == true,
+            adminExists[msg.sender] == true || msg.sender == masterAdmin,
             "Only admin can perform this function."
         );
         _;
