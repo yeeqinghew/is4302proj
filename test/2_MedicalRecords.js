@@ -16,11 +16,8 @@ contract("MedicalRecords", accounts => {
     const outsider = accounts[5];
     
     let result;
-    let stringdetails;
-    let details;
-    
-    stringdetails = "Patient has high fever" //, prescribed Acetaminophen
-    details = web3.utils.toHex(stringdetails);
+    let stringdetails = "Patient has high fever";
+    let details = web3.utils.toHex(stringdetails);
 
     before(async () => {
         usersInstance = await Users.deployed({from:masterAdmin});
@@ -35,9 +32,6 @@ contract("MedicalRecords", accounts => {
     });
 
     it('Test 1: Creating Records', async() => {
-        stringdetails = "Patient has high fever" //, prescribed Acetaminophen
-        details = web3.utils.toHex(stringdetails);
-
         // Test 1A: Creating Records for invalid patient 
         try {
             result = await medicalRecordsInstance.createRecord(10, 0, details, {from: doctor1});
@@ -67,9 +61,6 @@ contract("MedicalRecords", accounts => {
     });
 
     it('Test 2: Viewing Medical Records', async() => {
-        stringdetails = "Patient has high fever" //, prescribed Acetaminophen"
-        details = web3.utils.toHex(stringdetails);
-
         // Test 2A: Viewing invalid record
         try {
             result = await medicalRecordsInstance.viewRecord(5, {from: patient1});
@@ -92,8 +83,6 @@ contract("MedicalRecords", accounts => {
         }
 
         // Test 2D: Retrieving medical record
-        // Need to review this, either the sol code got problem or the following is wrong 'cause patientid is undefined
-
         result = await medicalRecordsInstance.viewRecord(0, {from: patient1});
         assert.strictEqual(result[0].toNumber(), 0, "patientid is different");
         let finalResult = web3.utils.hexToUtf8(result[1]);

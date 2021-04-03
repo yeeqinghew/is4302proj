@@ -65,34 +65,7 @@ contract("Users", accounts => {
         assert.strictEqual(result.toNumber(), 0, "Wrong penalty score");
 
         result = await usersInstance.getAppraisalScore(0);
-        assert.strictEqual(result.toNumber(), 0, "Wrong appraisal score");
-        
-        // might not need test 2d and 2e cause i changed function type from public to external
-        // meaning you only can call the function from other contracts
-        /* // Test 2D: Add penalty and appraisal score
-        result = await usersInstance.addPenaltyScore(0, 5);
-        result = await usersInstance.getPenaltyScore(0);
-        assert.strictEqual(result.toNumber(), 5, "Wrong penalty score for doctor1");
-
-        result = await usersInstance.addAppraisalScore(0);
-        result = await usersInstance.getAppraisalScore(0);
-        assert.strictEqual(result.toNumber(), 1, "Wrong appraisal score for doctor1");
-
-        // Test 2E: Trying to blacklist without being admin
-        try {
-            result = await usersInstance.blacklistDoctor(0, {from: outsider});
-        } catch(error) {
-            assert.include(error.message, "Only admin can perform this function.");
-        }
-
-        beforeRegister = await usersInstance.isBlacklisted(0);
-        assert.strictEqual(beforeRegister, false, "Doctor blacklisted before blacklisting");
-
-        result = await usersInstance.blacklistDoctor(0, {from: admin2});
-        afterRegister = await usersInstance.isBlacklisted(0);
-        assert.strictEqual(afterRegister, true, "Doctor didn't get blacklisted successfully");
-        */
-    
+        assert.strictEqual(result.toNumber(), 0, "Wrong appraisal score");    
     }); 
 
     it('Test 3: Registering patient, validating patient identity', async() => {
