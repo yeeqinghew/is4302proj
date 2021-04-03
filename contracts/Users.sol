@@ -131,6 +131,9 @@ contract Users{
 
     // function to see if address is an admin
     function isAdmin(address user) public view returns(bool) {
+        if (user == masterAdmin) {
+            return true;
+        }
         return adminExists[user];
     }
 
@@ -184,17 +187,17 @@ contract Users{
     }
 
     // function to add penalty score
-    function addPenaltyScore(uint256 doctorId, uint256 score) public adminOnly() doctorExist(doctorId) {
+    function addPenaltyScore(uint256 doctorId, uint256 score) external doctorExist(doctorId) {
         doctors[doctorId].penaltyScore += score;
     }
 
     // function to add appraisal score
-    function addAppraisalScore(uint256 doctorId) public doctorExist(doctorId) {
+    function addAppraisalScore(uint256 doctorId) external doctorExist(doctorId) {
         doctors[doctorId].appraisalScore += 1;
     }
 
     // function to blacklist doctor
-    function blacklistDoctor(uint256 doctorId) public adminOnly() doctorExist(doctorId) {
+    function blacklistDoctor(uint256 doctorId) external doctorExist(doctorId) {
         doctors[doctorId].blacklisted = true;
     }
 

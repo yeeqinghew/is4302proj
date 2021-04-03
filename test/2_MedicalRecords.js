@@ -81,21 +81,14 @@ contract("MedicalRecords", accounts => {
             assert.include(error.message, "Medical record does not belong to this patient.");
         }
 
-        // Test 2C:  Admin viewing valid record (this one should work, admin shuold be able to view record)
-        try {
-            result = await medicalRecordsInstance.viewRecord(0, {from: masterAdmin});
-        } catch(error) {
-            assert.include(error.message, "Not patient, doctor or admin, not authorised.");
-        }
-
-        // Test 2D: Blacklisted doctor viewing valid record
+        // Test 2C: Blacklisted doctor viewing valid record
         try {
             result = await medicalRecordsInstance.viewRecord(0, {from: blacklistedDoctor});
         } catch(error) {
             assert.include(error.message, "Not authorised as doctor is blacklisted.");
         }
 
-        /* Test 2E: Retrieving medical record
+        /* Test 2D: Retrieving medical record
         Need to review this, either the sol code got problem or the following is wrong 'cause patientid is undefined
 
         let patientid, info, doctorid, patientverified, doctorverified = await medicalRecordsInstance.viewRecord(0, {from: patient1});
@@ -150,7 +143,7 @@ contract("MedicalRecords", accounts => {
             return ev.medicalRecordId == 1
         });
 
-        // Test 4D: Doctor that has checked this doctor too many times (done many times for convinience)
+        // Test 4D: Doctor that has checked this doctor too many times (done many times for convenience)
         await medicalRecordsInstance.doctorVerify(1, {from: doctor1}); // 2
         await medicalRecordsInstance.doctorVerify(1, {from: doctor1}); // 3
         await medicalRecordsInstance.doctorVerify(1, {from: doctor1}); // 4, max number of verifications
@@ -172,14 +165,36 @@ contract("MedicalRecords", accounts => {
     });
 
     it('Test 5: Admin dealing with report after sending to authorities', async() => {
-        // Test 5A: Punishes non-flagged report (report id 1 or smth)
+        await medicalRecordsInstance.createRecord(1, 3, details, {from: doctor3});
+        await medicalRecordsInstance.createRecord(1, 3, details, {from: doctor3});
 
-        // Test 5B: Waives non-flagged report
+        // Test 5A: Waives flagged report
+        await medicalRecordsInstance.doctorReport(2, {from: doctor2});
 
-        // Test 5C: Waives flagged report
+        result = await medicalRecordsInstance.waive(2, {from: masterAdmin});
+        truffleAssertions.eventEmitted(result, 'wronglyAccusedReport', (ev) => {
+            return ev.medicalRecordId == 2
+        });
 
-        // Test 5D: Punishes flagged report
+        // Test 5B: Punishes flagged report
+        await medicalRecordsInstance.doctorReport(3, {from: doctor2});
 
-        // Test 5E: Check penalty score
+        result = await medicalRecordsInstance.punish(3, 3, {from: masterAdmin});
+        truffleAssertions.eventEmitted(result, 'fraudulentReport', (ev) => {
+            return ev.medicalRecordId == 3
+        });
+
+        // Test 5C: Check penalty 
+        let score = await usersInstance.getPenaltyScore(3);
+        assert.strictEqual(score.toNumber(), 3, "Penalty score is different.");
+
+        // Test 5D: Doctor 3 is punished again, gets blacklisted
+        await medicalRecordsInstance.createRecord(1, 3, details, {from: doctor3});
+        await medicalRecordsInstance.doctorReport(4, {from: doctor2});
+        await medicalRecordsInstance.punish(4, 8, {from: masterAdmin});
+
+        blacklisted = await usersInstance.isBlacklisted(3);
+        assert.strictEqual(blacklisted, true, "Not blacklisted.");
     })
+
 });
