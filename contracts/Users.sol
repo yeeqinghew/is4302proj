@@ -2,10 +2,10 @@
 pragma solidity >=0.4.21 <0.7.0; // version 6 is required for truffle build
 
 contract Users {
-    address masterAdminAddress;
+    address masterAdmin;
 
     constructor() public {
-        masterAdminAddress = msg.sender;
+        masterAdmin = msg.sender;
     }
 
     // patient structure
@@ -38,8 +38,6 @@ contract Users {
     mapping(uint256 => admin) public admins;
     mapping(address => bool) public adminExists;
 
-    uint256 masterAdminId = registerAdmin(masterAdminAddress);
-
     mapping(uint256 => patient) public patients;
     mapping(address => bool) public patientExists;
     mapping(uint256 => doctor) public doctors;
@@ -55,7 +53,7 @@ contract Users {
     modifier adminOnly() {
         // we might have to add more admins later
         require(
-            adminExists[msg.sender] == true,
+            adminExists[msg.sender] == true || msg.sender == masterAdmin,
             "Only admin can perform this function."
         );
         _;
@@ -135,6 +133,9 @@ contract Users {
 
     // function to see if address is an admin
     function isAdmin(address user) public view returns (bool) {
+        if (user == masterAdmin) {
+            return true;
+        }
         return adminExists[user];
     }
 
@@ -227,8 +228,7 @@ contract Users {
 
     // function to add penalty score
     function addPenaltyScore(uint256 doctorId, uint256 score)
-        public
-        adminOnly()
+        external
         doctorExist(doctorId)
     {
         doctors[doctorId].penaltyScore += score;
@@ -236,19 +236,14 @@ contract Users {
 
     // function to add appraisal score
     function addAppraisalScore(uint256 doctorId)
-        public
-        adminOnly()
+        external
         doctorExist(doctorId)
     {
         doctors[doctorId].appraisalScore += 1;
     }
 
     // function to blacklist doctor
-    function blacklistDoctor(uint256 doctorId)
-        public
-        adminOnly()
-        doctorExist(doctorId)
-    {
+    function blacklistDoctor(uint256 doctorId) external doctorExist(doctorId) {
         doctors[doctorId].blacklisted = true;
     }
 

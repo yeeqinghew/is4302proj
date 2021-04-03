@@ -16,8 +16,8 @@ contract MedicalRecords {
         uint256 patient;
         bytes32 details;
         uint256 doctorInCharge;
-        bool patientVerified;
-        bool doctorVerified;
+        uint256 patientVerified;
+        uint256 doctorVerified;
     }
 
     uint256 public numMedicalRecords = 0;
@@ -69,6 +69,19 @@ contract MedicalRecords {
             userContract.isDoctor(msg.sender) == true,
             "Not doctor, not authorised to verify."
         );
+        // SJ thinks that should also ensure this doctor verifying is not the doctor who attended to the patient
+        // keef agrees
+        _;
+    }
+
+    modifier notSameDoctor(uint256 medicalRecordId) {
+        require(
+            msg.sender !=
+                userContract.getDoctorAddress(
+                    medicalRecords[medicalRecordId].doctorInCharge
+                ),
+            "Doctor checking is the same as the doctor in charge."
+        );
         _;
     }
 
@@ -82,7 +95,7 @@ contract MedicalRecords {
 
     modifier blacklistedId(uint256 doctorId) {
         require(
-            userContract.isBlacklisted(doctorId),
+            userContract.isBlacklisted(doctorId) != true,
             "Not authorised as doctor is blacklisted."
         );
         _;
@@ -90,7 +103,8 @@ contract MedicalRecords {
 
     modifier blacklistedAddress() {
         require(
-            userContract.isBlacklisted(userContract.getDoctorId(msg.sender)),
+            userContract.isBlacklisted(userContract.getDoctorId(msg.sender)) !=
+                true,
             "Not authorised as doctor is blacklisted."
         );
         _;
@@ -118,7 +132,7 @@ contract MedicalRecords {
         returns (uint256)
     {
         medicalRecord memory newMedicalRecord =
-            medicalRecord(patientId, details, doctorId, false, false);
+            medicalRecord(patientId, details, doctorId, 0, 0);
 
         uint256 newMedicalRecordId = numMedicalRecords++;
         medicalRecords[newMedicalRecordId] = newMedicalRecord;
@@ -147,8 +161,8 @@ contract MedicalRecords {
             uint256,
             bytes32,
             uint256,
-            bool,
-            bool
+            uint256,
+            uint256
         )
     {
         require(
@@ -192,7 +206,7 @@ contract MedicalRecords {
         public
         isPatientFromRecord(medicalRecordId)
     {
-        medicalRecords[medicalRecordId].patientVerified = true;
+        medicalRecords[medicalRecordId].patientVerified = 1;
         emit patientVerified(medicalRecordId);
     }
 
@@ -201,16 +215,16 @@ contract MedicalRecords {
         public
         isDoctorAddress()
         blacklistedAddress()
+        notSameDoctor(medicalRecordId)
     {
         require(
             doctorVerifications[userContract.getDoctorId(msg.sender)][
                 medicalRecords[medicalRecordId].doctorInCharge
-            ] <= 5,
+            ] < 5,
             "This doctor has been verifying doctor in charge too many times."
         );
-        // TODO: change threshold
 
-        medicalRecords[medicalRecordId].doctorVerified = true;
+        medicalRecords[medicalRecordId].doctorVerified = 1;
         doctorVerifications[userContract.getDoctorId(msg.sender)][
             medicalRecords[medicalRecordId].doctorInCharge
         ] += 1;
@@ -225,6 +239,7 @@ contract MedicalRecords {
     {
         flaggedRecords[medicalRecordId] = medicalRecords[medicalRecordId];
         isFlaggedRecords[medicalRecordId] = true;
+        medicalRecords[medicalRecordId].patientVerified = 2;
         emit patientReported(medicalRecordId);
     }
 
@@ -233,12 +248,22 @@ contract MedicalRecords {
         public
         isDoctorAddress()
         blacklistedAddress()
+        notSameDoctor(medicalRecordId)
     {
+        require(
+            doctorVerifications[userContract.getDoctorId(msg.sender)][
+                medicalRecords[medicalRecordId].doctorInCharge
+            ] < 5,
+            "This doctor has been verifying doctor in charge too many times."
+        );
+
         flaggedRecords[medicalRecordId] = medicalRecords[medicalRecordId];
         isFlaggedRecords[medicalRecordId] = true;
         doctorVerifications[userContract.getDoctorId(msg.sender)][
             medicalRecords[medicalRecordId].doctorInCharge
         ] += 1;
+        medicalRecords[medicalRecordId].doctorVerified = 2;
+        userContract.addAppraisalScore(userContract.getDoctorId(msg.sender));
         emit doctorReported(medicalRecordId);
     }
 
@@ -276,8 +301,44 @@ contract MedicalRecords {
     {
         delete flaggedRecords[medicalRecordId];
         delete isFlaggedRecords[medicalRecordId];
-        medicalRecords[medicalRecordId].patientVerified = true;
-        medicalRecords[medicalRecordId].doctorVerified = true;
+        medicalRecords[medicalRecordId].patientVerified = 1;
+        medicalRecords[medicalRecordId].doctorVerified = 1;
         emit wronglyAccusedReport(medicalRecordId);
+    }
+
+    // function to convert string to bytes32 (to store details)
+    function stringToBytes32(string memory source)
+        public
+        pure
+        returns (bytes32 result)
+    {
+        bytes memory tempEmptyStringTest = bytes(source);
+        if (tempEmptyStringTest.length == 0) {
+            return 0x0;
+        }
+
+        assembly {
+            result := mload(add(source, 32))
+        }
+        return bytes32(result);
+    }
+
+    // function to convert bytes32 to string (to read details)
+    function bytes32ToString(bytes32 _bytes32)
+        public
+        pure
+        returns (string memory)
+    {
+        uint8 i = 0;
+        while (i < 32 && _bytes32[i] != 0) {
+            i++;
+        }
+
+        bytes memory bytesArray = new bytes(i);
+        for (i = 0; i < 32 && _bytes32[i] != 0; i++) {
+            bytesArray[i] = _bytes32[i];
+        }
+
+        return string(bytesArray);
     }
 }

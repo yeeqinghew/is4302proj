@@ -10,9 +10,9 @@ import {
 import AuthService from "../services/auth.service";
 
 export const registerPatient = (
-    roleId, username, email, password, firstName, lastName, contactNum, dob, gender, nationality, race, nric, homeAddress, emergencyContact
+    roleId, username, email, password, firstName, lastName, contactNum, dob, gender, nationality, race, bcAddress, nric, homeAddress, emergencyContact
 ) => (dispatch) => {
-    return AuthService.registerPatient(roleId, username, email, password, firstName, lastName, contactNum, dob, gender, nationality, race, nric, homeAddress, emergencyContact)
+    return AuthService.registerPatient(roleId, username, email, password, firstName, lastName, contactNum, dob, gender, nationality, race, bcAddress, nric, homeAddress, emergencyContact)
         .then(
             (response) => {
                 dispatch({
@@ -49,9 +49,9 @@ export const registerPatient = (
 };
 
 export const registerDoctor = (
-    roleId, username, email, password, firstName, lastName, contactNum, dob, gender, nationality, race, specialty, healthcareInstitution
+    roleId, username, email, password, firstName, lastName, contactNum, dob, gender, nationality, race, bcAddress, specialty, healthcareInstitution
 ) => (dispatch) => {
-    return AuthService.registerDoctor(roleId, username, email, password, firstName, lastName, contactNum, dob, gender, nationality, race, specialty, healthcareInstitution).then(
+    return AuthService.registerDoctor(roleId, username, email, password, firstName, lastName, contactNum, dob, gender, nationality, race, bcAddress, specialty, healthcareInstitution).then(
         (response) => {
             dispatch({
                 type: REGISTER_SUCCESS,

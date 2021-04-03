@@ -51,35 +51,35 @@ class App extends Component {
       });
     }
 
-    try {
-      // Get network provider and web3 instance.
-      const web3 = await getWeb3();
-      console.log("web3: ", web3);
+    // try {
+    //   // Get network provider and web3 instance.
+    //   const web3 = await getWeb3();
+    //   console.log("web3: ", web3);
 
-      // Use web3 to get the user's accounts.
-      const accounts = await web3.eth.getAccounts();
-      console.log("Accounts: ", accounts);
+    //   // Use web3 to get the user's accounts.
+    //   const accounts = await web3.eth.getAccounts();
+    //   console.log("Accounts: ", accounts);
 
-      // Get the contract instance.
-      const networkId = await web3.eth.net.getId();
-      console.log("Network ID: ", networkId);
-      const deployedNetwork = SimpleStorageContract.networks[networkId];
-      console.log("DeployedNetwork: ", deployedNetwork);
-      const instance = new web3.eth.Contract(
-        SimpleStorageContract.abi,
-        deployedNetwork && deployedNetwork.address,
-      );
+    //   // Get the contract instance.
+    //   const networkId = await web3.eth.net.getId();
+    //   console.log("Network ID: ", networkId);
+    //   const deployedNetwork = SimpleStorageContract.networks[networkId];
+    //   console.log("DeployedNetwork: ", deployedNetwork);
+    //   const instance = new web3.eth.Contract(
+    //     SimpleStorageContract.abi,
+    //     deployedNetwork && deployedNetwork.address,
+    //   );
 
-      // Set web3, accounts, and contract to the state, and then proceed with an
-      // example of interacting with the contract's methods.
-      this.setState({ web3, accounts, contract: instance }, this.runExample);
-    } catch (error) {
-      // Catch any errors for any of the above operations.
-      alert(
-        `Failed to load web3, accounts, or contract. Check console for details.`,
-      );
-      console.error(error);
-    }
+    //   // Set web3, accounts, and contract to the state, and then proceed with an
+    //   // example of interacting with the contract's methods.
+    //   this.setState({ web3, accounts, contract: instance }, this.runExample);
+    // } catch (error) {
+    //   // Catch any errors for any of the above operations.
+    //   alert(
+    //     `Failed to load web3, accounts, or contract. Check console for details.`,
+    //   );
+    //   console.error(error);
+    // }
   }
 
   runExample = async () => {
@@ -104,12 +104,6 @@ class App extends Component {
 
     return (
       <Router history={history}>
-        <link
-          rel="stylesheet"
-          href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
-          crossOrigin="anonymous"
-        />
         <div>
           <nav className="navbar navbar-expand navbar-dark bg-dark">
             <Link to={"/"} className="navbar-brand">
