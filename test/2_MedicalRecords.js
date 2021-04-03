@@ -9,10 +9,12 @@ contract("MedicalRecords", accounts => {
     const masterAdmin = accounts[0];
     const doctor1 = accounts[1];
     const doctor2 = accounts[2];
+    const doctor3 = accounts[7];
     const blacklistedDoctor = accounts[6];
     const patient1 = accounts[3];
     const patient2 = accounts[4];
     const outsider = accounts[5];
+    
     let result;
     let stringdetails;
     let details;
@@ -23,6 +25,7 @@ contract("MedicalRecords", accounts => {
         await usersInstance.registerDoctor(doctor1, {from: masterAdmin}); // doctorId = 0
         await usersInstance.registerDoctor(doctor2, {from: masterAdmin}); // doctorId = 1
         await usersInstance.registerDoctor(blacklistedDoctor, {from: masterAdmin}); // doctorId = 2
+        await usersInstance.registerDoctor(doctor3, {from: masterAdmin}); // doctorId = 3
         await usersInstance.blacklistDoctor(2, {from: masterAdmin});
         await usersInstance.registerPatient({from: patient1}); // patientId = 0
         await usersInstance.registerPatient({from: patient2}); // patientId = 1
@@ -34,27 +37,27 @@ contract("MedicalRecords", accounts => {
 
         // Test 1A: Creating Records for invalid patient 
         try {
-            result = await medicalRecordsInstance.createRecord(10, 0, details);
+            result = await medicalRecordsInstance.createRecord(10, 0, details, {from: doctor1});
         } catch(error) {
             assert.include(error.message, "Patient does not exist.");
         }
 
         // Test 1B: Creating Records with invalid doctor
         try {
-            result = await medicalRecordsInstance.createRecord(0, 5, details);
+            result = await medicalRecordsInstance.createRecord(0, 5, details, {from: doctor1});
         } catch(error) {
             assert.include(error.message, "Doctor does not exist.");
         }
 
         // Test 1C: Creating Records with blacklisted doctor
         try {
-            result = await medicalRecordsInstance.createRecord(0, 2, details);
+            result = await medicalRecordsInstance.createRecord(0, 2, details, {from: blacklistedDoctor});
         } catch(error) {
             assert.include(error.message, "revert", "Not authorised as doctor is blacklisted.");
         }
 
         // Test 1D: Successful creation of records
-        result = await medicalRecordsInstance.createRecord(0, 0, details);
+        result = await medicalRecordsInstance.createRecord(0, 0, details, {from: doctor1});
         truffleAssertions.eventEmitted(result, 'createdMedicalRecord', (ev) => {
             return ev.medicalRecordId == 0
         }); 
@@ -66,7 +69,7 @@ contract("MedicalRecords", accounts => {
 
         // Test 2A: Viewing invalid record
         try {
-            result = await medicalRecordsInstance.viewRecord(5);
+            result = await medicalRecordsInstance.viewRecord(5, {from: patient1});
         } catch(error) {
             assert.include(error.message, "Medical record does not exist.");
         }
@@ -78,7 +81,7 @@ contract("MedicalRecords", accounts => {
             assert.include(error.message, "Medical record does not belong to this patient.");
         }
 
-        // Test 2C:  Admin viewing valid record 
+        // Test 2C:  Admin viewing valid record (this one should work)
         try {
             result = await medicalRecordsInstance.viewRecord(0, {from: masterAdmin});
         } catch(error) {
@@ -118,12 +121,19 @@ contract("MedicalRecords", accounts => {
         }); 
 
         // Test 3C: Patient reports medical record
-        
+        result = await medicalRecordsInstance.patientReport(0, {from: patient1});
+        truffleAssertions.eventEmitted(result, 'patientReported', (ev) => {
+            return ev.medicalRecordId == 0
+        });
     });
 
     it('Test 4: Doctor checking medical record', async() => {
-        // Test 4A: Blacklisted doctor
+        await medicalRecordsInstance.createRecord(1, 1, details, {from: doctor2} )
 
+        // Test 4A: Blacklisted doctor
+        try {
+            result = await medicalRecordsInstance.doctor
+        }
         // Test 4B: Same doctor as doctor in charge
 
         // Test 4C: Doctor that has checked this doctor too many times
@@ -137,7 +147,7 @@ contract("MedicalRecords", accounts => {
     });
 
     it('Test 5: Admin dealing with report after sending to authorities', async() => {
-        // Test 5A: Punishes non-flagged report
+        // Test 5A: Punishes non-flagged report (report id 1 or smth)
 
         // Test 5B: Waives non-flagged report
 
