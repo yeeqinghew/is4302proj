@@ -103,7 +103,7 @@ contract("MedicalRecords", accounts => {
         assert.strictEqual(doctorverified.toNumber(), 0, "no doctor verified"); */
     });
 
-    it('Test 3: Patient verifying medical record', async() => {
+    it('Test 3: Patient checking medical record', async() => {
         // Test 3A: Not authorised patient
         try {
             result = await medicalRecordsInstance.patientVerify(0, {from: patient2});
@@ -116,5 +116,35 @@ contract("MedicalRecords", accounts => {
         truffleAssertions.eventEmitted(result, 'patientVerified', (ev) => {
             return ev.medicalRecordId == 0
         }); 
+
+        // Test 3C: Patient reports medical record
+        
     });
+
+    it('Test 4: Doctor checking medical record', async() => {
+        // Test 4A: Blacklisted doctor
+
+        // Test 4B: Same doctor as doctor in charge
+
+        // Test 4C: Doctor that has checked this doctor too many times
+
+        // Test 4D: Correct doctor verifies
+
+        // Test 4E: Correct doctor reports
+
+        // Test 4F: Check appraisal score
+
+    });
+
+    it('Test 5: Admin dealing with report after sending to authorities', async() => {
+        // Test 5A: Punishes non-flagged report
+
+        // Test 5B: Waives non-flagged report
+
+        // Test 5C: Waives flagged report
+
+        // Test 5D: Punishes flagged report
+
+        // Test 5E: Check penalty score
+    })
 });

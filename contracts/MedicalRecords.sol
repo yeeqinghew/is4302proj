@@ -144,8 +144,6 @@ contract MedicalRecords{
     // function for doctor to verify that medical record has no problems
     function doctorVerify(uint256 medicalRecordId) public isDoctorAddress() blacklistedAddress() notSameDoctor(medicalRecordId) {
         require(doctorVerifications[userContract.getDoctorId(msg.sender)][medicalRecords[medicalRecordId].doctorInCharge] <= 5, "This doctor has been verifying doctor in charge too many times.");
-        
-        // TODO: change threshold
 
         medicalRecords[medicalRecordId].doctorVerified = 1;
         doctorVerifications[userContract.getDoctorId(msg.sender)][medicalRecords[medicalRecordId].doctorInCharge] += 1;
@@ -164,7 +162,8 @@ contract MedicalRecords{
 
     // function for verifying doctor to whistleblow
     function doctorReport(uint256 medicalRecordId) public isDoctorAddress() blacklistedAddress() notSameDoctor(medicalRecordId) {
-
+        require(doctorVerifications[userContract.getDoctorId(msg.sender)][medicalRecords[medicalRecordId].doctorInCharge] <= 5, "This doctor has been verifying doctor in charge too many times.");
+        
         flaggedRecords[medicalRecordId] = medicalRecords[medicalRecordId];
         isFlaggedRecords[medicalRecordId] = true;
         doctorVerifications[userContract.getDoctorId(msg.sender)][medicalRecords[medicalRecordId].doctorInCharge] += 1;
