@@ -70,6 +70,18 @@ contract MedicalRecords {
             "Not doctor, not authorised to verify."
         );
         // SJ thinks that should also ensure this doctor verifying is not the doctor who attended to the patient
+        // keef agrees
+        _;
+    }
+
+    modifier notSameDoctor(uint256 medicalRecordId) {
+        require(
+            msg.sender !=
+                userContract.getDoctorAddress(
+                    medicalRecords[medicalRecordId].doctorInCharge
+                ),
+            "Doctor checking is the same as the doctor in charge."
+        );
         _;
     }
 
@@ -91,7 +103,8 @@ contract MedicalRecords {
 
     modifier blacklistedAddress() {
         require(
-            userContract.isBlacklisted(userContract.getDoctorId(msg.sender)),
+            userContract.isBlacklisted(userContract.getDoctorId(msg.sender)) !=
+                true,
             "Not authorised as doctor is blacklisted."
         );
         _;
@@ -202,14 +215,14 @@ contract MedicalRecords {
         public
         isDoctorAddress()
         blacklistedAddress()
+        notSameDoctor(medicalRecordId)
     {
         require(
             doctorVerifications[userContract.getDoctorId(msg.sender)][
                 medicalRecords[medicalRecordId].doctorInCharge
-            ] <= 5,
+            ] < 5,
             "This doctor has been verifying doctor in charge too many times."
         );
-        // TODO: change threshold
 
         medicalRecords[medicalRecordId].doctorVerified = 1;
         doctorVerifications[userContract.getDoctorId(msg.sender)][
@@ -235,13 +248,22 @@ contract MedicalRecords {
         public
         isDoctorAddress()
         blacklistedAddress()
+        notSameDoctor(medicalRecordId)
     {
+        require(
+            doctorVerifications[userContract.getDoctorId(msg.sender)][
+                medicalRecords[medicalRecordId].doctorInCharge
+            ] < 5,
+            "This doctor has been verifying doctor in charge too many times."
+        );
+
         flaggedRecords[medicalRecordId] = medicalRecords[medicalRecordId];
         isFlaggedRecords[medicalRecordId] = true;
         doctorVerifications[userContract.getDoctorId(msg.sender)][
             medicalRecords[medicalRecordId].doctorInCharge
         ] += 1;
         medicalRecords[medicalRecordId].doctorVerified = 2;
+        userContract.addAppraisalScore(userContract.getDoctorId(msg.sender));
         emit doctorReported(medicalRecordId);
     }
 

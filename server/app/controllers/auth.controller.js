@@ -28,7 +28,8 @@ exports.signup = (req, res) => {
             dob: new Date(YEAR, MONTH, DATE),
             gender: req.body.gender,
             nationality: req.body.nationality,
-            race: req.body.race
+            race: req.body.race,
+            bc_address: req.body.bcAddress
         }).then(user => {
             Patient.create({
                 nric: req.body.nric,
@@ -91,7 +92,8 @@ exports.signup = (req, res) => {
             dob: new Date(YEAR, MONTH, DATE),
             gender: req.body.gender,
             nationality: req.body.nationality,
-            race: req.body.race
+            race: req.body.race,
+            bcAddress: req.body.bc_address
         }).then(user => {
             Doctor.create({
                 specialty: req.body.specialty,
@@ -165,6 +167,7 @@ exports.signin = (req, res) => {
                         gender: user.gender,
                         nationality: user.nationality,
                         race: user.race,
+                        bc_address: user.bc_address,
                         nric: patient.nric,
                         home_address: patient.home_address,
                         emergency_contact: patient.emergency_contact,
@@ -190,6 +193,7 @@ exports.signin = (req, res) => {
                         gender: user.gender,
                         nationality: user.nationality,
                         race: user.race,
+                        bc_address: user.bc_address,
                         specialty: doctor.specialty,
                         healthcare_institution: doctor.healthcare_institution,
                         accessToken: token
@@ -214,6 +218,7 @@ exports.signin = (req, res) => {
                         gender: user.gender,
                         nationality: user.nationality,
                         race: user.race,
+                        bc_address: user.bc_address,
                         date_joined: admin.date_joined,
                         accessToken: token
                     });

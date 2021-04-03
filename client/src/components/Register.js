@@ -108,16 +108,22 @@ class Register extends Component {
             emergencyContact: "",
             specialty: "",
             healthcareInstitution: "",
+            bcAddress: "",
             successful: false,
             web3: null,
-            // accounts: null,
-            account: null,
+            accounts: null,
+            // account: null,
             contract: null
         };
     }
 
     componentDidMount = async () => {
+        if (!window.location.hash) {
+            window.location = window.location + '#loaded';
+            window.location.reload();
+        }
         try {
+            console.log(this.state.contract);
             console.log("I AM IN TRY CATCH NOW");
             const web3 = await getWeb3();
             console.log("********** web3: ", web3);
@@ -135,8 +141,13 @@ class Register extends Component {
                 Users.abi,
                 deployedNetwork && deployedNetwork.address
             );
-            this.setState({ web3, account: accounts[0], contract: instance });
+            this.setState({ web3, accounts, contract: instance });
             console.log("********** Instance:", instance);
+
+            // const patient1 = await instance.methods.getPatientAddress(0).call();
+            // const patient2 = await instance.methods.getPatientAddress(1).call();
+            // const patient3 = await instance.methods.getPatientAddress(2).call();
+            // console.log("*****", patient1, patient2, patient3);
         } catch (error) {
             alert(
                 `Failed to load web3, accounts, or contract. Check console for details.`,
@@ -254,51 +265,16 @@ class Register extends Component {
     }
 
     regPatient = async () => {
-        const { account, contract } = this.state;
-        console.log("Contract *****", contract);
-        // await contract.methods.registerPatient().call({ from: accounts[0] }).then(function (res) {
-        //     console.log(res);
-        // }).catch(function (err) {
-        //     console.log(err);
-        // });
-        // contract.events.MyEvent({})
-        //     .on("connected", function (subscriptionId) {
-        //         console.log("ok", subscriptionId);
-        //     })
-        //     .on('data', function (event) {
-        //         console.log(event); // same results as the optional callback above
-        //     })
-        await contract.methods.registerPatient.call();
-        console.log('Account', account);
-        // console.log("**** RESPONSE", response.logs[0]);
-        const patientAddress = await contract.methods.isPatient(account).call();
-        console.log("Patient Address", patientAddress);
+        const { accounts, contract } = this.state;
+        const response = await contract.methods.registerPatient().send({ from: accounts[0] })
+        console.log("######## Response", response);
+        console.log("*** isPatient", await contract.methods.isPatient(accounts[0]).call());
+        console.log("*** Exsisting", await contract.methods.isExistingPatient(0).call());
+        console.log("######## Event", response.events.registeredPatient.returnValues[0]);
         const patient1 = await contract.methods.getPatientAddress(0).call();
-        const patient2 = await contract.methods.getPatientAddress(1).call();
         console.log("$$$$$$$Patient 1:", patient1);
-        console.log("$$$$$$$Patient 2:", patient2);
-
-        // response._parent.events.registeredPatient({})
-        //     .on('data', async function (event) {
-        //         console.log(event.returnValues);
-        //         // Do something here
-        //     })
-        //     .on('error', console.error);
-
-        // let res = response._parent.events.registeredPatient({});
-        // res.get((error, logs) => {
-        //     logs.forEach((log) => {
-        //         console.log(log.args);
-        //     })
-        // })
-        // console.log("**** Decoded", response.registeredPatient);
-        // console.log("**** Decoded", response.registeredPatient.returnValues);
-        // // console.log("**** Decoded", response.registeredPatient());
-        // console.log("**** RESPONSE", response._parent.events);
-        // console.log("**** RESPONSE", response._parent.events.registeredPatient);
-        // // console.log("**** RESPONSE", response._parent.events.registeredPatient[0]);
-        // console.log("**** RESPONSE", response._parent.events.registeredPatient[["BoundArgs"]]);
-
+        this.setState({ bcAddress: response.events.registeredPatient.returnValues[0] });
+        return response;
     };
 
     handleRegister(e) {
@@ -311,35 +287,73 @@ class Register extends Component {
         this.form.validateAll();
 
         if (this.checkBtn.context._errors.length === 0 && this.state.roleId === "2") {
-            this.props
-                .dispatch(
-                    registerPatient(
-                        this.state.roleId,
-                        this.state.username,
-                        this.state.email,
-                        this.state.password,
-                        this.state.firstName,
-                        this.state.lastName,
-                        this.state.contactNum,
-                        this.state.dob,
-                        this.state.gender,
-                        this.state.nationality,
-                        this.state.race,
-                        this.state.nric,
-                        this.state.homeAddress,
-                        this.state.emergencyContact
-                    )
-                ).then(() => {
-                    this.regPatient();
-                }).then(() => {
-                    this.setState({
-                        successful: true,
-                    });
-                }).catch(() => {
-                    this.setState({
-                        successful: false,
-                    });
-                });
+            this.regPatient()
+                .then((res) => {
+                    if (res.events.registeredPatient) {
+                        this.props.dispatch(
+                            registerPatient(
+                                this.state.roleId,
+                                this.state.username,
+                                this.state.email,
+                                this.state.password,
+                                this.state.firstName,
+                                this.state.lastName,
+                                this.state.contactNum,
+                                this.state.dob,
+                                this.state.gender,
+                                this.state.nationality,
+                                this.state.race,
+                                this.state.bcAddress,
+                                this.state.nric,
+                                this.state.homeAddress,
+                                this.state.emergencyContact
+                            )
+                        ).then(() => {
+                            this.setState({
+                                successful: true,
+                            });
+                        }).catch(() => {
+                            this.setState({
+                                successful: false,
+                            });
+                        });
+                    }
+                }).catch((err) => {
+                    console.log("Failed with error: " + err);
+                    console.log(err);
+                    console.log(err.message);
+                    console.log(err.message.reason);
+                    console.log(JSON.parse(err.message.substring(15).trim()).message);
+                })
+            // this.props
+            //     .dispatch(
+            //         registerPatient(
+            //             this.state.roleId,
+            //             this.state.username,
+            //             this.state.email,
+            //             this.state.password,
+            //             this.state.firstName,
+            //             this.state.lastName,
+            //             this.state.contactNum,
+            //             this.state.dob,
+            //             this.state.gender,
+            //             this.state.nationality,
+            //             this.state.race,
+            //             this.state.nric,
+            //             this.state.homeAddress,
+            //             this.state.emergencyContact
+            //         )
+            //     ).then(() => {
+            //         this.regPatient();
+            //     }).then(() => {
+            //         this.setState({
+            //             successful: true,
+            //         });
+            //     }).catch(() => {
+            //         this.setState({
+            //             successful: false,
+            //         });
+            //     });
 
             // console.log("I AM INNNN ASYNC GET BC ADDRESS");
         } else if (this.checkBtn.context._errors.length === 0 && this.state.roleId === "3") {
@@ -580,7 +594,7 @@ class Register extends Component {
                                             />
                                         </div>
                                         <div className="form-group">
-                                            <label htmlFor="emergencyContact">Emergency Contract</label>
+                                            <label htmlFor="emergencyContact">Emergency Contact</label>
                                             <Input
                                                 type="text"
                                                 className="form-control"

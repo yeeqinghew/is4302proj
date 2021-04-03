@@ -46,6 +46,9 @@ class Dashboard extends Component {
                 <p><strong>Race: </strong>
                     {currentUser.race}
                 </p>
+                <p><strong>Blockchain Address: </strong>
+                    {currentUser.bc_address}
+                </p>
                 {currentUser.role === "admin" && <div>
                     <p> <strong>Date Joined: </strong>
                         {currentUser.date_joined}

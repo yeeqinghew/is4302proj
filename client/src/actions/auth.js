@@ -10,9 +10,9 @@ import {
 import AuthService from "../services/auth.service";
 
 export const registerPatient = (
-    roleId, username, email, password, firstName, lastName, contactNum, dob, gender, nationality, race, nric, homeAddress, emergencyContact
+    roleId, username, email, password, firstName, lastName, contactNum, dob, gender, nationality, race, bcAddress, nric, homeAddress, emergencyContact
 ) => (dispatch) => {
-    return AuthService.registerPatient(roleId, username, email, password, firstName, lastName, contactNum, dob, gender, nationality, race, nric, homeAddress, emergencyContact)
+    return AuthService.registerPatient(roleId, username, email, password, firstName, lastName, contactNum, dob, gender, nationality, race, bcAddress, nric, homeAddress, emergencyContact)
         .then(
             (response) => {
                 dispatch({
