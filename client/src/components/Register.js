@@ -124,7 +124,6 @@ class Register extends Component {
         }
         try {
             console.log(this.state.contract);
-            console.log("I AM IN TRY CATCH NOW");
             const web3 = await getWeb3();
             console.log("********** web3: ", web3);
 
@@ -143,11 +142,6 @@ class Register extends Component {
             );
             this.setState({ web3, accounts, contract: instance });
             console.log("********** Instance:", instance);
-
-            // const patient1 = await instance.methods.getPatientAddress(0).call();
-            // const patient2 = await instance.methods.getPatientAddress(1).call();
-            // const patient3 = await instance.methods.getPatientAddress(2).call();
-            // console.log("*****", patient1, patient2, patient3);
         } catch (error) {
             alert(
                 `Failed to load web3, accounts, or contract. Check console for details.`,
@@ -271,11 +265,22 @@ class Register extends Component {
         console.log("*** isPatient", await contract.methods.isPatient(accounts[0]).call());
         console.log("*** Exsisting", await contract.methods.isExistingPatient(0).call());
         console.log("######## Event", response.events.registeredPatient.returnValues[0]);
-        const patient1 = await contract.methods.getPatientAddress(0).call();
-        console.log("$$$$$$$Patient 1:", patient1);
+        // const patient1 = await contract.methods.getPatientAddress(0).call();
+        // console.log("$$$$$$$Patient 1:", patient1);
         this.setState({ bcAddress: response.events.registeredPatient.returnValues[0] });
         return response;
     };
+
+    regDoctor = async () => {
+        const { accounts, contract } = this.state;
+        const isDoctor = await contract.methods.isDoctor(accounts[0]).call();
+        console.log("doccc::::::", isDoctor);
+        console.log("doccc::::::", accounts[0]);
+        if (isDoctor === false) {
+            console.log("I AM IN");
+            this.setState({ bcAddress: accounts[0] });
+        }
+    }
 
     handleRegister(e) {
         e.preventDefault();
@@ -357,34 +362,72 @@ class Register extends Component {
 
             // console.log("I AM INNNN ASYNC GET BC ADDRESS");
         } else if (this.checkBtn.context._errors.length === 0 && this.state.roleId === "3") {
-            this.props
-                .dispatch(
-                    registerDoctor(
-                        this.state.roleId,
-                        this.state.username,
-                        this.state.email,
-                        this.state.password,
-                        this.state.firstName,
-                        this.state.lastName,
-                        this.state.contactNum,
-                        this.state.dob,
-                        this.state.gender,
-                        this.state.nationality,
-                        this.state.race,
-                        this.state.specialty,
-                        this.state.healthcareInstitution
-                    )
-                )
+            this.regDoctor()
                 .then(() => {
-                    this.setState({
-                        successful: true,
+                    console.log("You will see specialty", this.state.specialty);
+                    console.log("You will see healthcare", this.state.healthcareInstitution);
+
+                    this.props.dispatch(
+                        registerDoctor(
+                            this.state.roleId,
+                            this.state.username,
+                            this.state.email,
+                            this.state.password,
+                            this.state.firstName,
+                            this.state.lastName,
+                            this.state.contactNum,
+                            this.state.dob,
+                            this.state.gender,
+                            this.state.nationality,
+                            this.state.race,
+                            this.state.bcAddress,
+                            this.state.specialty,
+                            this.state.healthcareInstitution
+                        )
+                    ).then(() => {
+                        this.setState({
+                            successful: true,
+                        });
+                    }).catch(() => {
+                        this.setState({
+                            successful: false,
+                        });
                     });
+                }).catch((err) => {
+                    console.log("Failed with error: " + err);
+                    console.log(err);
+                    console.log(err.message);
+                    console.log(err.message.reason);
+                    // console.log(JSON.parse(err.message.substring(15).trim()).message);
                 })
-                .catch(() => {
-                    this.setState({
-                        successful: false,
-                    });
-                });
+            // this.props
+            //     .dispatch(
+            //         registerDoctor(
+            //             this.state.roleId,
+            //             this.state.username,
+            //             this.state.email,
+            //             this.state.password,
+            //             this.state.firstName,
+            //             this.state.lastName,
+            //             this.state.contactNum,
+            //             this.state.dob,
+            //             this.state.gender,
+            //             this.state.nationality,
+            //             this.state.race,
+            //             this.state.specialty,
+            //             this.state.healthcareInstitution
+            //         )
+            //     )
+            //     .then(() => {
+            //         this.setState({
+            //             successful: true,
+            //         });
+            //     })
+            //     .catch(() => {
+            //         this.setState({
+            //             successful: false,
+            //         });
+            //     });
         }
     }
     render() {

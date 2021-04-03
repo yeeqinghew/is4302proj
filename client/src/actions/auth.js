@@ -49,9 +49,9 @@ export const registerPatient = (
 };
 
 export const registerDoctor = (
-    roleId, username, email, password, firstName, lastName, contactNum, dob, gender, nationality, race, specialty, healthcareInstitution
+    roleId, username, email, password, firstName, lastName, contactNum, dob, gender, nationality, race, bcAddress, specialty, healthcareInstitution
 ) => (dispatch) => {
-    return AuthService.registerDoctor(roleId, username, email, password, firstName, lastName, contactNum, dob, gender, nationality, race, specialty, healthcareInstitution).then(
+    return AuthService.registerDoctor(roleId, username, email, password, firstName, lastName, contactNum, dob, gender, nationality, race, bcAddress, specialty, healthcareInstitution).then(
         (response) => {
             dispatch({
                 type: REGISTER_SUCCESS,

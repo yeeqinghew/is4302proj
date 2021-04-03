@@ -93,28 +93,34 @@ exports.signup = (req, res) => {
             gender: req.body.gender,
             nationality: req.body.nationality,
             race: req.body.race,
-            bcAddress: req.body.bc_address
+            bcAddress: req.body.bcAddress
         }).then(user => {
             Doctor.create({
                 specialty: req.body.specialty,
                 healthcare_institution: req.body.healthcareInstitution,
-                user: user
+                users: user
             }, {
                 include: [Doctor.user]
+            }).then((doctor) => {
+                if (req.body.roleId) {
+                    Role.findOne({
+                        where: {
+                            id: req.body.roleId
+                        }
+                    }).then(roleId => {
+                        doctor.setUser(user.userId).then(() => {
+                            console.log("Successful");
+                            // res.send({ message: "User was registered successfully!" });
+                        }).then(() => {
+                            user.setRole(roleId).then(() => {
+                                console.log("Successful");
+                            })
+                        }).then(() => {
+                            res.send({ message: "User was registered successfully!" });
+                        })
+                    })
+                }
             });
-
-            if (req.body.roleId) {
-                Role.findOne({
-                    where: {
-                        id: req.body.roleId
-                    }
-                }).then(roleId => {
-                    user.setRole(roleId).then(() => {
-                        console.log("Successful");
-                        res.send({ message: "User was registered successfully!" });
-                    });
-                })
-            }
         }).catch(err => {
             res.status(500).send({ message: err.message });
         });
@@ -143,7 +149,7 @@ exports.signin = (req, res) => {
             });
         }
 
-        var token = jwt.sign({ id: user.id }, config.secret, {
+        var token = jwt.sign({ id: user.userId }, config.secret, {
             expiresIn: 86400 // 24 hours
         });
 

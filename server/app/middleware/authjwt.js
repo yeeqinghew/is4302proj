@@ -4,20 +4,21 @@ const db = require("../models");
 const User = db.user;
 
 verifyToken = (req, res, next) => {
-    let token = req.headers["authorization"];
-
+    let token = req.headers["x-access-token"];
     if (!token) {
         return res.status(403).send({
             message: "No token provided!"
         });
     }
-
+    console.log(token);
     jwt.verify(token, config.secret, (err, decoded) => {
         if (err) {
+            console.log(err);
             return res.status(401).send({
                 message: "Unauthorized!"
             });
         }
+        console.log(decoded.userId);
         req.userId = decoded.id;
         next();
     });
@@ -40,8 +41,11 @@ isPatient = (req, res, next) => {
 };
 
 isAdmin = (req, res, next) => {
+    console.log("req.userId", req.userId);
     User.findByPk(req.userId).then(user => {
+        console.log(user);
         user.getRole().then(role => {
+            console.log(role, "!!!!!!!");
             if (role.name === "admin") {
                 next();
                 return;

@@ -15,6 +15,7 @@ export default class BoardAdmin extends Component {
     componentDidMount() {
         UserService.getAdminBoard().then(
             response => {
+                console.log("HEREEEEE", response);
                 this.setState({
                     content: response.data
                 });
@@ -37,6 +38,7 @@ export default class BoardAdmin extends Component {
             <div className="container">
                 <header className="jumbotron">
                     <h3>{this.state.content}</h3>
+                    {/* <h1>Testing</h1> */}
                 </header>
             </div>
         );
