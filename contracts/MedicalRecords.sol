@@ -62,8 +62,8 @@ contract MedicalRecords{
         _;
     }
 
-    modifier notSameDoctor(uint256 medicalRecordId) {
-        require(msg.sender != userContract.getDoctorAddress(medicalRecords[medicalRecordId].doctorInCharge), "Doctor checking is the same as the doctor in charge.");
+    modifier notSameDoctor(uint256 medicalRecordId) { 
+        require(msg.sender != userContract.getDoctorAddress(medicalRecords[medicalRecordId].doctorInCharge),"Doctor checking is the same as the doctor in charge.");
         _;
     }
 
@@ -78,7 +78,7 @@ contract MedicalRecords{
     }
 
     modifier blacklistedAddress() {
-        require(userContract.isBlacklisted(userContract.getDoctorId(msg.sender)), "Not authorised as doctor is blacklisted.");
+        require(userContract.isBlacklisted(userContract.getDoctorId(msg.sender)) != true, "Not authorised as doctor is blacklisted.");
         _;
     }
 
@@ -143,7 +143,7 @@ contract MedicalRecords{
 
     // function for doctor to verify that medical record has no problems
     function doctorVerify(uint256 medicalRecordId) public isDoctorAddress() blacklistedAddress() notSameDoctor(medicalRecordId) {
-        require(doctorVerifications[userContract.getDoctorId(msg.sender)][medicalRecords[medicalRecordId].doctorInCharge] <= 5, "This doctor has been verifying doctor in charge too many times.");
+        require(doctorVerifications[userContract.getDoctorId(msg.sender)][medicalRecords[medicalRecordId].doctorInCharge] < 5, "This doctor has been verifying doctor in charge too many times.");
 
         medicalRecords[medicalRecordId].doctorVerified = 1;
         doctorVerifications[userContract.getDoctorId(msg.sender)][medicalRecords[medicalRecordId].doctorInCharge] += 1;
@@ -162,12 +162,13 @@ contract MedicalRecords{
 
     // function for verifying doctor to whistleblow
     function doctorReport(uint256 medicalRecordId) public isDoctorAddress() blacklistedAddress() notSameDoctor(medicalRecordId) {
-        require(doctorVerifications[userContract.getDoctorId(msg.sender)][medicalRecords[medicalRecordId].doctorInCharge] <= 5, "This doctor has been verifying doctor in charge too many times.");
-        
+        require(doctorVerifications[userContract.getDoctorId(msg.sender)][medicalRecords[medicalRecordId].doctorInCharge] < 5, "This doctor has been verifying doctor in charge too many times.");
+
         flaggedRecords[medicalRecordId] = medicalRecords[medicalRecordId];
         isFlaggedRecords[medicalRecordId] = true;
         doctorVerifications[userContract.getDoctorId(msg.sender)][medicalRecords[medicalRecordId].doctorInCharge] += 1;
         medicalRecords[medicalRecordId].doctorVerified = 2;
+        userContract.addAppraisalScore(userContract.getDoctorId(msg.sender));
         emit doctorReported(medicalRecordId);
     }
 

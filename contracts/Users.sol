@@ -189,7 +189,7 @@ contract Users{
     }
 
     // function to add appraisal score
-    function addAppraisalScore(uint256 doctorId) public adminOnly() doctorExist(doctorId) {
+    function addAppraisalScore(uint256 doctorId) public doctorExist(doctorId) {
         doctors[doctorId].appraisalScore += 1;
     }
 

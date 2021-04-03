@@ -81,7 +81,7 @@ contract("MedicalRecords", accounts => {
             assert.include(error.message, "Medical record does not belong to this patient.");
         }
 
-        // Test 2C:  Admin viewing valid record (this one should work)
+        // Test 2C:  Admin viewing valid record (this one should work, admin shuold be able to view record)
         try {
             result = await medicalRecordsInstance.viewRecord(0, {from: masterAdmin});
         } catch(error) {
@@ -128,22 +128,47 @@ contract("MedicalRecords", accounts => {
     });
 
     it('Test 4: Doctor checking medical record', async() => {
-        await medicalRecordsInstance.createRecord(1, 1, details, {from: doctor2} )
+        await medicalRecordsInstance.createRecord(1, 1, details, {from: doctor2});
 
         // Test 4A: Blacklisted doctor
         try {
-            result = await medicalRecordsInstance.doctor
+            result = await medicalRecordsInstance.doctorVerify(1, {from: blacklistedDoctor});
+        } catch(error) {
+            assert.include(error.message, "Not authorised as doctor is blacklisted.");
         }
+
         // Test 4B: Same doctor as doctor in charge
+        try {
+            result = await medicalRecordsInstance.doctorVerify(1, {from: doctor2});
+        } catch(error) {
+            assert.include(error.message, "Doctor checking is the same as the doctor in charge.");
+        }
 
-        // Test 4C: Doctor that has checked this doctor too many times
+        // Test 4C: Correct doctor verifies
+        result = await medicalRecordsInstance.doctorVerify(1, {from: doctor1});
+        truffleAssertions.eventEmitted(result, 'doctorVerified', (ev) => {
+            return ev.medicalRecordId == 1
+        });
 
-        // Test 4D: Correct doctor verifies
+        // Test 4D: Doctor that has checked this doctor too many times (done many times for convinience)
+        await medicalRecordsInstance.doctorVerify(1, {from: doctor1}); // 2
+        await medicalRecordsInstance.doctorVerify(1, {from: doctor1}); // 3
+        await medicalRecordsInstance.doctorVerify(1, {from: doctor1}); // 4, max number of verifications
+        try {
+            result = await medicalRecordsInstance.doctorVerify(1, {from: doctor1});
+        } catch(error) {
+            assert.include(error.message, "This doctor has been verifying doctor in charge too many times.");
+        }
 
         // Test 4E: Correct doctor reports
+        result = await medicalRecordsInstance.doctorReport(1, {from: doctor3});
+        truffleAssertions.eventEmitted(result, 'doctorReported', (ev) => {
+            return ev.medicalRecordId == 1
+        });
 
         // Test 4F: Check appraisal score
-
+        let score = await usersInstance.getAppraisalScore(3);
+        assert.strictEqual(score.toNumber(), 1, "Appraisal score is different.");
     });
 
     it('Test 5: Admin dealing with report after sending to authorities', async() => {
