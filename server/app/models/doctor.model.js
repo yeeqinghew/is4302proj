@@ -6,6 +6,10 @@ module.exports = (sequelize, Sequelize) => {
         healthcare_institution: {
             type: Sequelize.STRING
         },
+        approved: {
+            type: Sequelize.BOOLEAN,
+            defaultValue: '0'
+        },
         // numOfServedPatients: {
         //     type: Sequelize.INTEGER,
         //     defaultValue: 0

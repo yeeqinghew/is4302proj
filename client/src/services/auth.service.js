@@ -7,10 +7,19 @@ class AuthService {
         return axios
             .post(API_URL + "signin", { username, password })
             .then((response) => {
-                if (response.data.accessToken) {
-                    localStorage.setItem("user", JSON.stringify(response.data));
+                if (response.data.role === "doctor") {
+                    if (response.data.approved === "true") {
+                        if (response.data.accessToken) {
+                            localStorage.setItem("user", JSON.stringify(response.data));
+                        }
+                    } else {
+                        return response.data;
+                    }
+                } else {
+                    if (response.data.accessToken) {
+                        localStorage.setItem("user", JSON.stringify(response.data));
+                    }
                 }
-
                 return response.data;
             });
     }

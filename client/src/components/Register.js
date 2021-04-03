@@ -323,7 +323,7 @@ class Register extends Component {
                     console.log(err);
                     console.log(err.message);
                     console.log(err.message.reason);
-                    console.log(JSON.parse(err.message.substring(15).trim()).message);
+                    // console.log(JSON.parse(err.message.substring(15).trim()).message);
                 })
             // this.props
             //     .dispatch(

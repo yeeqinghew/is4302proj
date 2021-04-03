@@ -196,6 +196,7 @@ exports.signin = (req, res) => {
                         bc_address: user.bc_address,
                         specialty: doctor.specialty,
                         healthcare_institution: doctor.healthcare_institution,
+                        approved: doctor.approved,
                         accessToken: token
                     });
                 })
