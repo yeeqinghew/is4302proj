@@ -18,6 +18,9 @@ contract("MedicalRecords", accounts => {
     let result;
     let stringdetails;
     let details;
+    
+    stringdetails = "Patient has high fever" //, prescribed Acetaminophen
+    details = web3.utils.toHex(stringdetails);
 
     before(async () => {
         usersInstance = await Users.deployed({from:masterAdmin});
@@ -64,8 +67,8 @@ contract("MedicalRecords", accounts => {
     });
 
     it('Test 2: Viewing Medical Records', async() => {
-        let stringdetails = "Patient has high fever, prescribed Acetaminophen"
-        let details = web3.utils.toHex(stringdetails);
+        stringdetails = "Patient has high fever" //, prescribed Acetaminophen"
+        details = web3.utils.toHex(stringdetails);
 
         // Test 2A: Viewing invalid record
         try {
@@ -88,15 +91,16 @@ contract("MedicalRecords", accounts => {
             assert.include(error.message, "Not authorised as doctor is blacklisted.");
         }
 
-        /* Test 2D: Retrieving medical record
-        Need to review this, either the sol code got problem or the following is wrong 'cause patientid is undefined
+        // Test 2D: Retrieving medical record
+        // Need to review this, either the sol code got problem or the following is wrong 'cause patientid is undefined
 
-        let patientid, info, doctorid, patientverified, doctorverified = await medicalRecordsInstance.viewRecord(0, {from: patient1});
-        assert.strictEqual(patientid.toNumber(), 0, "patientid is different");
-        assert.strictEqual(info, details, "details of record different");
-        assert.strictEqual(doctorid.toNumber(), 0, "doctorid different");
-        assert.strictEqual(patientverified.toNumber(), 0, "patient have yet to verify");
-        assert.strictEqual(doctorverified.toNumber(), 0, "no doctor verified"); */
+        result = await medicalRecordsInstance.viewRecord(0, {from: patient1});
+        assert.strictEqual(result[0].toNumber(), 0, "patientid is different");
+        let finalResult = web3.utils.hexToUtf8(result[1]);
+        assert.strictEqual(finalResult, stringdetails, "details of record different");
+        assert.strictEqual(result[2].toNumber(), 0, "doctorid different");
+        assert.strictEqual(result[3].toNumber(), 0, "patient have yet to verify");
+        assert.strictEqual(result[4].toNumber(), 0, "no doctor verified"); 
     });
 
     it('Test 3: Patient checking medical record', async() => {
