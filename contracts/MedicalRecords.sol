@@ -58,6 +58,12 @@ contract MedicalRecords{
     modifier isDoctorAddress() {
         require(userContract.isDoctor(msg.sender) == true, "Not doctor, not authorised to verify.");
         // SJ thinks that should also ensure this doctor verifying is not the doctor who attended to the patient
+        // keef agrees
+        _;
+    }
+
+    modifier notSameDoctor(uint256 medicalRecordId) {
+        require(msg.sender != userContract.getDoctorAddress(medicalRecords[medicalRecordId].doctorInCharge), "Doctor checking is the same as the doctor in charge.");
         _;
     }
 
@@ -136,8 +142,9 @@ contract MedicalRecords{
     }
 
     // function for doctor to verify that medical record has no problems
-    function doctorVerify(uint256 medicalRecordId) public isDoctorAddress() blacklistedAddress() {
+    function doctorVerify(uint256 medicalRecordId) public isDoctorAddress() blacklistedAddress() notSameDoctor(medicalRecordId) {
         require(doctorVerifications[userContract.getDoctorId(msg.sender)][medicalRecords[medicalRecordId].doctorInCharge] <= 5, "This doctor has been verifying doctor in charge too many times.");
+        
         // TODO: change threshold
 
         medicalRecords[medicalRecordId].doctorVerified = 1;
@@ -156,7 +163,7 @@ contract MedicalRecords{
     }
 
     // function for verifying doctor to whistleblow
-    function doctorReport(uint256 medicalRecordId) public isDoctorAddress() blacklistedAddress() {
+    function doctorReport(uint256 medicalRecordId) public isDoctorAddress() blacklistedAddress() notSameDoctor(medicalRecordId) {
 
         flaggedRecords[medicalRecordId] = medicalRecords[medicalRecordId];
         isFlaggedRecords[medicalRecordId] = true;
