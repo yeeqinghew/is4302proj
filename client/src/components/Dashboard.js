@@ -4,6 +4,11 @@ import { connect } from "react-redux";
 
 class Dashboard extends Component {
 
+    viewMedicalRecordList=()=> {
+        let path = "/patient-medical-record-list";
+        this.props.history.push(path);
+    }
+
     render() {
         const { user: currentUser } = this.props;
 
@@ -65,6 +70,11 @@ class Dashboard extends Component {
                     <p><strong>Emergency Contact: </strong>
                         {currentUser.emergency_contact}
                     </p>
+                    <div>
+                        <button className="btn btn-primary btn-block" onClick={this.viewMedicalRecordList}>
+                            View Medical Record List
+                        </button>
+                    </div>                    
                 </div>}
 
                 {currentUser.role === "doctor" && <div>
