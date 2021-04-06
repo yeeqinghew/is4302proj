@@ -11,6 +11,7 @@ import Dashboard from "./components/Dashboard";
 import BoardAdmin from "./components/BoardAdmin";
 import BoardPatient from "./components/BoardPatient";
 import BoardDoctor from "./components/BoardDoctor";
+import PatientMedicalRecordList from "./components/PatientMedicalRecordList";
 
 import { logout } from "./actions/auth";
 import { clearMessage } from "./actions/message";
@@ -31,7 +32,7 @@ class App extends Component {
       showPatientBoard: false,
       showDoctorBoard: false,
       currentUser: undefined,
-      storageValue: 0, web3: null, accounts: null, contract: null
+      storageValue: 0, web3: null, accounts: null, contract: null      
     };
 
     history.listen((location) => {
@@ -177,6 +178,7 @@ class App extends Component {
               <Route path="/patient" component={BoardPatient} />
               <Route path="/admin" component={BoardAdmin} />
               <Route path="/doctor" component={BoardDoctor} />
+              <Route path="/patient-medical-record-list" component={PatientMedicalRecordList} />
             </Switch>
           </div>
         </div>
