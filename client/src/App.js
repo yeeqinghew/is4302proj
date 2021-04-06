@@ -11,7 +11,8 @@ import Register from "./components/Register";
 import Dashboard from "./components/Dashboard";
 
 // admin
-import BoardAdmin from "./components/BoardAdmin";
+import BoardAdmin from "./components/Admin/BoardAdmin";
+import AllDoctors from "./components/Admin/AllDoctors";
 
 // patient
 import BoardPatient from "./components/BoardPatient";
@@ -23,7 +24,7 @@ import NewRecord from "./components/Doctor/NewRecord";
 import { logout } from "./actions/auth";
 import { clearMessage } from "./actions/message";
 
-import { history } from './helpers/history';
+import { history } from "./helpers/history";
 
 // sol
 import SimpleStorageContract from "./contracts/SimpleStorage.json";
@@ -39,7 +40,10 @@ class App extends Component {
       showPatientBoard: false,
       showDoctorBoard: false,
       currentUser: undefined,
-      storageValue: 0, web3: null, accounts: null, contract: null
+      storageValue: 0,
+      web3: null,
+      accounts: null,
+      contract: null,
     };
 
     history.listen((location) => {
@@ -55,7 +59,7 @@ class App extends Component {
         currentUser: user,
         showAdminBoard: user.role === "admin",
         showDoctorBoard: user.role === "doctor",
-        showPatientBoard: user.role === "patient"
+        showPatientBoard: user.role === "patient",
       });
     }
 
@@ -88,7 +92,7 @@ class App extends Component {
     //   );
     //   console.error(error);
     // }
-  }
+  };
 
   runExample = async () => {
     const { accounts, contract } = this.state;
@@ -108,7 +112,12 @@ class App extends Component {
   }
 
   render() {
-    const { currentUser, showPatientBoard, showAdminBoard, showDoctorBoard } = this.state;
+    const {
+      currentUser,
+      showPatientBoard,
+      showAdminBoard,
+      showDoctorBoard,
+    } = this.state;
 
     return (
       <Router history={history}>
@@ -116,31 +125,30 @@ class App extends Component {
           <nav className="navbar navbar-expand navbar-dark bg-dark">
             <Link to={"/"} className="navbar-brand">
               IS4302
-           </Link>
+            </Link>
             <div className="navbar-nav mr-auto">
               {showPatientBoard && (
                 <li className="nav-item">
                   <Link to={"/patient"} className="nav-link">
                     Patient Board
-                </Link>
+                  </Link>
                 </li>
-
               )}
-
               {showAdminBoard && (
-                <li className="nav-item">
-                  <Link to={"/admin"} className="nav-link">
-                    Admin Board
-                </Link>
-                </li>
+                <Fragment>
+                  <li className="nav-item">
+                    <Link to={"/admin"} className="nav-link">
+                      Admin Board
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link to={"/allDoctors"} className="nav-link">
+                      All Doctors
+                    </Link>
+                  </li>
+                </Fragment>
               )}
-
               {showDoctorBoard && (
-                // <li className="nav-item">
-                //   <Link to={"/doctor"} className="nav-link">
-                //     Doctor Board
-                // </Link>
-                // </li>
                 <Fragment>
                   <li className="nav-item">
                     <Link to={"/doctor"} className="nav-link">
@@ -166,7 +174,6 @@ class App extends Component {
               
               )}
             </div>
-
             {currentUser ? (
               <div className="navbar-nav ml-auto">
                 <li className="nav-item">
@@ -177,7 +184,7 @@ class App extends Component {
                 <li className="nav-item">
                   <a href="/login" className="nav-link" onClick={this.logOut}>
                     LogOut
-                </a>
+                  </a>
                 </li>
               </div>
             ) : (
@@ -185,19 +192,16 @@ class App extends Component {
                 <li className="nav-item">
                   <Link to={"/login"} className="nav-link">
                     Login
-                </Link>
+                  </Link>
                 </li>
-
                 <li className="nav-item">
                   <Link to={"/register"} className="nav-link">
                     Sign Up
-                </Link>
+                  </Link>
                 </li>
               </div>
             )}
           </nav>
-
-
           <div className="container mt-3">
             <Switch>
               {/* <Route exact path={["/", "/"]} component={Home} /> */}
@@ -207,13 +211,14 @@ class App extends Component {
               <Route exact path="/dashboard" component={Dashboard} />
               <Route path="/patient" component={BoardPatient} />
               <Route path="/admin" component={BoardAdmin} />
+              <Route path="/allDoctors" component={AllDoctors} />
               <Route path="/doctor" component={BoardDoctor} />
               <Route path="/newRecord" component={NewRecord} />
               <Route path="/flaggedRecords" component={BoardDoctor} />
             </Switch>
           </div>
         </div>
-      </Router >
+      </Router>
     );
   }
 }
