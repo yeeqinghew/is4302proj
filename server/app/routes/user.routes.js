@@ -1,6 +1,5 @@
 const { authjwt } = require("../middleware");
 const controller = require("../controllers/user.controller");
-
 module.exports = function (app) {
     app.use(function (req, res, next) {
         res.header(
@@ -9,8 +8,6 @@ module.exports = function (app) {
         );
         next();
     });
-
-    // app.get("/api/test/all", controller.allAccess);
 
     app.get(
         "/api/test/patient",
@@ -24,10 +21,15 @@ module.exports = function (app) {
         controller.adminBoard
     );
 
-
     app.get(
         "/api/test/doctor",
         [authjwt.verifyToken, authjwt.isDoctor],
         controller.doctorBoard
+    );
+
+    app.get(
+        "/api/test/patientByNric",
+        // [authjwt.verifyToken, authjwt.isDoctor],
+        controller.patientByNric
     );
 };
