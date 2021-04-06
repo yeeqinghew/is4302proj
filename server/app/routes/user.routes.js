@@ -30,4 +30,10 @@ module.exports = function (app) {
         [authjwt.verifyToken, authjwt.isDoctor],
         controller.doctorBoard
     );
+
+    app.get(
+        "/api/test/patientByNric",
+        // [authjwt.verifyToken, authjwt.isDoctor],
+        controller.patientByNric
+    );
 };

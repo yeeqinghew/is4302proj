@@ -16,5 +16,9 @@ class UserService {
     getDoctorBoard = () => {
         return axios.get(API_URL + "doctor", { headers: authHeader() });
     };
+
+    getPatientByNric(nric) {
+        return axios.get(API_URL + "patientByNric", { nric });
+    };
 }
 export default new UserService();

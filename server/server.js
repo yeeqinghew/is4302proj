@@ -59,6 +59,7 @@ function initial() {
             gender: "Male",
             nationality: "Singaporean",
             race: "Chinese",
+            bc_address: "0x8998E8A1ACE8D60A48f287eeb337aCa9a3eB2e8f",
             roleId: 1
         }
     }, {
@@ -73,14 +74,15 @@ function initial() {
         user: {
             username: "patient",
             password: "$2a$08$0taGxICOS60pcMcQBtYlte5vpmwC8UGx.YSzhB8OTJjBmc3xgw8lq",
-            first_name: "Sally",
-            last_name: "Lee",
+            first_name: "Aisha",
+            last_name: "bin Osman",
             email: "patient@gmail.com",
             contact_num: "95739285",
             dob: new Date(1961, 05, 18),
             gender: "Female",
             nationality: "Singaporean",
             race: "Malay",
+            bc_address: "0x25033AcE8b571F7cF05cAb12BE9dDe2F064beCdF",
             roleId: 2
         }
     }, {
@@ -91,17 +93,19 @@ function initial() {
     Doctor.create({
         specialty: "Neurology",
         healthcare_institution: "Tan Tock Seng Hospital",
+        approved: "1",
         user: {
             username: "doctor",
             password: "$2a$08$vd.7gkxv88xezScG9IbHI.Xvxil.uMSAhaBnI6eImzoYKsGtdItRG",
             first_name: "Patricia",
-            last_name: "Ong",
+            last_name: "Clarke",
             email: "doctor@gmail.com",
             contact_num: "94581236",
             dob: new Date(1985, 07, 27),
             gender: "Female",
             nationality: "Singaporean",
-            race: "Chinese",
+            race: "Eurasian",
+            bc_address: "0x9D9a9AA12B86E31a7928eA9b7533C8A2e6B3302E",
             roleId: 3
         }
     }, {

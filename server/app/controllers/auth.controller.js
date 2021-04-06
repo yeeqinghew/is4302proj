@@ -200,6 +200,7 @@ exports.signin = (req, res) => {
                         nationality: user.nationality,
                         race: user.race,
                         bc_address: user.bc_address,
+                        doctorId: doctor.id,
                         specialty: doctor.specialty,
                         healthcare_institution: doctor.healthcare_institution,
                         approved: doctor.approved,

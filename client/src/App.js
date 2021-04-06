@@ -1,16 +1,24 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import { Router, Switch, Route, Link } from "react-router-dom";
 
 // import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
+import NavDropdown from 'react-bootstrap/NavDropdown';
 
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Dashboard from "./components/Dashboard";
+
+// admin
 import BoardAdmin from "./components/BoardAdmin";
+
+// patient
 import BoardPatient from "./components/BoardPatient";
-import BoardDoctor from "./components/BoardDoctor";
+
+// doctor
+import BoardDoctor from "./components/Doctor/BoardDoctor";
+import NewRecord from "./components/Doctor/NewRecord";
 
 import { logout } from "./actions/auth";
 import { clearMessage } from "./actions/message";
@@ -128,11 +136,34 @@ class App extends Component {
               )}
 
               {showDoctorBoard && (
-                <li className="nav-item">
-                  <Link to={"/doctor"} className="nav-link">
-                    Doctor Board
-                </Link>
-                </li>
+                // <li className="nav-item">
+                //   <Link to={"/doctor"} className="nav-link">
+                //     Doctor Board
+                // </Link>
+                // </li>
+                <Fragment>
+                  <li className="nav-item">
+                    <Link to={"/doctor"} className="nav-link">
+                      Doctor Board
+                  </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link to={"/newRecord"} className="nav-link">
+                      New Record
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link to={"/flaggedRecords"} className="nav-link">
+                      Flagged Records
+                    </Link>
+                  </li>
+                  {/* <NavDropdown title="Medical Records" id="nav-dropdown">
+                    <NavDropdown.Item eventKey="4.1">Flagged Records</NavDropdown.Item>
+                    <NavDropdown.Divider />
+                    <NavDropdown.Item eventKey="4.2">New Record</NavDropdown.Item>
+                  </NavDropdown> */}
+              </Fragment>
+              
               )}
             </div>
 
@@ -177,6 +208,8 @@ class App extends Component {
               <Route path="/patient" component={BoardPatient} />
               <Route path="/admin" component={BoardAdmin} />
               <Route path="/doctor" component={BoardDoctor} />
+              <Route path="/newRecord" component={NewRecord} />
+              <Route path="/flaggedRecords" component={BoardDoctor} />
             </Switch>
           </div>
         </div>
