@@ -105,7 +105,8 @@ class NewRecord extends Component {
             response => {
                 this.setState({
                     patient: response.data,
-                    verified: true
+                    verified: true,
+                    message: ""
                 });
                 console.log("patient", response.data);
             },
@@ -136,7 +137,7 @@ class NewRecord extends Component {
         console.log("Event", response.events.createdMedicalRecord);
         const medicalRecordId = response.events.createdMedicalRecord.returnValues[0];
         console.log("Medical Record Id:", medicalRecordId);
-        // console.log("***** Medical Record:", await contract.methods.viewRecord(medicalRecordId).call());
+        // console.log("***** Medical Record:", await contract.methods.viewRecord(0).call({from: accounts[0]}));
         return response;
     }
 

@@ -20,6 +20,7 @@ import BoardPatient from "./components/BoardPatient";
 // doctor
 import BoardDoctor from "./components/Doctor/BoardDoctor";
 import NewRecord from "./components/Doctor/NewRecord";
+import RandomRecords from "./components/Doctor/RandomRecords";
 
 import { logout } from "./actions/auth";
 import { clearMessage } from "./actions/message";
@@ -161,8 +162,8 @@ class App extends Component {
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <Link to={"/flaggedRecords"} className="nav-link">
-                      Flagged Records
+                    <Link to={"/randomRecords"} className="nav-link">
+                      Verify Records
                     </Link>
                   </li>
                   {/* <NavDropdown title="Medical Records" id="nav-dropdown">
@@ -214,7 +215,7 @@ class App extends Component {
               <Route path="/allDoctors" component={AllDoctors} />
               <Route path="/doctor" component={BoardDoctor} />
               <Route path="/newRecord" component={NewRecord} />
-              <Route path="/flaggedRecords" component={BoardDoctor} />
+              <Route path="/randomRecords" component={RandomRecords} />
             </Switch>
           </div>
         </div>
