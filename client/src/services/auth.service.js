@@ -8,7 +8,7 @@ class AuthService {
             .post(API_URL + "signin", { username, password })
             .then((response) => {
                 if (response.data.role === "doctor") {
-                    if (response.data.approved === "true") {
+                    if (response.data.approved === true) {
                         if (response.data.accessToken) {
                             localStorage.setItem("user", JSON.stringify(response.data));
                         }
