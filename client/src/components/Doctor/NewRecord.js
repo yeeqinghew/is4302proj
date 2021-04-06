@@ -1,7 +1,9 @@
 import React, { Component, Fragment } from "react";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
+import TextArea from "react-validation/build/textarea";
 import CheckButton from "react-validation/build/button";
+import Toast from 'react-bootstrap/Toast'
 
 import { connect } from "react-redux";
 import UserService from "../../services/user.service";
@@ -23,13 +25,13 @@ const required = (value) => {
 class NewRecord extends Component {
     constructor(props) {
         super(props);
+        this.verifyPatient = this.verifyPatient.bind(this);
         this.handleRecord = this.handleRecord.bind(this);
         this.onChangeNric = this.onChangeNric.bind(this);
         this.onChangeDetails = this.onChangeDetails.bind(this);
         this.onChangeId = this.onChangeId.bind(this);
 
         this.state = {
-            content: "",
             web3: null,
             accounts: null,
             contract: null,
@@ -37,7 +39,7 @@ class NewRecord extends Component {
             message: "",
             patient: null,
             nric: "",
-            patientId: "",
+            verified: false,
             details: ""
         };
     }
@@ -77,26 +79,8 @@ class NewRecord extends Component {
     onChangeNric(e) {
         this.setState({
             nric: e.target.value,
+            verified: false,
         });
-
-        // UserService.getPatientByNric("S6153515B").then(
-        //     response => {
-        //         this.setState({
-        //             patient: response.data
-        //         });
-        //         console.log("patient", response.data);
-        //     },
-        //     error => {
-        //         this.setState({
-        //             content:
-        //                 (error.response &&
-        //                     error.response.data &&
-        //                     error.response.data.message) ||
-        //                 error.message ||
-        //                 error.toString()
-        //         });
-        //     }
-        // );
     }
 
     onChangeId(e) {
@@ -111,6 +95,34 @@ class NewRecord extends Component {
         });
     }
 
+    verifyPatient() {
+        // const data = { nric: 'S6153515B' };
+        // const response = await fetch("http://localhost:8080/getPatientByNric", { method: 'POST', body: JSON.stringify(data) });
+        // const jsonData = await response.json();
+        // this.setState({ patient: jsonData });
+        // console.log(this.state.patient);
+        UserService.getPatientByNric(this.state.nric).then(
+            response => {
+                this.setState({
+                    patient: response.data,
+                    verified: true
+                });
+                console.log("patient", response.data);
+            },
+            error => {
+                this.setState({
+                    message: "Patient cannot be verified"
+                });
+                console.log(
+                    (error.response &&
+                        error.response.data &&
+                        error.response.data.message) ||
+                    error.message ||
+                    error.toString())
+            }
+        );
+    };
+
     createRecord = async () => {
         const { accounts, contract } = this.state;
         const { user: currentDoctor } = this.props;
@@ -119,7 +131,7 @@ class NewRecord extends Component {
         const details = this.state.web3.utils.asciiToHex(this.state.details);
         console.log("convert to bytes:", details);
 
-        const response = await contract.methods.createRecord(this.state.patientId, 0, details).send({ from: accounts[0] }); //to replace doctorId, bc_address when doctor approval done
+        const response = await contract.methods.createRecord(this.state.patient.patientId, 0, details).send({ from: accounts[0] }); //to replace doctorId, bc_address when doctor approval done
         console.log("Response", response);
         console.log("Event", response.events.createdMedicalRecord);
         const medicalRecordId = response.events.createdMedicalRecord.returnValues[0];
@@ -135,12 +147,18 @@ class NewRecord extends Component {
             successful: false,
         });
 
+        if (!this.state.verified) {
+            this.setState({
+                message: "Patient has not been verified!"
+            });
+            return;
+        }
+
         this.form.validateAll();
 
         if (this.checkBtn.context._errors.length === 0) {
             this.createRecord()
             .then((res) => {
-                console.log("res", res);
                 this.setState({
                     successful: true,
                     message: "Medical Record is created successfully!"
@@ -157,6 +175,7 @@ class NewRecord extends Component {
 
     render() {
         const { message } = this.props;
+        const { patient } = this.state;
         return (
             <Fragment>
                 <header className="jumbotron">
@@ -170,7 +189,7 @@ class NewRecord extends Component {
                 >
                     {!this.state.successful && (
                         <div>
-                            {/* <div className="form-group">
+                            <div className="form-group">
                                 <label htmlFor="nric">NRIC</label>
                                 <Input
                                     type="text"
@@ -180,22 +199,33 @@ class NewRecord extends Component {
                                     onChange={this.onChangeNric}
                                     validations={[required]}
                                 />
-                            </div> */}
-                            <div className="form-group">
-                                <label htmlFor="patientId">Patient ID</label>
-                                <Input
-                                    type="text"
-                                    className="form-control"
-                                    name="patientId"
-                                    value={this.state.patientId}
-                                    onChange={this.onChangeId}
-                                    validations={[required]}
-                                />
                             </div>
                             <div className="form-group">
+                                <button type="button" className="btn btn-primary" onClick={this.verifyPatient}>Verify</button>
+                            </div>
+                            {this.state.verified && (
+                                <div className="form-group">
+                                    <h4>Current Patient Information</h4>
+                                    <br/>
+                                    <p> <strong>First Name: </strong>
+                                        {patient.first_name}
+                                    </p>
+                                    <p> <strong>Last Name: </strong>
+                                        {patient.last_name}
+                                    </p>
+                                    <p> <strong>Date of Birth: </strong>
+                                        {patient.dob}
+                                    </p>
+                                    <p> <strong>Contact Number: </strong>
+                                        {patient.contact_num}
+                                    </p>
+                                    <br/>
+                                </div>
+                            )}
+                            <div className="form-group">
                                 <label htmlFor="details">Details</label>
-                                <Input
-                                    type="textarea"
+                                <TextArea
+                                    // type="textarea"
                                     className="form-control"
                                     name="details"
                                     value={this.state.details}
@@ -204,7 +234,7 @@ class NewRecord extends Component {
                                 />
                             </div>
                             <div className="form-group">
-                                <button className="btn btn-primary">Submit</button>
+                                <button type="submit" className="btn btn-primary">Submit</button>
                             </div>
                         </div>
                     )}
@@ -216,6 +246,19 @@ class NewRecord extends Component {
                             </div>
                         </div>
                     )}
+                    {/* <Toast
+                        style={{
+                            position: 'absolute',
+                            top: 10,
+                            right: 10,
+                            background: '#00CC00'
+                        }}
+                    >
+                        <Toast.Header>
+                            <strong className="mr-auto">Bootstrap</strong>
+                        </Toast.Header>
+                        <Toast.Body>Record created successfully!</Toast.Body>
+                    </Toast> */}
                     <CheckButton
                         style={{ display: "none" }}
                         ref={(c) => {
@@ -227,13 +270,6 @@ class NewRecord extends Component {
         );
     }
 }
-
-// function mapStateToProps(state) {
-//     const { message } = state.message;
-//     return {
-//         message,
-//     };
-// }
 
 function mapStateToProps(state) {
     const { user } = state.auth;

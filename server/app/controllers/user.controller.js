@@ -16,20 +16,24 @@ exports.doctorBoard = (req, res) => {
 };
 
 exports.patientByNric = (req, res) => {
-    Patient.findOne({
+    User.findOne({
         where: {
-            nric: req.body.nric
+            '$patient.nric$': req.body.nric,
+        },
+        include: [
+            {model: Patient, as: "patient"}
+        ]
+    }).then((user) => {
+        if (!user) {
+            return res.status(404).send({ message: "User Not found." });
         }
-    }).then((patient) => {
-        if (!patient) {
-            return res.status(404).send({ message: "Patient Not found." });
-        }
+
+        // console.log("user", res.json(user));
 
         res.status(200).send({
             id: user.userId,
             username: user.username,
             email: user.email,
-            role: role.name,
             first_name: user.first_name,
             last_name: user.last_name,
             contact_num: user.contact_num,
@@ -38,12 +42,10 @@ exports.patientByNric = (req, res) => {
             nationality: user.nationality,
             race: user.race,
             bc_address: user.bc_address,
-            patientId: patient.id,
-            nric: patient.nric,
-            home_address: patient.home_address,
-            emergency_contact: patient.emergency_contact
+            patientId: user.patient.id,
+            nric: user.patient.nric,
+            home_address: user.patient.home_address,
+            emergency_contact: user.patient.emergency_contact
         });
-    }).catch(err => {
-        res.status(500).send({ message: err.message });
-    });
+    })
 };

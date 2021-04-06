@@ -27,7 +27,7 @@ module.exports = function (app) {
         controller.doctorBoard
     );
 
-    app.get(
+    app.post(
         "/api/test/patientByNric",
         // [authjwt.verifyToken, authjwt.isDoctor],
         controller.patientByNric
