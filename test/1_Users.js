@@ -54,17 +54,17 @@ contract("Users", accounts => {
         let afterRegister = await usersInstance.isDoctor(doctor);
         assert.strictEqual(afterRegister, true, "Failed to register doctor");
 
-        result = await usersInstance.isExistingDoctor(0);
+        result = await usersInstance.isExistingDoctor(1);
         assert.strictEqual(result, true, "Invalid registration of doctor identity");
 
-        result = await usersInstance.getDoctorAddress(0);
+        result = await usersInstance.getDoctorAddress(1);
         assert.strictEqual(result, doctor, "Invalid doctor's address");
 
         // Test 2C: Doctors should start off with 0 penalty and appraisal score
-        result = await usersInstance.getPenaltyScore(0);
+        result = await usersInstance.getPenaltyScore(1);
         assert.strictEqual(result.toNumber(), 0, "Wrong penalty score");
 
-        result = await usersInstance.getAppraisalScore(0);
+        result = await usersInstance.getAppraisalScore(1);
         assert.strictEqual(result.toNumber(), 0, "Wrong appraisal score");    
     }); 
 
@@ -87,25 +87,25 @@ contract("Users", accounts => {
         assert.strictEqual(afterRegister, true, "Failed to register patient2");
 
         // Test 3B: Validating patient identity
-        result = await usersInstance.getPatientAddress(0);
+        result = await usersInstance.getPatientAddress(1);
         assert.strictEqual(result, patient1, "Invalid patient1's address");
 
-        result = await usersInstance.getPatientAddress(1);
+        result = await usersInstance.getPatientAddress(2);
         assert.strictEqual(result, patient2, "Invalid patient2's address");
 
         // Test 3C: Getting patient record
         try {
-            result = await usersInstance.getRecordNumber(0, {from: outsider});
+            result = await usersInstance.getRecordNumber(1, {from: outsider});
         } catch(error) {
             assert.include(error.message, "Not authorised to view.");
         }
 
-        result = await usersInstance.getRecordNumber(0, {from:patient1});
+        result = await usersInstance.getRecordNumber(1, {from:patient1});
         assert.strictEqual(result.toNumber(), 0, "Invalid patient1's record number");
         
         // Test 3D: Adding and checking record number
-        await usersInstance.addRecordCount(0)
-        result = await usersInstance.getRecordNumber(0, {from:patient1});
+        await usersInstance.addRecordCount(1)
+        result = await usersInstance.getRecordNumber(1, {from:patient1});
         assert.strictEqual(result.toNumber(), 1, "Invalid patient1's record number");
     });
 });
