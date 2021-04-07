@@ -27,5 +27,7 @@ hs_err_pid*
 *.json
 client/src/contracts/SimpleStorage.json
 client/src/contracts/Migrations.json
+client/src/contracts/Users.json
+client/src/contracts/MedicalRecords.json
 *.json
 *.json

@@ -13,7 +13,7 @@ import Dashboard from "./components/Dashboard";
 // admin
 import BoardAdmin from "./components/Admin/BoardAdmin";
 import AllDoctors from "./components/Admin/AllDoctors";
-
+import AllPatients from "./components/Admin/AllPatients";
 // patient
 import BoardPatient from "./components/BoardPatient";
 
@@ -144,6 +144,11 @@ class App extends Component {
                     </Link>
                   </li>
                   <li className="nav-item">
+                    <Link to={"/allPatients"} className="nav-link">
+                      All Patients
+                    </Link>
+                  </li>
+                  <li className="nav-item">
                     <Link to={"/allDoctors"} className="nav-link">
                       All Doctors
                     </Link>
@@ -213,6 +218,7 @@ class App extends Component {
               <Route exact path="/dashboard" component={Dashboard} />
               <Route path="/patient" component={BoardPatient} />
               <Route path="/admin" component={BoardAdmin} />
+              <Route path="/allPatients" component={AllPatients} />
               <Route path="/allDoctors" component={AllDoctors} />
               <Route path="/doctor" component={BoardDoctor} />
               <Route path="/newRecord" component={NewRecord} />
