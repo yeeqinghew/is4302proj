@@ -22,39 +22,39 @@ contract("MedicalRecords", accounts => {
     before(async () => {
         usersInstance = await Users.deployed({from:masterAdmin});
         medicalRecordsInstance = await MedicalRecords.deployed(usersInstance.address, {from: masterAdmin});
-        await usersInstance.registerDoctor(doctor1, {from: masterAdmin}); // doctorId = 0
-        await usersInstance.registerDoctor(doctor2, {from: masterAdmin}); // doctorId = 1
-        await usersInstance.registerDoctor(blacklistedDoctor, {from: masterAdmin}); // doctorId = 2
-        await usersInstance.registerDoctor(doctor3, {from: masterAdmin}); // doctorId = 3
-        await usersInstance.blacklistDoctor(2, {from: masterAdmin});
-        await usersInstance.registerPatient({from: patient1}); // patientId = 0
-        await usersInstance.registerPatient({from: patient2}); // patientId = 1
+        await usersInstance.registerDoctor(doctor1, {from: masterAdmin}); 
+        await usersInstance.registerDoctor(doctor2, {from: masterAdmin}); 
+        await usersInstance.registerDoctor(blacklistedDoctor, {from: masterAdmin}); 
+        await usersInstance.registerDoctor(doctor3, {from: masterAdmin}); 
+        await usersInstance.blacklistDoctor(3, {from: masterAdmin});
+        await usersInstance.registerPatient({from: patient1}); 
+        await usersInstance.registerPatient({from: patient2}); 
     });
 
     it('Test 1: Creating Records', async() => {
         // Test 1A: Creating Records for invalid patient 
         try {
-            result = await medicalRecordsInstance.createRecord(10, 0, details, {from: doctor1});
+            result = await medicalRecordsInstance.createRecord(10, 1, details, {from: doctor1});
         } catch(error) {
             assert.include(error.message, "Patient does not exist.");
         }
 
         // Test 1B: Creating Records with invalid doctor
         try {
-            result = await medicalRecordsInstance.createRecord(0, 5, details, {from: doctor1});
+            result = await medicalRecordsInstance.createRecord(1, 5, details, {from: doctor1});
         } catch(error) {
             assert.include(error.message, "Doctor does not exist.");
         }
 
         // Test 1C: Creating Records with blacklisted doctor
         try {
-            result = await medicalRecordsInstance.createRecord(0, 2, details, {from: blacklistedDoctor});
+            result = await medicalRecordsInstance.createRecord(1, 3, details, {from: blacklistedDoctor});
         } catch(error) {
             assert.include(error.message, "revert", "Not authorised as doctor is blacklisted.");
         }
 
         // Test 1D: Successful creation of records
-        result = await medicalRecordsInstance.createRecord(0, 0, details, {from: doctor1});
+        result = await medicalRecordsInstance.createRecord(1, 1, details, {from: doctor1});
         truffleAssertions.eventEmitted(result, 'createdMedicalRecord', (ev) => {
             return ev.medicalRecordId == 0
         }); 
@@ -84,10 +84,10 @@ contract("MedicalRecords", accounts => {
 
         // Test 2D: Retrieving medical record
         result = await medicalRecordsInstance.viewRecord(0, {from: patient1});
-        assert.strictEqual(result[0].toNumber(), 0, "patientid is different");
+        assert.strictEqual(result[0].toNumber(), 1, "patientid is different");
         let finalResult = web3.utils.hexToUtf8(result[1]);
         assert.strictEqual(finalResult, stringdetails, "details of record different");
-        assert.strictEqual(result[2].toNumber(), 0, "doctorid different");
+        assert.strictEqual(result[2].toNumber(), 1, "doctorid different");
         assert.strictEqual(result[3].toNumber(), 0, "patient have yet to verify");
         assert.strictEqual(result[4].toNumber(), 0, "no doctor verified"); 
     });
@@ -114,7 +114,10 @@ contract("MedicalRecords", accounts => {
     });
 
     it('Test 4: Doctor checking medical record', async() => {
-        await medicalRecordsInstance.createRecord(1, 1, details, {from: doctor2});
+        result = await medicalRecordsInstance.createRecord(1, 2, details, {from: doctor2});
+        truffleAssertions.eventEmitted(result, 'createdMedicalRecord', (ev) => {
+            return ev.medicalRecordId == 1
+        }); 
 
         // Test 4A: Blacklisted doctor
         try {
@@ -153,16 +156,25 @@ contract("MedicalRecords", accounts => {
         });
 
         // Test 4F: Check appraisal score
-        let score = await usersInstance.getAppraisalScore(3);
-        assert.strictEqual(score.toNumber(), 1, "Appraisal score is different.");
+        let score = await usersInstance.getAppraisalScore(4);
+        assert.strictEqual(score.toNumber(), 1, "Appraisal score is different."); 
     });
 
     it('Test 5: Admin dealing with report after sending to authorities', async() => {
-        await medicalRecordsInstance.createRecord(1, 3, details, {from: doctor3});
-        await medicalRecordsInstance.createRecord(1, 3, details, {from: doctor3});
+        result = await medicalRecordsInstance.createRecord(1, 4, details, {from: doctor3});
+        truffleAssertions.eventEmitted(result, 'createdMedicalRecord', (ev) => {
+            return ev.medicalRecordId == 2
+        }); 
+        result = await medicalRecordsInstance.createRecord(1, 4, details, {from: doctor3});
+        truffleAssertions.eventEmitted(result, 'createdMedicalRecord', (ev) => {
+            return ev.medicalRecordId == 3
+        }); 
 
         // Test 5A: Waives flagged report
-        await medicalRecordsInstance.doctorReport(2, {from: doctor2});
+        result = await medicalRecordsInstance.doctorReport(2, {from: doctor2});
+        truffleAssertions.eventEmitted(result, 'doctorReported', (ev) => {
+            return ev.medicalRecordId == 2
+        }); 
 
         result = await medicalRecordsInstance.waive(2, {from: masterAdmin});
         truffleAssertions.eventEmitted(result, 'wronglyAccusedReport', (ev) => {
@@ -170,24 +182,27 @@ contract("MedicalRecords", accounts => {
         });
 
         // Test 5B: Punishes flagged report
-        await medicalRecordsInstance.doctorReport(3, {from: doctor2});
+        result = await medicalRecordsInstance.doctorReport(3, {from: doctor2});
+        truffleAssertions.eventEmitted(result, 'doctorReported', (ev) => {
+            return ev.medicalRecordId == 3
+        }); 
 
-        result = await medicalRecordsInstance.punish(3, 3, {from: masterAdmin});
+        result = await medicalRecordsInstance.punish(3, 4, {from: masterAdmin});
         truffleAssertions.eventEmitted(result, 'fraudulentReport', (ev) => {
             return ev.medicalRecordId == 3
         });
 
         // Test 5C: Check penalty 
-        let score = await usersInstance.getPenaltyScore(3);
-        assert.strictEqual(score.toNumber(), 3, "Penalty score is different.");
+        let score = await usersInstance.getPenaltyScore(4);
+        assert.strictEqual(score.toNumber(), 4, "Penalty score is different.");
 
         // Test 5D: Doctor 3 is punished again, gets blacklisted
-        await medicalRecordsInstance.createRecord(1, 3, details, {from: doctor3});
+        await medicalRecordsInstance.createRecord(1, 4, details, {from: doctor3});
         await medicalRecordsInstance.doctorReport(4, {from: doctor2});
         await medicalRecordsInstance.punish(4, 8, {from: masterAdmin});
 
-        blacklisted = await usersInstance.isBlacklisted(3);
-        assert.strictEqual(blacklisted, true, "Not blacklisted.");
-    })
+        blacklisted = await usersInstance.isBlacklisted(4);
+        assert.strictEqual(blacklisted, true, "Not blacklisted."); 
+    }) 
 
 });
