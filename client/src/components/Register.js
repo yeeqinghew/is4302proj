@@ -142,7 +142,6 @@ class Register extends Component {
         deployedNetwork && deployedNetwork.address
       );
       this.setState({ web3, accounts, contract: instance });
-      console.log("********** Instance:", instance);
     } catch (error) {
       alert(
         `Failed to load web3, accounts, or contract. Check console for details.`
