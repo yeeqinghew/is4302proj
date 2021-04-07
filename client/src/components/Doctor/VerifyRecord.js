@@ -198,13 +198,18 @@ class VerifyRecord extends Component {
                 console.log("Failed with error: ", err);
                 var str = JSON.stringify(err);
                 
-                var start = str.indexOf('reason');
-                var end = str.indexOf('stack');
-                var error = str.slice(start + 11, end - 7);
-                console.log(error);
+                var error;
+                if (err.code == -32603) {
+                    var start = str.indexOf('reason');
+                    var end = str.indexOf('stack');
+                    error = "Record cannot be reported: " + str.slice(start + 11, end - 7) + "!";
+                    console.log(error);
+                } else {
+                    error = "Record cannot be reported!"
+                }
                 
                 this.setState({
-                    message: "Record cannot be reported: " + error + "!"
+                    message: error
                 });
             }); 
 
@@ -269,12 +274,12 @@ class VerifyRecord extends Component {
                         <Row>
                             <Col md={{ span: 3, offset: 4}}>
                                 <div className="form-group">
-                                    <button type="button" className="btn btn-primary" onClick={this.verifyRecord}>Verify</button>
+                                    <button type="button" className="btn btn-primary" onClick={() => {if (window.confirm('Do you want to verify this medical record?')) this.verifyRecord() }}>Verify</button>
                                 </div>
                             </Col>
                             <Col md={{ span: 3 }}>
                                 <div className="form-group">
-                                    <button type="button" className="btn btn-danger" onClick={this.reportRecord}>Report</button>
+                                    <button type="button" className="btn btn-danger" onClick={() => {if (window.confirm('Do you want to report this medical record?')) this.reportRecord() }}>Report</button>
                                 </div>
                             </Col>
                         </Row>

@@ -35,38 +35,6 @@ app.get("/getAllPendingDoctors", async (req, res) => {
   res.json(allUsers);
 });
 
-// for Doctor
-// app.post("/getPatientByNric", (req, res) => {
-//     Users.findOne({
-//         where: {
-//             '$patient.nric$': req.body.nric,
-//         },
-//         include: [
-//             {model: Patient, as: "patient"}
-//         ]
-//     }).then((user) => {
-//         if (!user) {
-//             return res.status(404).send({ message: "User Not found." });
-//         }
-
-//         res.status(200).send({
-//             id: user.userId,
-//             username: user.username,
-//             email: user.email,
-//             first_name: user.first_name,
-//             last_name: user.last_name,
-//             contact_num: user.contact_num,
-//             dob: user.dob,
-//             gender: user.gender,
-//             nationality: user.nationality,
-//             race: user.race,
-//             bc_address: user.bc_address,
-//             patientId: user.patient.id,
-//             nric: user.patient.nric,
-//             home_address: user.patient.home_address,
-//             emergency_contact: user.patient.emergency_contact
-//         });
-//     })
 // });
 
 db.sequelize.sync({ force: true }).then(() => {

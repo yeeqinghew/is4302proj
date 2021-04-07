@@ -117,7 +117,7 @@ class RandomRecords extends Component {
 
             if (min < max) {
                 const response = await medicalRecordContract.methods.viewRecord(min).call({from: accounts[0]});
-                if (response[4] == 0) { // unflagged
+                if (response[4] == 0 && response[2] != currentDoctor.doctorId) { // unflagged, not owned by current doctor
                     const { patientData, doctorData } = await this.retrieveUserData(response[0], response[2]);
                     console.log("patientData", patientData);
                     console.log("doctorData", doctorData);
