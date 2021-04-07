@@ -4,6 +4,7 @@ import { Router, Switch, Route, Link } from "react-router-dom";
 
 // import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
+import NavDropdown from 'react-bootstrap/NavDropdown';
 
 import Login from "./components/Login";
 import Register from "./components/Register";
@@ -17,7 +18,10 @@ import AllPatients from "./components/Admin/AllPatients";
 import BoardPatient from "./components/BoardPatient";
 
 // doctor
-import BoardDoctor from "./components/BoardDoctor";
+import BoardDoctor from "./components/Doctor/BoardDoctor";
+import NewRecord from "./components/Doctor/NewRecord";
+import RandomRecords from "./components/Doctor/RandomRecords";
+import VerifyRecord from "./components/Doctor/VerifyRecord";
 
 import { logout } from "./actions/auth";
 import { clearMessage } from "./actions/message";
@@ -152,11 +156,29 @@ class App extends Component {
                 </Fragment>
               )}
               {showDoctorBoard && (
-                <li className="nav-item">
-                  <Link to={"/doctor"} className="nav-link">
-                    Doctor Board
+                <Fragment>
+                  <li className="nav-item">
+                    <Link to={"/doctor"} className="nav-link">
+                      Doctor Board
                   </Link>
-                </li>
+                  </li>
+                  <li className="nav-item">
+                    <Link to={"/newRecord"} className="nav-link">
+                      New Record
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link to={"/randomRecords"} className="nav-link">
+                      Verify Records
+                    </Link>
+                  </li>
+                  {/* <NavDropdown title="Medical Records" id="nav-dropdown">
+                    <NavDropdown.Item eventKey="4.1">Flagged Records</NavDropdown.Item>
+                    <NavDropdown.Divider />
+                    <NavDropdown.Item eventKey="4.2">New Record</NavDropdown.Item>
+                  </NavDropdown> */}
+              </Fragment>
+              
               )}
             </div>
             {currentUser ? (
@@ -199,6 +221,9 @@ class App extends Component {
               <Route path="/allPatients" component={AllPatients} />
               <Route path="/allDoctors" component={AllDoctors} />
               <Route path="/doctor" component={BoardDoctor} />
+              <Route path="/newRecord" component={NewRecord} />
+              <Route path="/randomRecords" component={RandomRecords} />
+              <Route path="/verifyRecord" component={VerifyRecord} />
             </Switch>
           </div>
         </div>

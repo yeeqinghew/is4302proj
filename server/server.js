@@ -111,64 +111,56 @@ function initial() {
     }
   );
 
-  // username: patient; password: patient
-  Patient.create(
-    {
-      nric: "S6153515B",
-      home_address: "12 West Coast Rd Singapore 123456",
-      emergency_contact: "98765432",
-      user: {
-        username: "patient",
-        password:
-          "$2a$08$0taGxICOS60pcMcQBtYlte5vpmwC8UGx.YSzhB8OTJjBmc3xgw8lq",
-        first_name: "Sally",
-        last_name: "Lee",
-        email: "patient@gmail.com",
-        contact_num: "95739285",
-        dob: new Date(1961, 05, 18),
-        gender: "Female",
-        nationality: "Singaporean",
-        race: "Malay",
-        roleId: 2,
-      },
-    },
-    {
-      include: [Patient.user],
-    }
-  );
+  // // username: patient; password: patient
+  // Patient.create(
+  //   {
+  //     nric: "S6153515B",
+  //     home_address: "12 West Coast Rd Singapore 123456",
+  //     emergency_contact: "98765432",
+  //     user: {
+  //       username: "patient",
+  //       password:
+  //         "$2a$08$0taGxICOS60pcMcQBtYlte5vpmwC8UGx.YSzhB8OTJjBmc3xgw8lq",
+  //       first_name: "Sally",
+  //       last_name: "Lee",
+  //       email: "patient@gmail.com",
+  //       contact_num: "95739285",
+  //       dob: new Date(1961, 05, 18),
+  //       gender: "Female",
+  //       nationality: "Singaporean",
+  //       race: "Malay",
+  //       roleId: 2,
+  //     },
+  //   },
+  //   {
+  //     include: [Patient.user],
+  //   }
+  // );
 
-  // username: doctor; password: doctor
-  Doctor.create(
-    {
-      specialty: "Neurology",
-      healthcare_institution: "Tan Tock Seng Hospital",
-      user: {
-        username: "doctor",
-        password:
-          "$2a$08$vd.7gkxv88xezScG9IbHI.Xvxil.uMSAhaBnI6eImzoYKsGtdItRG",
-        first_name: "Patricia",
-        last_name: "Ong",
-        email: "doctor@gmail.com",
-        contact_num: "94581236",
-        dob: new Date(1985, 07, 27),
-        gender: "Female",
-        nationality: "Singaporean",
-        race: "Chinese",
-        roleId: 3,
-      },
-    },
-    {
-      include: [Doctor.user],
-    }
-  );
-
-  // Users.create({
-  //     userId: 1,
-  //     username: "admin",
-  //     email: "admin@gmail.com",
-  //     password: "$2a$08$c83jezBZVCgjEwqpg54dVuPiwxZdGjWgztybLxDh8.sj2PeYSpGnG",
-  //     roleId: 1
-  // });
+  // // username: doctor; password: doctor
+  // Doctor.create(
+  //   {
+  //     specialty: "Neurology",
+  //     healthcare_institution: "Tan Tock Seng Hospital",
+  //     user: {
+  //       username: "doctor",
+  //       password:
+  //         "$2a$08$vd.7gkxv88xezScG9IbHI.Xvxil.uMSAhaBnI6eImzoYKsGtdItRG",
+  //       first_name: "Patricia",
+  //       last_name: "Ong",
+  //       email: "doctor@gmail.com",
+  //       contact_num: "94581236",
+  //       dob: new Date(1985, 07, 27),
+  //       gender: "Female",
+  //       nationality: "Singaporean",
+  //       race: "Chinese",
+  //       roleId: 3,
+  //     },
+  //   },
+  //   {
+  //     include: [Doctor.user],
+  //   }
+  // );
 }
 
 // For production: this is to avoid droppping data

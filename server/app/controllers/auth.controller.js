@@ -189,6 +189,7 @@ exports.signin = (req, res) => {
               nationality: user.nationality,
               race: user.race,
               bc_address: user.bc_address,
+              patientId: patient.id,
               nric: patient.nric,
               home_address: patient.home_address,
               emergency_contact: patient.emergency_contact,
@@ -214,6 +215,7 @@ exports.signin = (req, res) => {
               nationality: user.nationality,
               race: user.race,
               bc_address: user.bc_address,
+              doctorId: doctor.id,
               specialty: doctor.specialty,
               healthcare_institution: doctor.healthcare_institution,
               approved: doctor.approved,
@@ -239,6 +241,7 @@ exports.signin = (req, res) => {
               nationality: user.nationality,
               race: user.race,
               bc_address: user.bc_address,
+              adminId: admin.id,
               date_joined: admin.date_joined,
               accessToken: token,
             });

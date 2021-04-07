@@ -112,7 +112,7 @@ contract MedicalRecords {
 
     modifier flaggedRecord(uint256 medicalRecordId) {
         require(
-            isFlaggedRecords[medicalRecordId] = true,
+            isFlaggedRecords[medicalRecordId] == true,
             "Record is not a flagged one."
         );
         _;
@@ -137,6 +137,7 @@ contract MedicalRecords {
         uint256 newMedicalRecordId = numMedicalRecords++;
         medicalRecords[newMedicalRecordId] = newMedicalRecord;
         userContract.addRecordCount(patientId);
+        userContract.addRecordId(patientId, newMedicalRecordId);
         emit createdMedicalRecord(newMedicalRecordId);
 
         // randomly adds medical record to flaggedRecords so random spotchecks can be done
@@ -182,7 +183,7 @@ contract MedicalRecords {
             require(
                 userContract.isBlacklisted(
                     userContract.getDoctorId(msg.sender)
-                ),
+                ) == false,
                 "Not authorised as doctor is blacklisted."
             );
         } else {
@@ -341,4 +342,14 @@ contract MedicalRecords {
 
         return string(bytesArray);
     }
+
+    // function to get number of medical records
+    function getNumMedicalRecords() 
+        public 
+        view 
+        returns (uint256) 
+    {
+        return numMedicalRecords;
+    }
+
 }

@@ -25,6 +25,8 @@ import { Races } from "../json/races";
 import Users from "../contracts/Users.json";
 import getWeb3 from "../getWeb3";
 
+// const nric = require('nric');
+
 const required = (value) => {
   if (!value) {
     return (
@@ -64,6 +66,16 @@ const vpassword = (value) => {
     );
   }
 };
+
+// const vnric = (value) => {
+//     if (!nric.validate(value)) {
+//         return (
+//             <div className="alert alert-danger" role="alert">
+//                 This is not a valid NRIC.
+//             </div>
+//         );
+//     }
+// };
 
 class Register extends Component {
   constructor(props) {
