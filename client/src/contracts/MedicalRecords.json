@@ -549,7 +549,7 @@
         "id": 2,
         "nodeType": "ImportDirective",
         "scope": 827,
-        "sourceUnit": 1366,
+        "sourceUnit": 1426,
         "src": "103:21:0",
         "symbolAliases": [],
         "unitAlias": ""
@@ -577,7 +577,7 @@
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_Users_$1365",
+              "typeIdentifier": "t_contract$_Users_$1425",
               "typeString": "contract Users"
             },
             "typeName": {
@@ -585,10 +585,10 @@
               "id": 3,
               "name": "Users",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 1365,
+              "referencedDeclaration": 1425,
               "src": "156:5:0",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Users_$1365",
+                "typeIdentifier": "t_contract$_Users_$1425",
                 "typeString": "contract Users"
               }
             },
@@ -618,7 +618,7 @@
                       "referencedDeclaration": 4,
                       "src": "265:12:0",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_Users_$1365",
+                        "typeIdentifier": "t_contract$_Users_$1425",
                         "typeString": "contract Users"
                       }
                     },
@@ -633,13 +633,13 @@
                       "referencedDeclaration": 6,
                       "src": "280:12:0",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_Users_$1365",
+                        "typeIdentifier": "t_contract$_Users_$1425",
                         "typeString": "contract Users"
                       }
                     },
                     "src": "265:27:0",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_Users_$1365",
+                      "typeIdentifier": "t_contract$_Users_$1425",
                       "typeString": "contract Users"
                     }
                   },
@@ -670,7 +670,7 @@
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_Users_$1365",
+                    "typeIdentifier": "t_contract$_Users_$1425",
                     "typeString": "contract Users"
                   },
                   "typeName": {
@@ -678,10 +678,10 @@
                     "id": 5,
                     "name": "Users",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 1365,
+                    "referencedDeclaration": 1425,
                     "src": "228:5:0",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_Users_$1365",
+                      "typeIdentifier": "t_contract$_Users_$1425",
                       "typeString": "contract Users"
                     }
                   },
@@ -1527,7 +1527,7 @@
                               "referencedDeclaration": 4,
                               "src": "1435:12:0",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_Users_$1365",
+                                "typeIdentifier": "t_contract$_Users_$1425",
                                 "typeString": "contract Users"
                               }
                             },
@@ -1538,7 +1538,7 @@
                             "lValueRequested": false,
                             "memberName": "isExistingPatient",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 1157,
+                            "referencedDeclaration": 1217,
                             "src": "1435:30:0",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_external_view$_t_uint256_$returns$_t_bool_$",
@@ -1619,10 +1619,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        1383,
-                        1384
+                        1443,
+                        1444
                       ],
-                      "referencedDeclaration": 1384,
+                      "referencedDeclaration": 1444,
                       "src": "1414:7:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -1791,7 +1791,7 @@
                               "referencedDeclaration": 4,
                               "src": "1642:12:0",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_Users_$1365",
+                                "typeIdentifier": "t_contract$_Users_$1425",
                                 "typeString": "contract Users"
                               }
                             },
@@ -1802,7 +1802,7 @@
                             "lValueRequested": false,
                             "memberName": "getPatientAddress",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 1188,
+                            "referencedDeclaration": 1248,
                             "src": "1642:30:0",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_external_view$_t_uint256_$returns$_t_address_$",
@@ -1833,7 +1833,7 @@
                             "name": "msg",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 1380,
+                            "referencedDeclaration": 1440,
                             "src": "1747:3:0",
                             "typeDescriptions": {
                               "typeIdentifier": "t_magic_message",
@@ -1894,10 +1894,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        1383,
-                        1384
+                        1443,
+                        1444
                       ],
-                      "referencedDeclaration": 1384,
+                      "referencedDeclaration": 1444,
                       "src": "1621:7:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -2023,7 +2023,7 @@
                               "referencedDeclaration": 4,
                               "src": "1921:12:0",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_Users_$1365",
+                                "typeIdentifier": "t_contract$_Users_$1425",
                                 "typeString": "contract Users"
                               }
                             },
@@ -2034,7 +2034,7 @@
                             "lValueRequested": false,
                             "memberName": "isExistingDoctor",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 1172,
+                            "referencedDeclaration": 1232,
                             "src": "1921:29:0",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_external_view$_t_uint256_$returns$_t_bool_$",
@@ -2115,10 +2115,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        1383,
-                        1384
+                        1443,
+                        1444
                       ],
-                      "referencedDeclaration": 1384,
+                      "referencedDeclaration": 1444,
                       "src": "1900:7:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -2222,7 +2222,7 @@
                                 "name": "msg",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 1380,
+                                "referencedDeclaration": 1440,
                                 "src": "2120:3:0",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_magic_message",
@@ -2260,7 +2260,7 @@
                               "referencedDeclaration": 4,
                               "src": "2098:12:0",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_Users_$1365",
+                                "typeIdentifier": "t_contract$_Users_$1425",
                                 "typeString": "contract Users"
                               }
                             },
@@ -2271,7 +2271,7 @@
                             "lValueRequested": false,
                             "memberName": "isDoctor",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 1123,
+                            "referencedDeclaration": 1183,
                             "src": "2098:21:0",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_external_view$_t_address_$returns$_t_bool_$",
@@ -2352,10 +2352,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        1383,
-                        1384
+                        1443,
+                        1444
                       ],
-                      "referencedDeclaration": 1384,
+                      "referencedDeclaration": 1444,
                       "src": "2077:7:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -2429,7 +2429,7 @@
                             "name": "msg",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 1380,
+                            "referencedDeclaration": 1440,
                             "src": "2441:3:0",
                             "typeDescriptions": {
                               "typeIdentifier": "t_magic_message",
@@ -2528,7 +2528,7 @@
                               "referencedDeclaration": 4,
                               "src": "2471:12:0",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_Users_$1365",
+                                "typeIdentifier": "t_contract$_Users_$1425",
                                 "typeString": "contract Users"
                               }
                             },
@@ -2539,7 +2539,7 @@
                             "lValueRequested": false,
                             "memberName": "getDoctorAddress",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 1204,
+                            "referencedDeclaration": 1264,
                             "src": "2471:29:0",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_external_view$_t_uint256_$returns$_t_address_$",
@@ -2600,10 +2600,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        1383,
-                        1384
+                        1443,
+                        1444
                       ],
-                      "referencedDeclaration": 1384,
+                      "referencedDeclaration": 1444,
                       "src": "2420:7:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -2707,7 +2707,7 @@
                                 "name": "msg",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 1380,
+                                "referencedDeclaration": 1440,
                                 "src": "2759:3:0",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_magic_message",
@@ -2745,7 +2745,7 @@
                               "referencedDeclaration": 4,
                               "src": "2738:12:0",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_Users_$1365",
+                                "typeIdentifier": "t_contract$_Users_$1425",
                                 "typeString": "contract Users"
                               }
                             },
@@ -2756,7 +2756,7 @@
                             "lValueRequested": false,
                             "memberName": "isAdmin",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 1142,
+                            "referencedDeclaration": 1202,
                             "src": "2738:20:0",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_external_view$_t_address_$returns$_t_bool_$",
@@ -2837,10 +2837,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        1383,
-                        1384
+                        1443,
+                        1444
                       ],
-                      "referencedDeclaration": 1384,
+                      "referencedDeclaration": 1444,
                       "src": "2717:7:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -2939,7 +2939,7 @@
                               "referencedDeclaration": 4,
                               "src": "2938:12:0",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_Users_$1365",
+                                "typeIdentifier": "t_contract$_Users_$1425",
                                 "typeString": "contract Users"
                               }
                             },
@@ -2950,7 +2950,7 @@
                             "lValueRequested": false,
                             "memberName": "isBlacklisted",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 1364,
+                            "referencedDeclaration": 1424,
                             "src": "2938:26:0",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_external_view$_t_uint256_$returns$_t_bool_$",
@@ -3031,10 +3031,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        1383,
-                        1384
+                        1443,
+                        1444
                       ],
-                      "referencedDeclaration": 1384,
+                      "referencedDeclaration": 1444,
                       "src": "2917:7:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -3141,7 +3141,7 @@
                                     "name": "msg",
                                     "nodeType": "Identifier",
                                     "overloadedDeclarations": [],
-                                    "referencedDeclaration": 1380,
+                                    "referencedDeclaration": 1440,
                                     "src": "3185:3:0",
                                     "typeDescriptions": {
                                       "typeIdentifier": "t_magic_message",
@@ -3179,7 +3179,7 @@
                                   "referencedDeclaration": 4,
                                   "src": "3160:12:0",
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_contract$_Users_$1365",
+                                    "typeIdentifier": "t_contract$_Users_$1425",
                                     "typeString": "contract Users"
                                   }
                                 },
@@ -3190,7 +3190,7 @@
                                 "lValueRequested": false,
                                 "memberName": "getDoctorId",
                                 "nodeType": "MemberAccess",
-                                "referencedDeclaration": 1226,
+                                "referencedDeclaration": 1286,
                                 "src": "3160:24:0",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_function_external_view$_t_address_$returns$_t_uint256_$",
@@ -3228,7 +3228,7 @@
                               "referencedDeclaration": 4,
                               "src": "3133:12:0",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_Users_$1365",
+                                "typeIdentifier": "t_contract$_Users_$1425",
                                 "typeString": "contract Users"
                               }
                             },
@@ -3239,7 +3239,7 @@
                             "lValueRequested": false,
                             "memberName": "isBlacklisted",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 1364,
+                            "referencedDeclaration": 1424,
                             "src": "3133:26:0",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_external_view$_t_uint256_$returns$_t_bool_$",
@@ -3320,10 +3320,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        1383,
-                        1384
+                        1443,
+                        1444
                       ],
-                      "referencedDeclaration": 1384,
+                      "referencedDeclaration": 1444,
                       "src": "3112:7:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -3485,10 +3485,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        1383,
-                        1384
+                        1443,
+                        1444
                       ],
-                      "referencedDeclaration": 1384,
+                      "referencedDeclaration": 1444,
                       "src": "3369:7:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -3903,7 +3903,7 @@
                         "referencedDeclaration": 4,
                         "src": "4063:12:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_Users_$1365",
+                          "typeIdentifier": "t_contract$_Users_$1425",
                           "typeString": "contract Users"
                         }
                       },
@@ -3914,7 +3914,7 @@
                       "lValueRequested": false,
                       "memberName": "addRecordCount",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 1298,
+                      "referencedDeclaration": 1358,
                       "src": "4063:27:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$returns$__$",
@@ -4073,7 +4073,7 @@
                                     "name": "block",
                                     "nodeType": "Identifier",
                                     "overloadedDeclarations": [],
-                                    "referencedDeclaration": 1370,
+                                    "referencedDeclaration": 1430,
                                     "src": "4298:5:0",
                                     "typeDescriptions": {
                                       "typeIdentifier": "t_magic_block",
@@ -4926,10 +4926,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        1383,
-                        1384
+                        1443,
+                        1444
                       ],
-                      "referencedDeclaration": 1384,
+                      "referencedDeclaration": 1444,
                       "src": "4930:7:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -4977,7 +4977,7 @@
                             "name": "msg",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 1380,
+                            "referencedDeclaration": 1440,
                             "src": "5174:3:0",
                             "typeDescriptions": {
                               "typeIdentifier": "t_magic_message",
@@ -5015,7 +5015,7 @@
                           "referencedDeclaration": 4,
                           "src": "5151:12:0",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_contract$_Users_$1365",
+                            "typeIdentifier": "t_contract$_Users_$1425",
                             "typeString": "contract Users"
                           }
                         },
@@ -5026,7 +5026,7 @@
                         "lValueRequested": false,
                         "memberName": "isPatient",
                         "nodeType": "MemberAccess",
-                        "referencedDeclaration": 1111,
+                        "referencedDeclaration": 1171,
                         "src": "5151:22:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_function_external_view$_t_address_$returns$_t_bool_$",
@@ -5096,7 +5096,7 @@
                               "name": "msg",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 1380,
+                              "referencedDeclaration": 1440,
                               "src": "5481:3:0",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_magic_message",
@@ -5134,7 +5134,7 @@
                             "referencedDeclaration": 4,
                             "src": "5459:12:0",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_Users_$1365",
+                              "typeIdentifier": "t_contract$_Users_$1425",
                               "typeString": "contract Users"
                             }
                           },
@@ -5145,7 +5145,7 @@
                           "lValueRequested": false,
                           "memberName": "isDoctor",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 1123,
+                          "referencedDeclaration": 1183,
                           "src": "5459:21:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_external_view$_t_address_$returns$_t_bool_$",
@@ -5223,7 +5223,7 @@
                                         "name": "msg",
                                         "nodeType": "Identifier",
                                         "overloadedDeclarations": [],
-                                        "referencedDeclaration": 1380,
+                                        "referencedDeclaration": 1440,
                                         "src": "5794:3:0",
                                         "typeDescriptions": {
                                           "typeIdentifier": "t_magic_message",
@@ -5261,7 +5261,7 @@
                                       "referencedDeclaration": 4,
                                       "src": "5773:12:0",
                                       "typeDescriptions": {
-                                        "typeIdentifier": "t_contract$_Users_$1365",
+                                        "typeIdentifier": "t_contract$_Users_$1425",
                                         "typeString": "contract Users"
                                       }
                                     },
@@ -5272,7 +5272,7 @@
                                     "lValueRequested": false,
                                     "memberName": "isAdmin",
                                     "nodeType": "MemberAccess",
-                                    "referencedDeclaration": 1142,
+                                    "referencedDeclaration": 1202,
                                     "src": "5773:20:0",
                                     "typeDescriptions": {
                                       "typeIdentifier": "t_function_external_view$_t_address_$returns$_t_bool_$",
@@ -5353,10 +5353,10 @@
                               "name": "require",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [
-                                1383,
-                                1384
+                                1443,
+                                1444
                               ],
-                              "referencedDeclaration": 1384,
+                              "referencedDeclaration": 1444,
                               "src": "5748:7:0",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -5409,7 +5409,7 @@
                                           "name": "msg",
                                           "nodeType": "Identifier",
                                           "overloadedDeclarations": [],
-                                          "referencedDeclaration": 1380,
+                                          "referencedDeclaration": 1440,
                                           "src": "5614:3:0",
                                           "typeDescriptions": {
                                             "typeIdentifier": "t_magic_message",
@@ -5447,7 +5447,7 @@
                                         "referencedDeclaration": 4,
                                         "src": "5589:12:0",
                                         "typeDescriptions": {
-                                          "typeIdentifier": "t_contract$_Users_$1365",
+                                          "typeIdentifier": "t_contract$_Users_$1425",
                                           "typeString": "contract Users"
                                         }
                                       },
@@ -5458,7 +5458,7 @@
                                       "lValueRequested": false,
                                       "memberName": "getDoctorId",
                                       "nodeType": "MemberAccess",
-                                      "referencedDeclaration": 1226,
+                                      "referencedDeclaration": 1286,
                                       "src": "5589:24:0",
                                       "typeDescriptions": {
                                         "typeIdentifier": "t_function_external_view$_t_address_$returns$_t_uint256_$",
@@ -5496,7 +5496,7 @@
                                     "referencedDeclaration": 4,
                                     "src": "5541:12:0",
                                     "typeDescriptions": {
-                                      "typeIdentifier": "t_contract$_Users_$1365",
+                                      "typeIdentifier": "t_contract$_Users_$1425",
                                       "typeString": "contract Users"
                                     }
                                   },
@@ -5507,7 +5507,7 @@
                                   "lValueRequested": false,
                                   "memberName": "isBlacklisted",
                                   "nodeType": "MemberAccess",
-                                  "referencedDeclaration": 1364,
+                                  "referencedDeclaration": 1424,
                                   "src": "5541:26:0",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_function_external_view$_t_uint256_$returns$_t_bool_$",
@@ -5562,10 +5562,10 @@
                               "name": "require",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [
-                                1383,
-                                1384
+                                1443,
+                                1444
                               ],
-                              "referencedDeclaration": 1384,
+                              "referencedDeclaration": 1444,
                               "src": "5516:7:0",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -5692,7 +5692,7 @@
                                     "referencedDeclaration": 4,
                                     "src": "5234:12:0",
                                     "typeDescriptions": {
-                                      "typeIdentifier": "t_contract$_Users_$1365",
+                                      "typeIdentifier": "t_contract$_Users_$1425",
                                       "typeString": "contract Users"
                                     }
                                   },
@@ -5703,7 +5703,7 @@
                                   "lValueRequested": false,
                                   "memberName": "getPatientAddress",
                                   "nodeType": "MemberAccess",
-                                  "referencedDeclaration": 1188,
+                                  "referencedDeclaration": 1248,
                                   "src": "5234:30:0",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_function_external_view$_t_uint256_$returns$_t_address_$",
@@ -5734,7 +5734,7 @@
                                   "name": "msg",
                                   "nodeType": "Identifier",
                                   "overloadedDeclarations": [],
-                                  "referencedDeclaration": 1380,
+                                  "referencedDeclaration": 1440,
                                   "src": "5347:3:0",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_magic_message",
@@ -5795,10 +5795,10 @@
                             "name": "require",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [
-                              1383,
-                              1384
+                              1443,
+                              1444
                             ],
-                            "referencedDeclaration": 1384,
+                            "referencedDeclaration": 1444,
                             "src": "5209:7:0",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -6606,7 +6606,7 @@
                                     "name": "msg",
                                     "nodeType": "Identifier",
                                     "overloadedDeclarations": [],
-                                    "referencedDeclaration": 1380,
+                                    "referencedDeclaration": 1440,
                                     "src": "6846:3:0",
                                     "typeDescriptions": {
                                       "typeIdentifier": "t_magic_message",
@@ -6644,7 +6644,7 @@
                                   "referencedDeclaration": 4,
                                   "src": "6821:12:0",
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_contract$_Users_$1365",
+                                    "typeIdentifier": "t_contract$_Users_$1425",
                                     "typeString": "contract Users"
                                   }
                                 },
@@ -6655,7 +6655,7 @@
                                 "lValueRequested": false,
                                 "memberName": "getDoctorId",
                                 "nodeType": "MemberAccess",
-                                "referencedDeclaration": 1226,
+                                "referencedDeclaration": 1286,
                                 "src": "6821:24:0",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_function_external_view$_t_address_$returns$_t_uint256_$",
@@ -6815,10 +6815,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        1383,
-                        1384
+                        1443,
+                        1444
                       ],
-                      "referencedDeclaration": 1384,
+                      "referencedDeclaration": 1444,
                       "src": "6780:7:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -6974,7 +6974,7 @@
                                 "name": "msg",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 1380,
+                                "referencedDeclaration": 1440,
                                 "src": "7145:3:0",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_magic_message",
@@ -7012,7 +7012,7 @@
                               "referencedDeclaration": 4,
                               "src": "7120:12:0",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_Users_$1365",
+                                "typeIdentifier": "t_contract$_Users_$1425",
                                 "typeString": "contract Users"
                               }
                             },
@@ -7023,7 +7023,7 @@
                             "lValueRequested": false,
                             "memberName": "getDoctorId",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 1226,
+                            "referencedDeclaration": 1286,
                             "src": "7120:24:0",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_external_view$_t_address_$returns$_t_uint256_$",
@@ -7168,7 +7168,7 @@
                               "name": "msg",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 1380,
+                              "referencedDeclaration": 1440,
                               "src": "7298:3:0",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_magic_message",
@@ -7206,7 +7206,7 @@
                             "referencedDeclaration": 4,
                             "src": "7273:12:0",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_Users_$1365",
+                              "typeIdentifier": "t_contract$_Users_$1425",
                               "typeString": "contract Users"
                             }
                           },
@@ -7217,7 +7217,7 @@
                           "lValueRequested": false,
                           "memberName": "getDoctorId",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 1226,
+                          "referencedDeclaration": 1286,
                           "src": "7273:24:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_external_view$_t_address_$returns$_t_uint256_$",
@@ -7255,7 +7255,7 @@
                         "referencedDeclaration": 4,
                         "src": "7242:12:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_Users_$1365",
+                          "typeIdentifier": "t_contract$_Users_$1425",
                           "typeString": "contract Users"
                         }
                       },
@@ -7266,7 +7266,7 @@
                       "lValueRequested": false,
                       "memberName": "addAppraisalScore",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 1332,
+                      "referencedDeclaration": 1392,
                       "src": "7242:30:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$returns$__$",
@@ -7941,7 +7941,7 @@
                                     "name": "msg",
                                     "nodeType": "Identifier",
                                     "overloadedDeclarations": [],
-                                    "referencedDeclaration": 1380,
+                                    "referencedDeclaration": 1440,
                                     "src": "8058:3:0",
                                     "typeDescriptions": {
                                       "typeIdentifier": "t_magic_message",
@@ -7979,7 +7979,7 @@
                                   "referencedDeclaration": 4,
                                   "src": "8033:12:0",
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_contract$_Users_$1365",
+                                    "typeIdentifier": "t_contract$_Users_$1425",
                                     "typeString": "contract Users"
                                   }
                                 },
@@ -7990,7 +7990,7 @@
                                 "lValueRequested": false,
                                 "memberName": "getDoctorId",
                                 "nodeType": "MemberAccess",
-                                "referencedDeclaration": 1226,
+                                "referencedDeclaration": 1286,
                                 "src": "8033:24:0",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_function_external_view$_t_address_$returns$_t_uint256_$",
@@ -8150,10 +8150,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        1383,
-                        1384
+                        1443,
+                        1444
                       ],
-                      "referencedDeclaration": 1384,
+                      "referencedDeclaration": 1444,
                       "src": "7992:7:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -8393,7 +8393,7 @@
                                 "name": "msg",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 1380,
+                                "referencedDeclaration": 1440,
                                 "src": "8422:3:0",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_magic_message",
@@ -8431,7 +8431,7 @@
                               "referencedDeclaration": 4,
                               "src": "8397:12:0",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_Users_$1365",
+                                "typeIdentifier": "t_contract$_Users_$1425",
                                 "typeString": "contract Users"
                               }
                             },
@@ -8442,7 +8442,7 @@
                             "lValueRequested": false,
                             "memberName": "getDoctorId",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 1226,
+                            "referencedDeclaration": 1286,
                             "src": "8397:24:0",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_external_view$_t_address_$returns$_t_uint256_$",
@@ -8681,7 +8681,7 @@
                               "name": "msg",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 1380,
+                              "referencedDeclaration": 1440,
                               "src": "8635:3:0",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_magic_message",
@@ -8719,7 +8719,7 @@
                             "referencedDeclaration": 4,
                             "src": "8610:12:0",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_Users_$1365",
+                              "typeIdentifier": "t_contract$_Users_$1425",
                               "typeString": "contract Users"
                             }
                           },
@@ -8730,7 +8730,7 @@
                           "lValueRequested": false,
                           "memberName": "getDoctorId",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 1226,
+                          "referencedDeclaration": 1286,
                           "src": "8610:24:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_external_view$_t_address_$returns$_t_uint256_$",
@@ -8768,7 +8768,7 @@
                         "referencedDeclaration": 4,
                         "src": "8579:12:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_Users_$1365",
+                          "typeIdentifier": "t_contract$_Users_$1425",
                           "typeString": "contract Users"
                         }
                       },
@@ -8779,7 +8779,7 @@
                       "lValueRequested": false,
                       "memberName": "addAppraisalScore",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 1332,
+                      "referencedDeclaration": 1392,
                       "src": "8579:30:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$returns$__$",
@@ -9184,7 +9184,7 @@
                         "referencedDeclaration": 4,
                         "src": "8986:12:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_Users_$1365",
+                          "typeIdentifier": "t_contract$_Users_$1425",
                           "typeString": "contract Users"
                         }
                       },
@@ -9195,7 +9195,7 @@
                       "lValueRequested": false,
                       "memberName": "addPenaltyScore",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 1316,
+                      "referencedDeclaration": 1376,
                       "src": "8986:28:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$_t_uint256_$returns$__$",
@@ -9308,7 +9308,7 @@
                           "referencedDeclaration": 4,
                           "src": "9178:12:0",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_contract$_Users_$1365",
+                            "typeIdentifier": "t_contract$_Users_$1425",
                             "typeString": "contract Users"
                           }
                         },
@@ -9319,7 +9319,7 @@
                         "lValueRequested": false,
                         "memberName": "getPenaltyScore",
                         "nodeType": "MemberAccess",
-                        "referencedDeclaration": 1269,
+                        "referencedDeclaration": 1329,
                         "src": "9178:28:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_function_external_view$_t_uint256_$returns$_t_uint256_$",
@@ -9452,7 +9452,7 @@
                               "referencedDeclaration": 4,
                               "src": "9314:12:0",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_Users_$1365",
+                                "typeIdentifier": "t_contract$_Users_$1425",
                                 "typeString": "contract Users"
                               }
                             },
@@ -9463,7 +9463,7 @@
                             "lValueRequested": false,
                             "memberName": "blacklistDoctor",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 1348,
+                            "referencedDeclaration": 1408,
                             "src": "9314:28:0",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$returns$__$",
@@ -11501,7 +11501,7 @@
       },
       {
         "attributes": {
-          "SourceUnit": 1366,
+          "SourceUnit": 1426,
           "absolutePath": "/Users/yeeqinghew/Desktop/is4302/contracts/Users.sol",
           "file": "./Users.sol",
           "scope": 827,
@@ -11548,7 +11548,7 @@
                 "attributes": {
                   "contractScope": null,
                   "name": "Users",
-                  "referencedDeclaration": 1365,
+                  "referencedDeclaration": 1425,
                   "type": "contract Users"
                 },
                 "id": 3,
@@ -11594,7 +11594,7 @@
                         "attributes": {
                           "contractScope": null,
                           "name": "Users",
-                          "referencedDeclaration": 1365,
+                          "referencedDeclaration": 1425,
                           "type": "contract Users"
                         },
                         "id": 5,
@@ -12560,10 +12560,10 @@
                                 }
                               ],
                               "overloadedDeclarations": [
-                                1383,
-                                1384
+                                1443,
+                                1444
                               ],
-                              "referencedDeclaration": 1384,
+                              "referencedDeclaration": 1444,
                               "type": "function (bool,string memory) pure",
                               "value": "require"
                             },
@@ -12614,7 +12614,7 @@
                                       "isPure": false,
                                       "lValueRequested": false,
                                       "member_name": "isExistingPatient",
-                                      "referencedDeclaration": 1157,
+                                      "referencedDeclaration": 1217,
                                       "type": "function (uint256) view external returns (bool)"
                                     },
                                     "children": [
@@ -12792,10 +12792,10 @@
                                 }
                               ],
                               "overloadedDeclarations": [
-                                1383,
-                                1384
+                                1443,
+                                1444
                               ],
-                              "referencedDeclaration": 1384,
+                              "referencedDeclaration": 1444,
                               "type": "function (bool,string memory) pure",
                               "value": "require"
                             },
@@ -12846,7 +12846,7 @@
                                       "isPure": false,
                                       "lValueRequested": false,
                                       "member_name": "getPatientAddress",
-                                      "referencedDeclaration": 1188,
+                                      "referencedDeclaration": 1248,
                                       "type": "function (uint256) view external returns (address)"
                                     },
                                     "children": [
@@ -12952,7 +12952,7 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 1380,
+                                      "referencedDeclaration": 1440,
                                       "type": "msg",
                                       "value": "msg"
                                     },
@@ -13084,10 +13084,10 @@
                                 }
                               ],
                               "overloadedDeclarations": [
-                                1383,
-                                1384
+                                1443,
+                                1444
                               ],
-                              "referencedDeclaration": 1384,
+                              "referencedDeclaration": 1444,
                               "type": "function (bool,string memory) pure",
                               "value": "require"
                             },
@@ -13138,7 +13138,7 @@
                                       "isPure": false,
                                       "lValueRequested": false,
                                       "member_name": "isExistingDoctor",
-                                      "referencedDeclaration": 1172,
+                                      "referencedDeclaration": 1232,
                                       "type": "function (uint256) view external returns (bool)"
                                     },
                                     "children": [
@@ -13294,10 +13294,10 @@
                                 }
                               ],
                               "overloadedDeclarations": [
-                                1383,
-                                1384
+                                1443,
+                                1444
                               ],
-                              "referencedDeclaration": 1384,
+                              "referencedDeclaration": 1444,
                               "type": "function (bool,string memory) pure",
                               "value": "require"
                             },
@@ -13348,7 +13348,7 @@
                                       "isPure": false,
                                       "lValueRequested": false,
                                       "member_name": "isDoctor",
-                                      "referencedDeclaration": 1123,
+                                      "referencedDeclaration": 1183,
                                       "type": "function (address) view external returns (bool)"
                                     },
                                     "children": [
@@ -13389,7 +13389,7 @@
                                           "overloadedDeclarations": [
                                             null
                                           ],
-                                          "referencedDeclaration": 1380,
+                                          "referencedDeclaration": 1440,
                                           "type": "msg",
                                           "value": "msg"
                                         },
@@ -13543,10 +13543,10 @@
                                 }
                               ],
                               "overloadedDeclarations": [
-                                1383,
-                                1384
+                                1443,
+                                1444
                               ],
-                              "referencedDeclaration": 1384,
+                              "referencedDeclaration": 1444,
                               "type": "function (bool,string memory) pure",
                               "value": "require"
                             },
@@ -13587,7 +13587,7 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 1380,
+                                      "referencedDeclaration": 1440,
                                       "type": "msg",
                                       "value": "msg"
                                     },
@@ -13628,7 +13628,7 @@
                                       "isPure": false,
                                       "lValueRequested": false,
                                       "member_name": "getDoctorAddress",
-                                      "referencedDeclaration": 1204,
+                                      "referencedDeclaration": 1264,
                                       "type": "function (uint256) view external returns (address)"
                                     },
                                     "children": [
@@ -13813,10 +13813,10 @@
                                 }
                               ],
                               "overloadedDeclarations": [
-                                1383,
-                                1384
+                                1443,
+                                1444
                               ],
-                              "referencedDeclaration": 1384,
+                              "referencedDeclaration": 1444,
                               "type": "function (bool,string memory) pure",
                               "value": "require"
                             },
@@ -13867,7 +13867,7 @@
                                       "isPure": false,
                                       "lValueRequested": false,
                                       "member_name": "isAdmin",
-                                      "referencedDeclaration": 1142,
+                                      "referencedDeclaration": 1202,
                                       "type": "function (address) view external returns (bool)"
                                     },
                                     "children": [
@@ -13908,7 +13908,7 @@
                                           "overloadedDeclarations": [
                                             null
                                           ],
-                                          "referencedDeclaration": 1380,
+                                          "referencedDeclaration": 1440,
                                           "type": "msg",
                                           "value": "msg"
                                         },
@@ -14062,10 +14062,10 @@
                                 }
                               ],
                               "overloadedDeclarations": [
-                                1383,
-                                1384
+                                1443,
+                                1444
                               ],
-                              "referencedDeclaration": 1384,
+                              "referencedDeclaration": 1444,
                               "type": "function (bool,string memory) pure",
                               "value": "require"
                             },
@@ -14116,7 +14116,7 @@
                                       "isPure": false,
                                       "lValueRequested": false,
                                       "member_name": "isBlacklisted",
-                                      "referencedDeclaration": 1364,
+                                      "referencedDeclaration": 1424,
                                       "type": "function (uint256) view external returns (bool)"
                                     },
                                     "children": [
@@ -14272,10 +14272,10 @@
                                 }
                               ],
                               "overloadedDeclarations": [
-                                1383,
-                                1384
+                                1443,
+                                1444
                               ],
-                              "referencedDeclaration": 1384,
+                              "referencedDeclaration": 1444,
                               "type": "function (bool,string memory) pure",
                               "value": "require"
                             },
@@ -14326,7 +14326,7 @@
                                       "isPure": false,
                                       "lValueRequested": false,
                                       "member_name": "isBlacklisted",
-                                      "referencedDeclaration": 1364,
+                                      "referencedDeclaration": 1424,
                                       "type": "function (uint256) view external returns (bool)"
                                     },
                                     "children": [
@@ -14377,7 +14377,7 @@
                                           "isPure": false,
                                           "lValueRequested": false,
                                           "member_name": "getDoctorId",
-                                          "referencedDeclaration": 1226,
+                                          "referencedDeclaration": 1286,
                                           "type": "function (address) view external returns (uint256)"
                                         },
                                         "children": [
@@ -14418,7 +14418,7 @@
                                               "overloadedDeclarations": [
                                                 null
                                               ],
-                                              "referencedDeclaration": 1380,
+                                              "referencedDeclaration": 1440,
                                               "type": "msg",
                                               "value": "msg"
                                             },
@@ -14577,10 +14577,10 @@
                                 }
                               ],
                               "overloadedDeclarations": [
-                                1383,
-                                1384
+                                1443,
+                                1444
                               ],
-                              "referencedDeclaration": 1384,
+                              "referencedDeclaration": 1444,
                               "type": "function (bool,string memory) pure",
                               "value": "require"
                             },
@@ -15294,7 +15294,7 @@
                               "isPure": false,
                               "lValueRequested": false,
                               "member_name": "addRecordCount",
-                              "referencedDeclaration": 1298,
+                              "referencedDeclaration": 1358,
                               "type": "function (uint256) external"
                             },
                             "children": [
@@ -15558,7 +15558,7 @@
                                                   "overloadedDeclarations": [
                                                     null
                                                   ],
-                                                  "referencedDeclaration": 1370,
+                                                  "referencedDeclaration": 1430,
                                                   "type": "block",
                                                   "value": "block"
                                                 },
@@ -16274,10 +16274,10 @@
                                 }
                               ],
                               "overloadedDeclarations": [
-                                1383,
-                                1384
+                                1443,
+                                1444
                               ],
-                              "referencedDeclaration": 1384,
+                              "referencedDeclaration": 1444,
                               "type": "function (bool,string memory) pure",
                               "value": "require"
                             },
@@ -16405,7 +16405,7 @@
                                   "isPure": false,
                                   "lValueRequested": false,
                                   "member_name": "isPatient",
-                                  "referencedDeclaration": 1111,
+                                  "referencedDeclaration": 1171,
                                   "type": "function (address) view external returns (bool)"
                                 },
                                 "children": [
@@ -16446,7 +16446,7 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 1380,
+                                      "referencedDeclaration": 1440,
                                       "type": "msg",
                                       "value": "msg"
                                     },
@@ -16518,10 +16518,10 @@
                                         }
                                       ],
                                       "overloadedDeclarations": [
-                                        1383,
-                                        1384
+                                        1443,
+                                        1444
                                       ],
-                                      "referencedDeclaration": 1384,
+                                      "referencedDeclaration": 1444,
                                       "type": "function (bool,string memory) pure",
                                       "value": "require"
                                     },
@@ -16572,7 +16572,7 @@
                                               "isPure": false,
                                               "lValueRequested": false,
                                               "member_name": "getPatientAddress",
-                                              "referencedDeclaration": 1188,
+                                              "referencedDeclaration": 1248,
                                               "type": "function (uint256) view external returns (address)"
                                             },
                                             "children": [
@@ -16678,7 +16678,7 @@
                                               "overloadedDeclarations": [
                                                 null
                                               ],
-                                              "referencedDeclaration": 1380,
+                                              "referencedDeclaration": 1440,
                                               "type": "msg",
                                               "value": "msg"
                                             },
@@ -16773,7 +16773,7 @@
                                       "isPure": false,
                                       "lValueRequested": false,
                                       "member_name": "isDoctor",
-                                      "referencedDeclaration": 1123,
+                                      "referencedDeclaration": 1183,
                                       "type": "function (address) view external returns (bool)"
                                     },
                                     "children": [
@@ -16814,7 +16814,7 @@
                                           "overloadedDeclarations": [
                                             null
                                           ],
-                                          "referencedDeclaration": 1380,
+                                          "referencedDeclaration": 1440,
                                           "type": "msg",
                                           "value": "msg"
                                         },
@@ -16886,10 +16886,10 @@
                                             }
                                           ],
                                           "overloadedDeclarations": [
-                                            1383,
-                                            1384
+                                            1443,
+                                            1444
                                           ],
-                                          "referencedDeclaration": 1384,
+                                          "referencedDeclaration": 1444,
                                           "type": "function (bool,string memory) pure",
                                           "value": "require"
                                         },
@@ -16925,7 +16925,7 @@
                                               "isPure": false,
                                               "lValueRequested": false,
                                               "member_name": "isBlacklisted",
-                                              "referencedDeclaration": 1364,
+                                              "referencedDeclaration": 1424,
                                               "type": "function (uint256) view external returns (bool)"
                                             },
                                             "children": [
@@ -16976,7 +16976,7 @@
                                                   "isPure": false,
                                                   "lValueRequested": false,
                                                   "member_name": "getDoctorId",
-                                                  "referencedDeclaration": 1226,
+                                                  "referencedDeclaration": 1286,
                                                   "type": "function (address) view external returns (uint256)"
                                                 },
                                                 "children": [
@@ -17017,7 +17017,7 @@
                                                       "overloadedDeclarations": [
                                                         null
                                                       ],
-                                                      "referencedDeclaration": 1380,
+                                                      "referencedDeclaration": 1440,
                                                       "type": "msg",
                                                       "value": "msg"
                                                     },
@@ -17104,10 +17104,10 @@
                                             }
                                           ],
                                           "overloadedDeclarations": [
-                                            1383,
-                                            1384
+                                            1443,
+                                            1444
                                           ],
-                                          "referencedDeclaration": 1384,
+                                          "referencedDeclaration": 1444,
                                           "type": "function (bool,string memory) pure",
                                           "value": "require"
                                         },
@@ -17158,7 +17158,7 @@
                                                   "isPure": false,
                                                   "lValueRequested": false,
                                                   "member_name": "isAdmin",
-                                                  "referencedDeclaration": 1142,
+                                                  "referencedDeclaration": 1202,
                                                   "type": "function (address) view external returns (bool)"
                                                 },
                                                 "children": [
@@ -17199,7 +17199,7 @@
                                                       "overloadedDeclarations": [
                                                         null
                                                       ],
-                                                      "referencedDeclaration": 1380,
+                                                      "referencedDeclaration": 1440,
                                                       "type": "msg",
                                                       "value": "msg"
                                                     },
@@ -18057,10 +18057,10 @@
                                 }
                               ],
                               "overloadedDeclarations": [
-                                1383,
-                                1384
+                                1443,
+                                1444
                               ],
-                              "referencedDeclaration": 1384,
+                              "referencedDeclaration": 1444,
                               "type": "function (bool,string memory) pure",
                               "value": "require"
                             },
@@ -18145,7 +18145,7 @@
                                               "isPure": false,
                                               "lValueRequested": false,
                                               "member_name": "getDoctorId",
-                                              "referencedDeclaration": 1226,
+                                              "referencedDeclaration": 1286,
                                               "type": "function (address) view external returns (uint256)"
                                             },
                                             "children": [
@@ -18186,7 +18186,7 @@
                                                   "overloadedDeclarations": [
                                                     null
                                                   ],
-                                                  "referencedDeclaration": 1380,
+                                                  "referencedDeclaration": 1440,
                                                   "type": "msg",
                                                   "value": "msg"
                                                 },
@@ -18498,7 +18498,7 @@
                                           "isPure": false,
                                           "lValueRequested": false,
                                           "member_name": "getDoctorId",
-                                          "referencedDeclaration": 1226,
+                                          "referencedDeclaration": 1286,
                                           "type": "function (address) view external returns (uint256)"
                                         },
                                         "children": [
@@ -18539,7 +18539,7 @@
                                               "overloadedDeclarations": [
                                                 null
                                               ],
-                                              "referencedDeclaration": 1380,
+                                              "referencedDeclaration": 1440,
                                               "type": "msg",
                                               "value": "msg"
                                             },
@@ -18684,7 +18684,7 @@
                               "isPure": false,
                               "lValueRequested": false,
                               "member_name": "addAppraisalScore",
-                              "referencedDeclaration": 1332,
+                              "referencedDeclaration": 1392,
                               "type": "function (uint256) external"
                             },
                             "children": [
@@ -18735,7 +18735,7 @@
                                   "isPure": false,
                                   "lValueRequested": false,
                                   "member_name": "getDoctorId",
-                                  "referencedDeclaration": 1226,
+                                  "referencedDeclaration": 1286,
                                   "type": "function (address) view external returns (uint256)"
                                 },
                                 "children": [
@@ -18776,7 +18776,7 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 1380,
+                                      "referencedDeclaration": 1440,
                                       "type": "msg",
                                       "value": "msg"
                                     },
@@ -19506,10 +19506,10 @@
                                 }
                               ],
                               "overloadedDeclarations": [
-                                1383,
-                                1384
+                                1443,
+                                1444
                               ],
-                              "referencedDeclaration": 1384,
+                              "referencedDeclaration": 1444,
                               "type": "function (bool,string memory) pure",
                               "value": "require"
                             },
@@ -19594,7 +19594,7 @@
                                               "isPure": false,
                                               "lValueRequested": false,
                                               "member_name": "getDoctorId",
-                                              "referencedDeclaration": 1226,
+                                              "referencedDeclaration": 1286,
                                               "type": "function (address) view external returns (uint256)"
                                             },
                                             "children": [
@@ -19635,7 +19635,7 @@
                                                   "overloadedDeclarations": [
                                                     null
                                                   ],
-                                                  "referencedDeclaration": 1380,
+                                                  "referencedDeclaration": 1440,
                                                   "type": "msg",
                                                   "value": "msg"
                                                 },
@@ -20039,7 +20039,7 @@
                                           "isPure": false,
                                           "lValueRequested": false,
                                           "member_name": "getDoctorId",
-                                          "referencedDeclaration": 1226,
+                                          "referencedDeclaration": 1286,
                                           "type": "function (address) view external returns (uint256)"
                                         },
                                         "children": [
@@ -20080,7 +20080,7 @@
                                               "overloadedDeclarations": [
                                                 null
                                               ],
-                                              "referencedDeclaration": 1380,
+                                              "referencedDeclaration": 1440,
                                               "type": "msg",
                                               "value": "msg"
                                             },
@@ -20325,7 +20325,7 @@
                               "isPure": false,
                               "lValueRequested": false,
                               "member_name": "addAppraisalScore",
-                              "referencedDeclaration": 1332,
+                              "referencedDeclaration": 1392,
                               "type": "function (uint256) external"
                             },
                             "children": [
@@ -20376,7 +20376,7 @@
                                   "isPure": false,
                                   "lValueRequested": false,
                                   "member_name": "getDoctorId",
-                                  "referencedDeclaration": 1226,
+                                  "referencedDeclaration": 1286,
                                   "type": "function (address) view external returns (uint256)"
                                 },
                                 "children": [
@@ -20417,7 +20417,7 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 1380,
+                                      "referencedDeclaration": 1440,
                                       "type": "msg",
                                       "value": "msg"
                                     },
@@ -20804,7 +20804,7 @@
                               "isPure": false,
                               "lValueRequested": false,
                               "member_name": "addPenaltyScore",
-                              "referencedDeclaration": 1316,
+                              "referencedDeclaration": 1376,
                               "type": "function (uint256,uint256) external"
                             },
                             "children": [
@@ -20959,7 +20959,7 @@
                                   "isPure": false,
                                   "lValueRequested": false,
                                   "member_name": "getPenaltyScore",
-                                  "referencedDeclaration": 1269,
+                                  "referencedDeclaration": 1329,
                                   "type": "function (uint256) view external returns (uint256)"
                                 },
                                 "children": [
@@ -21101,7 +21101,7 @@
                                       "isPure": false,
                                       "lValueRequested": false,
                                       "member_name": "blacklistDoctor",
-                                      "referencedDeclaration": 1348,
+                                      "referencedDeclaration": 1408,
                                       "type": "function (uint256) external"
                                     },
                                     "children": [
@@ -23326,21 +23326,12 @@
         }
       },
       "links": {},
-<<<<<<< HEAD
-      "address": "0x8E3745f66A7533369958196E053d271E28507031",
-      "transactionHash": "0x61783bed51ad5b7e46e4667bf074ad071227d41eebe04227b98f81a255f43922"
+      "address": "0xA8d6F42B2bC9b48e00eB2639Fb776A822C0f29a7",
+      "transactionHash": "0xb4d554c317a3f7f3045f3c99736ddaa51ea24aaa764ad0db6a84b5da3f8acf4e"
     }
   },
   "schemaVersion": "3.3.3",
-  "updatedAt": "2021-04-07T12:13:13.911Z",
-=======
-      "address": "0xf0e35665E3cFDa2e2C56E805E69a78b716ac4407",
-      "transactionHash": "0x02cd568784b6d91b5bf1db200b08068f75565e9d997b752c0224ed7c0778da2a"
-    }
-  },
-  "schemaVersion": "3.3.3",
-  "updatedAt": "2021-04-04T11:25:45.121Z",
->>>>>>> a05dc90fee4d0c6742df7df6350624216d16e103
+  "updatedAt": "2021-04-07T13:28:46.729Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}
