@@ -21,6 +21,7 @@ import BoardPatient from "./components/BoardPatient";
 import BoardDoctor from "./components/Doctor/BoardDoctor";
 import NewRecord from "./components/Doctor/NewRecord";
 import RandomRecords from "./components/Doctor/RandomRecords";
+import VerifyRecord from "./components/Doctor/VerifyRecord";
 
 import { logout } from "./actions/auth";
 import { clearMessage } from "./actions/message";
@@ -216,6 +217,7 @@ class App extends Component {
               <Route path="/doctor" component={BoardDoctor} />
               <Route path="/newRecord" component={NewRecord} />
               <Route path="/randomRecords" component={RandomRecords} />
+              <Route path="/verifyRecord" component={VerifyRecord} />
             </Switch>
           </div>
         </div>

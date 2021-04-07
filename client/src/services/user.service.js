@@ -19,5 +19,13 @@ class UserService {
     getPatientByNric(nric) {
         return axios.post(API_URL + "patientByNric", { nric });
     };
+
+    getPatientById(id) {
+        return axios.post(API_URL + "patientById", { id });
+    };
+
+    getDoctorById(id) {
+        return axios.post(API_URL + "doctorById", { id });
+    };
 }
 export default new UserService();

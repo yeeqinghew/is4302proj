@@ -29,7 +29,19 @@ module.exports = function (app) {
 
     app.post(
         "/api/test/patientByNric",
-        // [authjwt.verifyToken, authjwt.isDoctor],
+        // [authjwt.verifyToken],
         controller.patientByNric
+    );
+
+    app.post(
+        "/api/test/patientById",
+        // [authjwt.verifyToken],
+        controller.patientById
+    );
+
+    app.post(
+        "/api/test/doctorById",
+        // [authjwt.verifyToken],
+        controller.doctorById
     );
 };

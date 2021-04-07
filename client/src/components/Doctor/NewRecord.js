@@ -3,7 +3,7 @@ import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import TextArea from "react-validation/build/textarea";
 import CheckButton from "react-validation/build/button";
-import Toast from 'react-bootstrap/Toast'
+// import Toast from 'react-bootstrap/Toast'
 
 import { connect } from "react-redux";
 import UserService from "../../services/user.service";
@@ -96,11 +96,6 @@ class NewRecord extends Component {
     }
 
     verifyPatient() {
-        // const data = { nric: 'S6153515B' };
-        // const response = await fetch("http://localhost:8080/getPatientByNric", { method: 'POST', body: JSON.stringify(data) });
-        // const jsonData = await response.json();
-        // this.setState({ patient: jsonData });
-        // console.log(this.state.patient);
         UserService.getPatientByNric(this.state.nric).then(
             response => {
                 this.setState({
@@ -132,7 +127,10 @@ class NewRecord extends Component {
         const details = this.state.web3.utils.asciiToHex(this.state.details);
         console.log("convert to bytes:", details);
 
-        const response = await contract.methods.createRecord(this.state.patient.patientId, 0, details).send({ from: accounts[0] }); //to replace doctorId, bc_address when doctor approval done
+        const response = await contract.methods.createRecord(
+            this.state.patient.patientId, 
+            currentDoctor.doctorId, details
+        ).send({ from: accounts[0] }); 
         console.log("Response", response);
         console.log("Event", response.events.createdMedicalRecord);
         const medicalRecordId = response.events.createdMedicalRecord.returnValues[0];
@@ -164,6 +162,11 @@ class NewRecord extends Component {
                     successful: true,
                     message: "Medical Record is created successfully!"
                 });
+
+                setTimeout(() => {
+                    window.location.reload();
+                }, 5000);
+
             }).catch((err) => {
                 console.log("Failed!", err);
                 this.setState({

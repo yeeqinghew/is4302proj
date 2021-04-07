@@ -13,6 +13,7 @@ contract Users {
         uint256 patientId;
         address patientAddress;
         uint256 recordNumber;
+        uint256[] recordIds;
     }
 
     // doctor structure
@@ -77,9 +78,10 @@ contract Users {
             patientExists[msg.sender] != true,
             "Address is already a patient."
         );
-        uint256 newPatientId = numPatients++;
+        uint256 newPatientId = ++numPatients;
 
-        patient memory newPatient = patient(newPatientId, msg.sender, 0);
+        uint256[] memory init_arr;
+        patient memory newPatient = patient(newPatientId, msg.sender, 0, init_arr);
 
         patients[newPatientId] = newPatient;
         patientExists[msg.sender] = true;
@@ -93,7 +95,7 @@ contract Users {
         adminOnly()
         returns (uint256)
     {
-        uint256 newDoctorId = numDoctors++;
+        uint256 newDoctorId = ++numDoctors;
 
         doctor memory newDoctor =
             doctor(newDoctorId, doctorAddress, 0, 0, false);
@@ -201,6 +203,23 @@ contract Users {
         return patients[patientId].recordNumber;
     }
 
+    // function to check patient's list of recordIds
+    function getRecordIds(uint256 patientId)
+        public
+        view
+        patientExist(patientId)
+        returns (uint256[] memory)
+    {
+        // not sure if this requirement is too strict
+        require(
+            patients[patientId].patientAddress == msg.sender,
+            "Not authorised to view."
+        );
+
+        uint256[] memory recordIds = patients[patientId].recordIds;
+        return recordIds;
+    }
+
     // function to check doctor's penalty score
     function getPenaltyScore(uint256 doctorId)
         public
@@ -219,6 +238,11 @@ contract Users {
         returns (uint256)
     {
         return doctors[doctorId].appraisalScore;
+    }
+
+    // function to add medical record id to patient's list
+    function addRecordId(uint256 patientId, uint256 medicalRecordId) public {
+        patients[patientId].recordIds.push(medicalRecordId);
     }
 
     // function to add medical record count to patient
