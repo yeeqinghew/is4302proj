@@ -4,7 +4,7 @@ import { Router, Switch, Route, Link } from "react-router-dom";
 
 // import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
-import NavDropdown from 'react-bootstrap/NavDropdown';
+// import NavDropdown from 'react-bootstrap/NavDropdown';
 
 import Login from "./components/Login";
 import Register from "./components/Register";
@@ -15,8 +15,8 @@ import BoardAdmin from "./components/Admin/BoardAdmin";
 import AllDoctors from "./components/Admin/AllDoctors";
 
 // patient
-import BoardPatient from "./components/BoardPatient";
-import PatientMedicalRecordList from "./components/PatientMedicalRecordList";
+import BoardPatient from "./components/Patient/BoardPatient";
+import PatientMedicalRecordList from "./components/Patient/PatientMedicalRecordList";
 
 // doctor
 import BoardDoctor from "./components/Doctor/BoardDoctor";

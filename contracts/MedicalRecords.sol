@@ -137,6 +137,7 @@ contract MedicalRecords {
         uint256 newMedicalRecordId = numMedicalRecords++;
         medicalRecords[newMedicalRecordId] = newMedicalRecord;
         userContract.addRecordCount(patientId);
+        userContract.addRecordId(patientId, newMedicalRecordId);
         emit createdMedicalRecord(newMedicalRecordId);
 
         // randomly adds medical record to flaggedRecords so random spotchecks can be done
