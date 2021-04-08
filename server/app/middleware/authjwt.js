@@ -4,71 +4,70 @@ const db = require("../models");
 const User = db.user;
 
 verifyToken = (req, res, next) => {
-    let token = req.headers["authorization"];
-
-    if (!token) {
-        return res.status(403).send({
-            message: "No token provided!"
-        });
-    }
-
-    jwt.verify(token, config.secret, (err, decoded) => {
-        if (err) {
-            return res.status(401).send({
-                message: "Unauthorized!"
-            });
-        }
-        req.userId = decoded.id;
-        next();
+  let token = req.headers["x-access-token"];
+  if (!token) {
+    return res.status(403).send({
+      message: "No token provided!",
     });
+  }
+  jwt.verify(token, config.secret, (err, decoded) => {
+    if (err) {
+      console.log(err);
+      return res.status(401).send({
+        message: "Unauthorized!",
+      });
+    }
+    req.userId = decoded.id;
+    next();
+  });
 };
 
 isPatient = (req, res, next) => {
-    User.findByPk(req.userId).then(user => {
-        user.getRole().then(role => {
-            if (role.name === "patient") {
-                next();
-                return;
-            }
+  User.findByPk(req.userId).then((user) => {
+    user.getRole().then((role) => {
+      if (role.name === "patient") {
+        next();
+        return;
+      }
 
-            res.status(403).send({
-                message: "Require Patient Role!"
-            });
-            return;
-        });
+      res.status(403).send({
+        message: "Require Patient Role!",
+      });
+      return;
     });
+  });
 };
 
 isAdmin = (req, res, next) => {
-    User.findByPk(req.userId).then(user => {
-        user.getRole().then(role => {
-            if (role.name === "admin") {
-                next();
-                return;
-            }
+  User.findByPk(req.userId).then((user) => {
+    user.getRole().then((role) => {
+      if (role.name === "admin") {
+        next();
+        return;
+      }
 
-            res.status(403).send({
-                message: "Require Admin Role!"
-            });
-            return;
-        });
+      res.status(403).send({
+        message: "Require Admin Role!",
+      });
+      return;
     });
+  });
 };
 
 isDoctor = (req, res, next) => {
-    User.findByPk(req.userId).then(user => {
-        user.getRole().then(role => {
-            if (role.name === "doctor") {
-                next();
-                return;
-            }
+  User.findByPk(req.userId).then((user) => {
+    user.getRole().then((role) => {
+      if (role.name === "doctor") {
+        next();
+        return;
+      }
 
-            res.status(403).send({
-                message: "Require Doctor Role!"
-            });
-            return;
-        });
+      res.status(403).send({
+        message: "Require Doctor Role!",
+      });
+      return;
     });
+  });
 };
 
 /*
@@ -96,9 +95,9 @@ isModeratorOrAdmin = (req, res, next) => {
 */
 
 const authjwt = {
-    verifyToken: verifyToken,
-    isPatient: isPatient,
-    isAdmin: isAdmin,
-    isDoctor: isDoctor,
+  verifyToken: verifyToken,
+  isPatient: isPatient,
+  isAdmin: isAdmin,
+  isDoctor: isDoctor,
 };
 module.exports = authjwt;

@@ -5,31 +5,27 @@ const API_URL = "http://localhost:8080/api/test/";
 
 class UserService {
     getPatientBoard = () => {
-        return axios.get(API_URL + "patient", { headers: authHeader() });
+    return axios.get(API_URL + "patient", { headers: authHeader() });
     };
 
     getAdminBoard = () => {
-        return axios.get(API_URL + "admin", { headers: authHeader() });
-    };
-
-    getHealthcareProviderBoard = () => {
-        return axios.get(API_URL + "healthcareProvider", { headers: authHeader() });
-    };
-
-    getFinancialInstitution = () => {
-        return axios.get(API_URL + "financialInstitution", { headers: authHeader() });
+    return axios.get(API_URL + "admin", { headers: authHeader() });
     };
 
     getDoctorBoard = () => {
         return axios.get(API_URL + "doctor", { headers: authHeader() });
     };
 
-    getNurseBoard = () => {
-        return axios.get(API_URL + "nurse", { headers: authHeader() });
+    getPatientByNric(nric) {
+        return axios.post(API_URL + "patientByNric", { nric });
     };
 
-    getHealthcareAnalystBoard = () => {
-        return axios.get(API_URL + "healthcareAnalyst", { headers: authHeader() });
+    getPatientById(id) {
+        return axios.post(API_URL + "patientById", { id });
+    };
+
+    getDoctorById(id) {
+        return axios.post(API_URL + "doctorById", { id });
     };
 }
 export default new UserService();
