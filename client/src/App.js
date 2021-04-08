@@ -13,7 +13,7 @@ import Dashboard from "./components/Dashboard";
 // admin
 import BoardAdmin from "./components/Admin/BoardAdmin";
 import AllDoctors from "./components/Admin/AllDoctors";
-
+import AllPatients from "./components/Admin/AllPatients";
 // patient
 import BoardPatient from "./components/Patient/BoardPatient";
 import PatientMedicalRecordList from "./components/Patient/PatientMedicalRecordList";
@@ -21,6 +21,8 @@ import PatientMedicalRecordList from "./components/Patient/PatientMedicalRecordL
 // doctor
 import BoardDoctor from "./components/Doctor/BoardDoctor";
 import NewRecord from "./components/Doctor/NewRecord";
+import RandomRecords from "./components/Doctor/RandomRecords";
+import VerifyRecord from "./components/Doctor/VerifyRecord";
 
 import { logout } from "./actions/auth";
 import { clearMessage } from "./actions/message";
@@ -143,6 +145,11 @@ class App extends Component {
                     </Link>
                   </li>
                   <li className="nav-item">
+                    <Link to={"/allPatients"} className="nav-link">
+                      All Patients
+                    </Link>
+                  </li>
+                  <li className="nav-item">
                     <Link to={"/allDoctors"} className="nav-link">
                       All Doctors
                     </Link>
@@ -162,8 +169,8 @@ class App extends Component {
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <Link to={"/flaggedRecords"} className="nav-link">
-                      Flagged Records
+                    <Link to={"/randomRecords"} className="nav-link">
+                      Verify Records
                     </Link>
                   </li>
                   {/* <NavDropdown title="Medical Records" id="nav-dropdown">
@@ -212,11 +219,13 @@ class App extends Component {
               <Route exact path="/dashboard" component={Dashboard} />
               <Route path="/patient" component={BoardPatient} />
               <Route path="/admin" component={BoardAdmin} />
+              <Route path="/allPatients" component={AllPatients} />
               <Route path="/allDoctors" component={AllDoctors} />
               <Route path="/doctor" component={BoardDoctor} />
               <Route path="/patient-medical-record-list" component={PatientMedicalRecordList} />
               <Route path="/newRecord" component={NewRecord} />
-              <Route path="/flaggedRecords" component={BoardDoctor} />
+              <Route path="/randomRecords" component={RandomRecords} />
+              <Route path="/verifyRecord" component={VerifyRecord} />
             </Switch>
           </div>
         </div>

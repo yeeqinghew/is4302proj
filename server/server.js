@@ -26,53 +26,49 @@ app.get("/", (req, res) => {
 });
 
 // for Admin
+// for Admin
+app.get("/getAllPatients", async (req, res) => {
+  const allUsers = await Users.findAll({
+    where: { roleId: 2 },
+  });
+  // console.log(allUsers);
+  res.json(allUsers);
+});
+
 app.get("/getAllPendingDoctors", async (req, res) => {
   const allUsers = await Users.findAll({
     include: "doctor",
     where: { roleId: 3, "$doctor.approved$": "f" },
   });
-  console.log(allUsers);
+  // console.log(allUsers);
   res.json(allUsers);
 });
 
-// for Doctor
-// app.post("/getPatientByNric", (req, res) => {
-//     Users.findOne({
-//         where: {
-//             '$patient.nric$': req.body.nric,
-//         },
-//         include: [
-//             {model: Patient, as: "patient"}
-//         ]
-//     }).then((user) => {
-//         if (!user) {
-//             return res.status(404).send({ message: "User Not found." });
-//         }
+app.put("/approveDoctorStatus/:doctor_id", async (req, res) => {
+  const doctorId = req.params["doctor_id"];
+  await Doctor.update(
+    { approved: "t" },
+    {
+      where: { userId: parseInt(doctorId) },
+    }
+  ).then((response) => console.log(response));
 
-//         res.status(200).send({
-//             id: user.userId,
-//             username: user.username,
-//             email: user.email,
-//             first_name: user.first_name,
-//             last_name: user.last_name,
-//             contact_num: user.contact_num,
-//             dob: user.dob,
-//             gender: user.gender,
-//             nationality: user.nationality,
-//             race: user.race,
-//             bc_address: user.bc_address,
-//             patientId: user.patient.id,
-//             nric: user.patient.nric,
-//             home_address: user.patient.home_address,
-//             emergency_contact: user.patient.emergency_contact
-//         });
-//     })
-// });
-
-db.sequelize.sync({ force: true }).then(() => {
-  console.log("Drop and Resync Db");
-  initial();
+  // res.json(updateDoctorAddress);
 });
+app.put("/deleteDoctorAddress/:doctor_id", async (req, res) => {
+  const doctorId = req.params["doctor_id"];
+  await Users.update(
+    {
+      bc_address: null,
+    },
+    { where: { userId: +parseInt(doctorId) } }
+  ).then((response) => console.log(response));
+});
+
+// db.sequelize.sync({ force: true }).then(() => {
+//   console.log("Drop and Resync Db");
+//   initial();
+// });
 
 function initial() {
   Role.create({
@@ -106,7 +102,7 @@ function initial() {
         gender: "Male",
         nationality: "Singaporean",
         race: "Chinese",
-        bc_address: "0x9295f5B62De2946F0F221a5caE811866EF976af6",
+        bc_address: "0xf459b27F4Ca1A8A44937a10785E572CfB91C96B6",
         roleId: 1,
       },
     },
