@@ -1,10 +1,7 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import { Router, Switch, Route, Link } from "react-router-dom";
-
-// import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
-import NavDropdown from 'react-bootstrap/NavDropdown';
 
 import Login from "./components/Login";
 import Register from "./components/Register";
@@ -29,8 +26,8 @@ import { clearMessage } from "./actions/message";
 import { history } from "./helpers/history";
 
 // sol
-import SimpleStorageContract from "./contracts/SimpleStorage.json";
-import getWeb3 from "./getWeb3";
+// import SimpleStorageContract from "./contracts/SimpleStorage.json";
+// import getWeb3 from "./getWeb3";
 
 class App extends Component {
   constructor(props) {
