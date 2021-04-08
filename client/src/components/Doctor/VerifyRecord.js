@@ -199,7 +199,7 @@ class VerifyRecord extends Component {
                 var str = JSON.stringify(err);
                 
                 var error;
-                if (err.code === -32603) {
+                if (err.code == -32603) {
                     var start = str.indexOf('reason');
                     var end = str.indexOf('stack');
                     error = "Record cannot be reported: " + str.slice(start + 11, end - 7) + "!";

@@ -10,6 +10,7 @@ import { registerPatient } from "../actions/auth";
 import { registerDoctor } from "../actions/auth";
 
 // datepicker
+import DayPickerInput from "react-day-picker/DayPickerInput";
 import { DateUtils } from "react-day-picker";
 import "react-day-picker/lib/style.css";
 
@@ -468,6 +469,7 @@ class Register extends Component {
   }
   render() {
     const { message } = this.props;
+    const FORMAT = "yyyyMMdd";
     return (
       <div className="col-md-12">
         <div className="card card-container">

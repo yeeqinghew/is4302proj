@@ -117,7 +117,7 @@ class RandomRecords extends Component {
 
             if (min < max) {
                 const response = await medicalRecordContract.methods.viewRecord(min).call({from: accounts[0]});
-                if (response[4] === 0 && response[2] !== currentDoctor.doctorId) { // unflagged, not owned by current doctor
+                if (response[4] == 0 && response[2] != currentDoctor.doctorId) { // unflagged, not owned by current doctor
                     const { patientData, doctorData } = await this.retrieveUserData(response[0], response[2]);
                     console.log("patientData", patientData);
                     console.log("doctorData", doctorData);
@@ -159,7 +159,7 @@ class RandomRecords extends Component {
                 <header className="jumbotron">
                 <h1> Medical Records </h1>
                 </header>
-                {loading && medicalRecords.length !== 0 && (
+                {loading && medicalRecords.length != 0 && (
                     <Table hover responsive striped>
                     {/* <table className="table table-hover table-responsive" style={{width: '100%', margin: '0px'}}> */}
                         <thead>
@@ -191,7 +191,7 @@ class RandomRecords extends Component {
                         {/* </table> */}
                     </Table>
                 )}
-                {loading && medicalRecords.length === 0 && (
+                {loading && medicalRecords.length == 0 && (
                     <h5>No records to verify</h5>
                 )}
             </Fragment>
