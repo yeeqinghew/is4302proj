@@ -194,6 +194,7 @@ exports.signin = (req, res) => {
               home_address: patient.home_address,
               emergency_contact: patient.emergency_contact,
               accessToken: token,
+              patientId: patient.id,
             });
           });
         } else if (role.dataValues.name === "doctor") {

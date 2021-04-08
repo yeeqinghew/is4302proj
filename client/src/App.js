@@ -4,7 +4,7 @@ import { Router, Switch, Route, Link } from "react-router-dom";
 
 // import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
-import NavDropdown from 'react-bootstrap/NavDropdown';
+// import NavDropdown from 'react-bootstrap/NavDropdown';
 
 import Login from "./components/Login";
 import Register from "./components/Register";
@@ -15,7 +15,8 @@ import BoardAdmin from "./components/Admin/BoardAdmin";
 import AllDoctors from "./components/Admin/AllDoctors";
 import AllPatients from "./components/Admin/AllPatients";
 // patient
-import BoardPatient from "./components/BoardPatient";
+import BoardPatient from "./components/Patient/BoardPatient";
+import PatientMedicalRecordList from "./components/Patient/PatientMedicalRecordList";
 
 // doctor
 import BoardDoctor from "./components/Doctor/BoardDoctor";
@@ -221,6 +222,7 @@ class App extends Component {
               <Route path="/allPatients" component={AllPatients} />
               <Route path="/allDoctors" component={AllDoctors} />
               <Route path="/doctor" component={BoardDoctor} />
+              <Route path="/patient-medical-record-list" component={PatientMedicalRecordList} />
               <Route path="/newRecord" component={NewRecord} />
               <Route path="/randomRecords" component={RandomRecords} />
               <Route path="/verifyRecord" component={VerifyRecord} />
