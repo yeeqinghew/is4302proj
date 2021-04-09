@@ -8,11 +8,7 @@ class AuthService {
       .post(API_URL + "signin", { username, password })
       .then((response) => {
         if (response.data.role === "doctor") {
-          console.log("doctor");
-          console.log(response.data.approved);
           if (response.data.approved === true) {
-            console.log("approved √");
-
             if (response.data.accessToken) {
               localStorage.setItem("user", JSON.stringify(response.data));
             }
@@ -30,6 +26,36 @@ class AuthService {
 
   logout() {
     localStorage.removeItem("user");
+  }
+
+  registerAdmin(
+    roleId,
+    username,
+    email,
+    password,
+    firstName,
+    lastName,
+    contactNum,
+    dob,
+    gender,
+    nationality,
+    race,
+    bcAddress
+  ) {
+    return axios.post(API_URL + "signup", {
+      roleId,
+      username,
+      email,
+      password,
+      firstName,
+      lastName,
+      contactNum,
+      dob,
+      gender,
+      nationality,
+      race,
+      bcAddress,
+    });
   }
 
   registerPatient(

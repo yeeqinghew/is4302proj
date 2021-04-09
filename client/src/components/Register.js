@@ -125,7 +125,6 @@ class Register extends Component {
       successful: false,
       web3: null,
       accounts: null,
-      // account: null,
       contract: null,
     };
   }
@@ -205,7 +204,6 @@ class Register extends Component {
   }
 
   onChangeDob(e) {
-    // console.log("dob", this.state.dob);
     this.setState({
       dob: e.target.value,
     });
@@ -392,8 +390,6 @@ class Register extends Component {
       //             successful: false,
       //         });
       //     });
-
-      // console.log("I AM INNNN ASYNC GET BC ADDRESS");
     } else if (
       this.checkBtn.context._errors.length === 0 &&
       this.state.roleId === "3"
