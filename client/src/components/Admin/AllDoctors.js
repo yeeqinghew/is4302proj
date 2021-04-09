@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from "react";
-
 import UserService from "../../services/user.service";
 // solidity
 import Users from "../../contracts/Users.json";

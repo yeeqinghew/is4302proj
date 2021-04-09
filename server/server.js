@@ -26,8 +26,17 @@ app.get("/", (req, res) => {
 });
 
 // for Admin
-// for Admin
+app.get("/getAllAdmins", async (req, res) => {
+  // this is to get a list of admins
+  const allAdmins = await Users.findAll({
+    where: { roleId: 1 },
+  });
+  console.log(allAdmins);
+  res.json(allAdmins);
+});
+
 app.get("/getAllPatients", async (req, res) => {
+  // this is to get a list of patients
   const allUsers = await Users.findAll({
     where: { roleId: 2 },
   });
@@ -36,6 +45,7 @@ app.get("/getAllPatients", async (req, res) => {
 });
 
 app.get("/getAllPendingDoctors", async (req, res) => {
+  // this is to get a list of doctors
   const allUsers = await Users.findAll({
     include: "doctor",
     where: { roleId: 3, "$doctor.approved$": "f" },
@@ -45,6 +55,7 @@ app.get("/getAllPendingDoctors", async (req, res) => {
 });
 
 app.put("/approveDoctorStatus/:doctor_id", async (req, res) => {
+  // this is to approve or reject the doctor account
   const doctorId = req.params["doctor_id"];
   await Doctor.update(
     { approved: "t" },
@@ -55,6 +66,7 @@ app.put("/approveDoctorStatus/:doctor_id", async (req, res) => {
 
   // res.json(updateDoctorAddress);
 });
+
 app.put("/deleteDoctorAddress/:doctor_id", async (req, res) => {
   const doctorId = req.params["doctor_id"];
   await Users.update(
