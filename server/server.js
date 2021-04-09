@@ -31,7 +31,6 @@ app.get("/getAllAdmins", async (req, res) => {
   const allAdmins = await Users.findAll({
     where: { roleId: 1 },
   });
-  console.log(allAdmins);
   res.json(allAdmins);
 });
 
@@ -40,7 +39,6 @@ app.get("/getAllPatients", async (req, res) => {
   const allUsers = await Users.findAll({
     where: { roleId: 2 },
   });
-  // console.log(allUsers);
   res.json(allUsers);
 });
 
@@ -50,7 +48,6 @@ app.get("/getAllPendingDoctors", async (req, res) => {
     include: "doctor",
     where: { roleId: 3, "$doctor.approved$": "f" },
   });
-  // console.log(allUsers);
   res.json(allUsers);
 });
 
@@ -62,7 +59,7 @@ app.put("/approveDoctorStatus/:doctor_id", async (req, res) => {
     {
       where: { userId: parseInt(doctorId) },
     }
-  ).then((response) => console.log(response));
+  );
 
   // res.json(updateDoctorAddress);
 });
@@ -74,7 +71,7 @@ app.put("/deleteDoctorAddress/:doctor_id", async (req, res) => {
       bc_address: null,
     },
     { where: { userId: +parseInt(doctorId) } }
-  ).then((response) => console.log(response));
+  );
 });
 
 // db.sequelize.sync({ force: true }).then(() => {

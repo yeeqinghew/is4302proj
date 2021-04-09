@@ -16,8 +16,69 @@ exports.signup = (req, res) => {
   var MONTH = req.body.dob.substring(4, 6) - 1;
   var DATE = req.body.dob.substring(6, 8);
 
+  // Save Admin to Database
+  console.log("req.body", req.body.roleId);
+  console.log("req.body", typeof req.body.roleId);
+  console.log("vvv", req.body.roleId === 1);
+  if (req.body.roleId === 1) {
+    console.log("admin in x1");
+    User.create({
+      username: req.body.username,
+      email: req.body.email,
+      password: bcrypt.hashSync(req.body.password, 8),
+      first_name: req.body.firstName,
+      last_name: req.body.lastName,
+      contact_num: req.body.contactNum,
+      dob: new Date(YEAR, MONTH, DATE),
+      gender: req.body.gender,
+      nationality: req.body.nationality,
+      race: req.body.race,
+      bc_address: req.body.bcAddress,
+    })
+      .then((user) => {
+        console.log("admin user", user);
+        Admin.create(
+          {
+            date_joined: new Date(),
+            users: user,
+          },
+          {
+            include: [Admin.user],
+          }
+        ).then((admin) => {
+          console.log("admin amidn", admin);
+          if (req.body.roleId) {
+            Role.findOne({
+              where: {
+                id: req.body.roleId,
+              },
+            }).then((roleId) => {
+              admin
+                .setUser(user.userId)
+                .then(() => {
+                  console.log("Successful");
+                  // res.send({ message: "User was registered successfully!" });
+                })
+                .then(() => {
+                  user.setRole(roleId).then(() => {
+                    console.log("Successful");
+                    // res.send({ message: "User was registered successfully!" });
+                  });
+                })
+                .then(() => {
+                  res.send({ message: "User was registered successfully!" });
+                });
+            });
+          }
+        });
+      })
+      .catch((err) => {
+        res.status(500).send({ message: err.message });
+      });
+  }
+
   // Save Patient to Database
-  if (req.body.roleId === "2") {
+  else if (req.body.roleId === 2) {
     User.create({
       username: req.body.username,
       email: req.body.email,
@@ -42,14 +103,14 @@ exports.signup = (req, res) => {
           {
             include: [Patient.user],
           }
-        ).then((patient) => {
+        ).then((admin) => {
           if (req.body.roleId) {
             Role.findOne({
               where: {
                 id: req.body.roleId,
               },
             }).then((roleId) => {
-              patient
+              admin
                 .setUser(user.userId)
                 .then(() => {
                   console.log("Successful");
@@ -87,7 +148,7 @@ exports.signup = (req, res) => {
   }
 
   // Save User to Database
-  if (req.body.roleId === "3") {
+  else if (req.body.roleId === 3) {
     User.create({
       username: req.body.username,
       email: req.body.email,
