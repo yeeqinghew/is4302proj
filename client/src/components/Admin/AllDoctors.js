@@ -181,12 +181,14 @@ export default class AllDoctors extends Component {
                   <th>{rec.penaltyScore}</th>
                   <th>{String(rec.isBlacklisted)}</th>
                   <th>
-                    <button
-                      className="btn btn-warning btn-block"
-                      onClick={() => this.handleBlacklist(rec.doctor)}
-                    >
-                      Blacklist
-                    </button>
+                    {String(rec.isBlacklisted) === "false" && (
+                      <button
+                        className="btn btn-warning btn-block"
+                        onClick={() => this.handleBlacklist(rec.doctor)}
+                      >
+                        Blacklist
+                      </button>
+                    )}
                   </th>
                 </tr>
               ))}
