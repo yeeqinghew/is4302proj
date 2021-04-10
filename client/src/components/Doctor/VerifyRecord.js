@@ -15,7 +15,7 @@ class VerifyRecord extends Component {
 
     constructor(props) {
         super(props);
-        this.retrieveUserData = this.retrieveUserData.bind(this);
+        this.retrievePatientData = this.retrievePatientData.bind(this);
         this.retrieveRecord = this.retrieveRecord.bind(this);
         this.verifyRecord = this.verifyRecord.bind(this);
         this.reportRecord = this.reportRecord.bind(this);
@@ -79,9 +79,8 @@ class VerifyRecord extends Component {
         this.retrieveRecord();
     }
 
-    retrieveUserData = async(patientId, doctorId) => {
+    retrievePatientData = async(patientId) => {
         var patient;
-        var doctor;
 
         await UserService.getPatientById(patientId).then(
             response => {
@@ -96,37 +95,22 @@ class VerifyRecord extends Component {
                     error.toString())
             }
         );
-        await UserService.getDoctorById(doctorId).then(
-            response => {
-                doctor = response.data;
-            },
-            error => {
-                console.log(
-                    (error.response &&
-                        error.response.data &&
-                        error.response.data.message) ||
-                    error.message ||
-                    error.toString())
-            }
-        );
-        return { patientData: patient, doctorData: doctor};
+        return { patientData: patient};
     }
 
     retrieveRecord = async() => {
         const { web3, accounts, medicalRecordContract, recordId } = this.state;
 
         const response = await medicalRecordContract.methods.viewRecord(recordId).call({from: accounts[0]});
-        const { patientData, doctorData } = await this.retrieveUserData(response[0], response[2]);
+        const { patientData } = await this.retrievePatientData(response[0]);
         
         var record = {
             recordId: 1,
             patient: response[0], 
-            details: web3.utils.hexToAscii(response[1]), 
-            doctorInCharge: response[2], 
-            patientVerified: response[3], 
-            doctorVerified: response[4],
-            patientData: patientData,
-            doctorData: doctorData
+            details: web3.utils.hexToAscii(response[1]),
+            patientVerified: response[2], 
+            doctorVerified: response[3],
+            patientData: patientData
         };
         this.setState({
             medicalRecord: record,
@@ -199,7 +183,8 @@ class VerifyRecord extends Component {
                 var str = JSON.stringify(err);
                 
                 var error;
-                if (err.code == -32603) {
+
+                if (err.code === -32603) {
                     var start = str.indexOf('reason');
                     var end = str.indexOf('stack');
                     error = "Record cannot be reported: " + str.slice(start + 11, end - 7) + "!";
@@ -217,7 +202,7 @@ class VerifyRecord extends Component {
     }
 
     render() {
-        const { loading, medicalRecord, recordId } = this.state;
+        const { loading, medicalRecord, recordId, message, successful } = this.state;
 
         return (
             <div className="container">
@@ -227,46 +212,31 @@ class VerifyRecord extends Component {
                     </h3>
                     ID: {recordId}
                 </header>
-                { loading && (
+                {loading && (
                     <Container>
-                        <Row>
-                        <Col>
-                            <h4>Patient</h4>
-                            <br/>
-                            <p> <strong>First Name: </strong>
-                                {medicalRecord.patientData.first_name}
-                            </p>
-                            <p> <strong>Last Name: </strong>
-                                {medicalRecord.patientData.last_name}
-                            </p>
-                            <p> <strong>Date of Birth: </strong>
-                                {medicalRecord.patientData.dob}
-                            </p>
-                            <p> <strong>Contact Number: </strong>
-                                {medicalRecord.patientData.contact_num}
-                            </p>
-                        </Col>
-                        <Col>
-                            <h4>Doctor-in-Charge</h4>
-                            <br/>
-                            <p> <strong>First Name: </strong>
-                                {medicalRecord.doctorData.first_name}
-                            </p>
-                            <p> <strong>Last Name: </strong>
-                                {medicalRecord.doctorData.last_name}
-                            </p>
-                            <p> <strong>Specialty: </strong>
-                                {medicalRecord.doctorData.specialty}
-                            </p>
-                            <p> <strong>Healthcare Institution: </strong>
-                                {medicalRecord.doctorData.healthcare_institution}
-                            </p>
-                        </Col>
-                        </Row>
+                        <h4>Patient Information</h4>
                         <br/>
                         <Row>
                             <Col>
-                                <h5>Record Details</h5>
+                                <p> <strong>First Name: </strong>
+                                    {medicalRecord.patientData.first_name}
+                                </p>
+                                <p> <strong>Last Name: </strong>
+                                    {medicalRecord.patientData.last_name}
+                                </p>
+                                <p> <strong>Date of Birth: </strong>
+                                    {medicalRecord.patientData.dob}
+                                </p>
+                                <p> <strong>Contact Number: </strong>
+                                    {medicalRecord.patientData.contact_num}
+                                </p>
+                            </Col>
+                        </Row>
+                        <br/>
+                        <br/>
+                        <Row>
+                            <Col>
+                                <h4>Record Details</h4>
                                 <p>{medicalRecord.details}</p>
                             </Col>
                         </Row>
@@ -283,11 +253,11 @@ class VerifyRecord extends Component {
                                 </div>
                             </Col>
                         </Row>
-                        {this.state.message && (
+                        {message && (
                             <Row>
                                 <div className="form-group">
-                                    <div className={this.state.successful ? "alert alert-success" : "alert alert-danger"} role="alert">
-                                        {this.state.message}
+                                    <div className={successful ? "alert alert-success" : "alert alert-danger"} role="alert">
+                                        {message}
                                     </div>
                                 </div>
                             </Row>

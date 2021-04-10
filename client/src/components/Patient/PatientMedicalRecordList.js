@@ -1,8 +1,6 @@
 import React, { Component } from "react";
-import { Redirect } from 'react-router-dom';
+import Table from "react-bootstrap/Table";
 import { connect } from "react-redux";
-
-import UserService from "../../services/user.service";
 
 // solidity
 import Users from "../../contracts/Users.json";
@@ -108,9 +106,8 @@ class PatientMedicalRecordList extends Component {
                 recordId: index,
                 patient: response[0],
                 details: web3.utils.hexToUtf8(response[1]),
-                doctorInCharge: response[2],
-                patientVerified: response[3],
-                doctorVerified: response[4],
+                patientVerified: response[2],
+                doctorVerified: response[3],
                 flagged: false,
             }   
 
@@ -127,7 +124,6 @@ class PatientMedicalRecordList extends Component {
 
     flagRecord = async () => {
         const { accounts, medicalRecordContract } = this.state;
-        const { user: currentPatient } = this.props;
 
         const response = await medicalRecordContract.methods.patientReport(this.state.selectedRecordId).send({from: accounts[0]});
 
@@ -137,11 +133,29 @@ class PatientMedicalRecordList extends Component {
         window.location.reload();
     }
 
-    handleClick(e) {
-        this.state.selectedRecordId = e;
+    verifyRecord = async () => {
+        const { accounts, medicalRecordContract } = this.state;
+
+        const response = await medicalRecordContract.methods.patientVerify(this.state.selectedRecordId).send({from: accounts[0]});
+
+        const medicalRecordId = response.events.patientVerified.returnValues[0];
+        console.log("Medical Record Id: ", medicalRecordId);
+
+        window.location.reload();
+    }
+
+    handleReport = async (e) => {
+        await this.setState({selectedRecordId: e});
         console.log("Selected Record Id: ", this.state.selectedRecordId);
 
         this.flagRecord();        
+    }
+
+    handleVerify = async (e) => {
+        await this.setState({selectedRecordId: e});
+        console.log("Selected Record Id: ", this.state.selectedRecordId);
+
+        this.verifyRecord();        
     }
 
     renderRows() {
@@ -174,13 +188,22 @@ class PatientMedicalRecordList extends Component {
                     </th>
                     <th>
                         {record.patientVerified === '0' &&
-                        <button onClick={() => {if (window.confirm('Do you want to report this medical record?')) this.handleClick(record.recordId)} }>
-                            Report
-                        </button>}    
-                        {record.patientVerified === '1' || record.patientVerified === '2' &&
+                        <div>
+                                <button className="btn btn-primary" onClick={() => {if (window.confirm('Do you want to verify this medical record?')) this.handleVerify(record.recordId)} }>
+                                    Verify
+                                </button>
+                                <button className="btn btn-danger" onClick={() => {if (window.confirm('Do you want to report this medical record?')) this.handleReport(record.recordId)} }>
+                                    Report
+                                </button>
+                        </div>}   
+                        {record.patientVerified === '1' &&
+                        <button disabled >
+                            Verified
+                        </button>}   
+                        {record.patientVerified === '2' &&
                         <button disabled >
                             Reported
-                        </button>}                
+                        </button>}               
                     </th>
                 </tr> 
             )
@@ -194,7 +217,8 @@ class PatientMedicalRecordList extends Component {
                 <header className="jumbotron">
                     <h3>Medical Records</h3>
                 </header>
-                <table className="table table-hover table-responsive">
+                <Table hover responsive striped>
+                {/* <table className="table table-hover table-responsive"> */}
                     <thead>
                         <tr>
                             <th>Record Id</th>
@@ -207,7 +231,8 @@ class PatientMedicalRecordList extends Component {
                     <tbody>
                         {this.renderRows()}
                     </tbody>
-                </table>
+                {/* </table> */}
+                </Table>
             </div>
         );
     }

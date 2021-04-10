@@ -131,7 +131,7 @@ function initial() {
         gender: "Male",
         nationality: "Singaporean",
         race: "Chinese",
-        bc_address: "0xf459b27F4Ca1A8A44937a10785E572CfB91C96B6",
+        bc_address: "0x262e7E8FB274dFC93F5b840Ebb32124C9227A276",
         roleId: 1,
       },
     },
