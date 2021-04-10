@@ -1,15 +1,23 @@
 import React, { Component, Fragment } from "react";
 import UserService from "../../services/user.service";
+
+import ClipLoader from "react-spinners/ClipLoader";
 // solidity
 import Users from "../../contracts/Users.json";
 import getWeb3 from "../../getWeb3";
 export default class AllDoctors extends Component {
   constructor(props) {
     super(props);
+    this.findAppraisalAndPenalty = this.findAppraisalAndPenalty.bind(this);
+    this.allDoctors = this.allDoctors.bind(this);
+    this.allPendingDoctors = this.allPendingDoctors.bind(this);
 
     this.state = {
       content: "",
       doctors: [],
+      records: [],
+      pendingDoctors: [],
+      loading: false,
     };
   }
 
@@ -54,27 +62,53 @@ export default class AllDoctors extends Component {
         deployedNetwork && deployedNetwork.address
       );
       this.setState({ web3, accounts, contract: instance });
-      console.log(
-        "******** admin",
-        await instance.methods
-          .isAdmin("0xf459b27F4Ca1A8A44937a10785E572CfB91C96B6")
-          .call()
-      );
     } catch (error) {
       alert(
         `Failed to load web3, accounts, or contract. Check console for details.`
       );
       console.error(error);
     }
-
     this.allDoctors();
+    this.findAppraisalAndPenalty();
+    this.allPendingDoctors();
   };
 
   allDoctors = async () => {
-    const response = await fetch("http://localhost:8080/getAllPendingDoctors");
+    const response = await fetch("http://localhost:8080/getAllDoctors");
     const jsonData = await response.json();
     this.setState({ doctors: jsonData });
-    // console.log(this.state.doctors);
+  };
+
+  findAppraisalAndPenalty = async () => {
+    const { contract } = this.state;
+    const newDoctorArr = [];
+    this.state.doctors.forEach(async (doctor) => {
+      const penaltyScore = await contract.methods
+        .getPenaltyScore(doctor.doctor.id)
+        .call();
+
+      const appraisalScore = await contract.methods
+        .getAppraisalScore(doctor.doctor.id)
+        .call();
+
+      var newRec = {
+        doctor: doctor,
+        appraisalScore: appraisalScore,
+        penaltyScore: penaltyScore,
+      };
+      newDoctorArr.push(newRec);
+    });
+    console.log(newDoctorArr);
+    this.setState({ records: newDoctorArr, loading: true });
+    console.log(this.state.loading);
+    console.log(this.state.records);
+  };
+
+  allPendingDoctors = async () => {
+    const response = await fetch("http://localhost:8080/getAllPendingDoctors");
+    const jsonData = await response.json();
+    this.setState({ pendingDoctors: jsonData });
+    // console.log(this.state.pendingDoctors);
   };
 
   handleApprove = async (doc) => {
@@ -101,17 +135,45 @@ export default class AllDoctors extends Component {
         method: "PUT",
       }).then((response) => console.log(response));
     }
-
-    // console.log(response);
   };
 
   render() {
+    const { content, records, pendingDoctors, loading } = this.state;
+    if (!records) {
+      return <ClipLoader loading={loading} size={150} />;
+    }
     return (
       <Fragment>
         <header className="jumbotron">
           <h1> All Doctor </h1>
-          <h3> {this.state.content} </h3>
+          <h3> {content} </h3>
         </header>
+        <h1>Doctors</h1>
+
+        {loading && records.length !== 0 && (
+          <table className="table table-hover table-responsive">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Appraisal Score</th>
+                <th>Penalty Score</th>
+              </tr>
+            </thead>
+            <tbody>
+              {records.map((rec) => {
+                <tr key={rec.doctor.userId}>
+                  <th>
+                    {rec.doctor.first_name} + {rec.doctor.last_name}
+                  </th>
+                  <th>{rec.appraisalScore}</th>
+                  <th>{rec.penaltyScore}</th>
+                </tr>;
+              })}
+            </tbody>
+          </table>
+        )}
+        {loading && records.length === 0 && <h5>No records to display</h5>}
+        <h1>Pending doctors</h1>
         <table className="table table-hover table-responsive">
           <thead>
             <tr>
@@ -123,7 +185,7 @@ export default class AllDoctors extends Component {
             </tr>
           </thead>
           <tbody>
-            {this.state.doctors.map((doctor) => (
+            {pendingDoctors.map((doctor) => (
               <tr key={doctor.userId}>
                 <th>{doctor.username}</th>
                 <th>{doctor.first_name + " " + doctor.last_name}</th>
