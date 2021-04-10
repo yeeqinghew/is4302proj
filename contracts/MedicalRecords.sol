@@ -162,7 +162,6 @@ contract MedicalRecords {
             uint256,
             bytes32,
             uint256,
-            uint256,
             uint256
         )
     {
@@ -196,7 +195,6 @@ contract MedicalRecords {
         return (
             medicalRecords[medicalRecordId].patient,
             medicalRecords[medicalRecordId].details,
-            medicalRecords[medicalRecordId].doctorInCharge,
             medicalRecords[medicalRecordId].patientVerified,
             medicalRecords[medicalRecordId].doctorVerified
         );

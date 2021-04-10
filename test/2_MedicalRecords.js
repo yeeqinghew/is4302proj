@@ -87,9 +87,8 @@ contract("MedicalRecords", accounts => {
         assert.strictEqual(result[0].toNumber(), 1, "patientid is different");
         let finalResult = web3.utils.hexToUtf8(result[1]);
         assert.strictEqual(finalResult, stringdetails, "details of record different");
-        assert.strictEqual(result[2].toNumber(), 1, "doctorid different");
-        assert.strictEqual(result[3].toNumber(), 0, "patient have yet to verify");
-        assert.strictEqual(result[4].toNumber(), 0, "no doctor verified"); 
+        assert.strictEqual(result[2].toNumber(), 0, "patient have yet to verify");
+        assert.strictEqual(result[3].toNumber(), 0, "no doctor verified"); 
     });
 
     it('Test 3: Patient checking medical record', async() => {
