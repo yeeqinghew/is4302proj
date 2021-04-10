@@ -42,6 +42,16 @@ app.get("/getAllPatients", async (req, res) => {
   res.json(allUsers);
 });
 
+app.get("/getAllDoctors", async (req, res) => {
+  // this is to get a list of doctors
+  const allUsers = await Users.findAll({
+    include: "doctor",
+    where: { roleId: 3 },
+  });
+  // console.log(allUsers);
+  res.json(allUsers);
+});
+
 app.get("/getAllPendingDoctors", async (req, res) => {
   // this is to get a list of doctors
   const allUsers = await Users.findAll({
