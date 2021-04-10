@@ -1,9 +1,6 @@
 import React, { Component, Fragment } from "react";
 import UserService from "../../services/user.service";
-<<<<<<< HEAD
 import Table from "react-bootstrap/Table";
-=======
->>>>>>> 329bf3c25def256e1fc8a88e37c95920c325b881
 
 import ClipLoader from "react-spinners/ClipLoader";
 // solidity
@@ -12,11 +9,6 @@ import getWeb3 from "../../getWeb3";
 export default class AllDoctors extends Component {
   constructor(props) {
     super(props);
-<<<<<<< HEAD
-    // this.findAppraisalAndPenalty = this.findAppraisalAndPenalty.bind(this);
-=======
-    this.findAppraisalAndPenalty = this.findAppraisalAndPenalty.bind(this);
->>>>>>> 329bf3c25def256e1fc8a88e37c95920c325b881
     this.allDoctors = this.allDoctors.bind(this);
     this.allPendingDoctors = this.allPendingDoctors.bind(this);
 
