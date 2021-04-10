@@ -15,6 +15,7 @@ import BoardAdmin from "./components/Admin/BoardAdmin";
 import AllDoctors from "./components/Admin/AllDoctors";
 import AllPatients from "./components/Admin/AllPatients";
 import AllAdmins from "./components/Admin/AllAdmins";
+import AllMedicalRecords from "./components/Admin/AllMedicalRecords";
 
 // patient
 import BoardPatient from "./components/Patient/BoardPatient";
@@ -141,27 +142,31 @@ class App extends Component {
               )}
               {showAdminBoard && (
                 <Fragment>
-                  <li className="nav-item">
+                  {/* <li className="nav-item">
                     <Link to={"/admin"} className="nav-link">
                       Admin Board
                     </Link>
-                  </li>
+                  </li> */}
                   <li className="nav-item">
                     <Link to={"/allAdmins"} className="nav-link">
-                      All Admins
+                      Admins
                     </Link>
                   </li>
                   <li className="nav-item">
                     <Link to={"/allPatients"} className="nav-link">
-                      All Patients
+                      Patients
                     </Link>
                   </li>
                   <li className="nav-item">
                     <Link to={"/allDoctors"} className="nav-link">
-                      All Doctors
+                      Doctors
                     </Link>
                   </li>
-                  
+                  <li className="nav-item">
+                    <Link to={"/allMedicalRecords"} className="nav-link">
+                      Medical Records
+                    </Link>
+                  </li>
                 </Fragment>
               )}
               {showDoctorBoard && (
@@ -169,7 +174,7 @@ class App extends Component {
                   <li className="nav-item">
                     <Link to={"/doctor"} className="nav-link">
                       Doctor Board
-                  </Link>
+                    </Link>
                   </li>
                   <li className="nav-item">
                     <Link to={"/newRecord"} className="nav-link">
@@ -186,8 +191,7 @@ class App extends Component {
                     <NavDropdown.Divider />
                     <NavDropdown.Item eventKey="4.2">New Record</NavDropdown.Item>
                   </NavDropdown> */}
-              </Fragment>
-              
+                </Fragment>
               )}
             </div>
             {currentUser ? (
@@ -230,8 +234,12 @@ class App extends Component {
               <Route path="/allAdmins" component={AllAdmins} />
               <Route path="/allPatients" component={AllPatients} />
               <Route path="/allDoctors" component={AllDoctors} />
+              <Route path="/allMedicalRecords" component={AllMedicalRecords} />
               <Route path="/doctor" component={BoardDoctor} />
-              <Route path="/patient-medical-record-list" component={PatientMedicalRecordList} />
+              <Route
+                path="/patient-medical-record-list"
+                component={PatientMedicalRecordList}
+              />
               <Route path="/newRecord" component={NewRecord} />
               <Route path="/randomRecords" component={RandomRecords} />
               <Route path="/verifyRecord" component={VerifyRecord} />

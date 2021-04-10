@@ -1,15 +1,23 @@
 import React, { Component, Fragment } from "react";
 import UserService from "../../services/user.service";
+import Table from "react-bootstrap/Table";
+
+import ClipLoader from "react-spinners/ClipLoader";
 // solidity
 import Users from "../../contracts/Users.json";
 import getWeb3 from "../../getWeb3";
 export default class AllDoctors extends Component {
   constructor(props) {
     super(props);
+    this.allDoctors = this.allDoctors.bind(this);
+    this.allPendingDoctors = this.allPendingDoctors.bind(this);
 
     this.state = {
       content: "",
       doctors: [],
+      records: [],
+      pendingDoctors: [],
+      loading: false,
     };
   }
 
@@ -54,27 +62,55 @@ export default class AllDoctors extends Component {
         deployedNetwork && deployedNetwork.address
       );
       this.setState({ web3, accounts, contract: instance });
-      console.log(
-        "******** admin",
-        await instance.methods
-          .isAdmin("0xf459b27F4Ca1A8A44937a10785E572CfB91C96B6")
-          .call()
-      );
     } catch (error) {
       alert(
         `Failed to load web3, accounts, or contract. Check console for details.`
       );
       console.error(error);
     }
-
     this.allDoctors();
+    this.allPendingDoctors();
   };
 
   allDoctors = async () => {
-    const response = await fetch("http://localhost:8080/getAllPendingDoctors");
+    const { contract } = this.state;
+    const response = await fetch("http://localhost:8080/getAllDoctors");
     const jsonData = await response.json();
     this.setState({ doctors: jsonData });
-    // console.log(this.state.doctors);
+
+    var newDoctorArr = [];
+    for (let i = 0; i < this.state.doctors.length; i++) {
+      console.log(this.state.doctors[i]);
+      const penaltyScore = await contract.methods
+        .getPenaltyScore(this.state.doctors[i].doctor.id)
+        .call();
+
+      const appraisalScore = await contract.methods
+        .getAppraisalScore(this.state.doctors[i].doctor.id)
+        .call();
+
+      const isBlacklisted = await contract.methods
+        .isBlacklisted(this.state.doctors[i].doctor.id)
+        .call();
+
+      var newRec = {
+        doctor: this.state.doctors[i],
+        appraisalScore: appraisalScore,
+        penaltyScore: penaltyScore,
+        isBlacklisted: isBlacklisted,
+      };
+      newDoctorArr.push(newRec);
+    }
+    console.log(newDoctorArr);
+    this.setState({ records: newDoctorArr, loading: true });
+    console.log(this.state.records);
+  };
+
+  allPendingDoctors = async () => {
+    const response = await fetch("http://localhost:8080/getAllPendingDoctors");
+    const jsonData = await response.json();
+    this.setState({ pendingDoctors: jsonData });
+    // console.log(this.state.pendingDoctors);
   };
 
   handleApprove = async (doc) => {
@@ -101,50 +137,102 @@ export default class AllDoctors extends Component {
         method: "PUT",
       }).then((response) => console.log(response));
     }
-
-    // console.log(response);
   };
 
+  handleBlacklist = async (doctor) => {
+    const { accounts, contract } = this.state;
+    console.log("blacklistttt");
+    const blacklist = await contract.methods
+      .blacklistDoctor(doctor.doctor.id)
+      .send({ from: accounts[0] });
+
+    console.log(blacklist);
+  };
   render() {
+    const { records, pendingDoctors, loading } = this.state;
+    if (!records) {
+      return <ClipLoader loading={loading} size={150} />;
+    }
     return (
       <Fragment>
         <header className="jumbotron">
           <h1> All Doctor </h1>
-          <h3> {this.state.content} </h3>
         </header>
-        <table className="table table-hover table-responsive">
-          <thead>
-            <tr>
-              <th>Username</th>
-              <th>Name</th>
-              <th>Specialty</th>
-              <th>Healthcare Institution</th>
-              <th>Address</th>
-            </tr>
-          </thead>
-          <tbody>
-            {this.state.doctors.map((doctor) => (
-              <tr key={doctor.userId}>
-                <th>{doctor.username}</th>
-                <th>{doctor.first_name + " " + doctor.last_name}</th>
-                <th>{doctor["doctor"].specialty}</th>
-                <th>{doctor["doctor"].healthcare_institution}</th>
-                <th>{doctor.bc_address}</th>
-                <th>
-                  <button
-                    type="submit"
-                    onClick={() => this.handleApprove(doctor)}
-                  >
-                    Approve
-                  </button>
-                </th>
-                <th>
-                  <button>Reject</button>
-                </th>
+        <h1>Doctors</h1>
+
+        {loading && records.length !== 0 && (
+          <Table hover responsive>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Appraisal Score</th>
+                <th>Penalty Score</th>
+                <th>Blacklist</th>
+                <th></th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {records.map((rec) => (
+                <tr key={rec.doctor.userId}>
+                  <th>
+                    {rec.doctor.first_name} {rec.doctor.last_name}
+                  </th>
+                  <th>{rec.appraisalScore}</th>
+                  <th>{rec.penaltyScore}</th>
+                  <th>{String(rec.isBlacklisted)}</th>
+                  <th>
+                    {String(rec.isBlacklisted) === "false" && (
+                      <button
+                        className="btn btn-warning btn-block"
+                        onClick={() => this.handleBlacklist(rec.doctor)}
+                      >
+                        Blacklist
+                      </button>
+                    )}
+                  </th>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        )}
+        {loading && records.length === 0 && <h5>No records to display</h5>}
+
+        <h1>Pending doctors</h1>
+        {pendingDoctors.length !== 0 && (
+          <Table hover responsive>
+            <thead>
+              <tr>
+                <th>Username</th>
+                <th>Name</th>
+                <th>Specialty</th>
+                <th>Healthcare Institution</th>
+                <th>Address</th>
+              </tr>
+            </thead>
+            <tbody>
+              {pendingDoctors.map((doctor) => (
+                <tr key={doctor.userId}>
+                  <th>{doctor.username}</th>
+                  <th>{doctor.first_name + " " + doctor.last_name}</th>
+                  <th>{doctor["doctor"].specialty}</th>
+                  <th>{doctor["doctor"].healthcare_institution}</th>
+                  <th>{doctor.bc_address}</th>
+                  <th>
+                    <button
+                      type="submit"
+                      onClick={() => this.handleApprove(doctor)}
+                    >
+                      Approve
+                    </button>
+                  </th>
+                  <th>
+                    <button>Reject</button>
+                  </th>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        )}
       </Fragment>
     );
   }
