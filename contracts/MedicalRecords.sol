@@ -1,5 +1,5 @@
 // pragma solidity ^0.5.0;
-pragma solidity >=0.4.21 <0.7.0; // version 6 is required for truffle build
+//pragma solidity >=0.4.21 <0.7.0; // version 6 is required for truffle build
 import "./Users.sol";
 
 contract MedicalRecords {
@@ -199,6 +199,56 @@ contract MedicalRecords {
             medicalRecords[medicalRecordId].doctorVerified
         );
     }
+
+
+// function to view medical record (for admins)
+    function viewRecordAdmin(uint256 medicalRecordId)
+        public
+        view
+        returns (
+            uint256,
+            bytes32,
+            uint256,
+            uint256,
+            uint256
+        )
+    {
+        require(
+            medicalRecordId <= numMedicalRecords,
+            "Medical record does not exist."
+        );
+
+        // requirement that only patient can view this record if the msg.sender is a patient
+        if (userContract.isPatient(msg.sender) == true) {
+            require(
+                userContract.getPatientAddress(
+                    medicalRecords[medicalRecordId].patient
+                ) == msg.sender,
+                "Medical record does not belong to this patient."
+            );
+        } else if (userContract.isDoctor(msg.sender) == true) {
+            require(
+                userContract.isBlacklisted(
+                    userContract.getDoctorId(msg.sender)
+                ) == false,
+                "Not authorised as doctor is blacklisted."
+            );
+        } else {
+            require(
+                userContract.isAdmin(msg.sender) == true,
+                "Not patient, doctor or admin, not authorised."
+            );
+        }
+
+        return (
+            medicalRecords[medicalRecordId].patient,
+            medicalRecords[medicalRecordId].details,
+            medicalRecords[medicalRecordId].doctorInCharge,
+            medicalRecords[medicalRecordId].patientVerified,
+            medicalRecords[medicalRecordId].doctorVerified
+        );
+    }
+
 
     // function for patient to verify that medical record has no problems
     function patientVerify(uint256 medicalRecordId)
