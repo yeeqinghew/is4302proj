@@ -183,6 +183,7 @@ class VerifyRecord extends Component {
                 var str = JSON.stringify(err);
                 
                 var error;
+
                 if (err.code === -32603) {
                     var start = str.indexOf('reason');
                     var end = str.indexOf('stack');
@@ -213,10 +214,10 @@ class VerifyRecord extends Component {
                 </header>
                 {loading && (
                     <Container>
+                        <h4>Patient Information</h4>
+                        <br/>
                         <Row>
                             <Col>
-                                <h4>Patient</h4>
-                                <br/>
                                 <p> <strong>First Name: </strong>
                                     {medicalRecord.patientData.first_name}
                                 </p>
@@ -232,9 +233,10 @@ class VerifyRecord extends Component {
                             </Col>
                         </Row>
                         <br/>
+                        <br/>
                         <Row>
                             <Col>
-                                <h5>Record Details</h5>
+                                <h4>Record Details</h4>
                                 <p>{medicalRecord.details}</p>
                             </Col>
                         </Row>

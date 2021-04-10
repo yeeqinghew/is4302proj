@@ -12,7 +12,7 @@ class RandomRecords extends Component {
   constructor(props) {
     super(props);
     this.getRandomInt = this.getRandomInt.bind(this);
-    this.retrieveUserData = this.retrieveUserData.bind(this);
+    this.retrievePatientData = this.retrievePatientData.bind(this);
     this.retrieveRandomRecords = this.retrieveRandomRecords.bind(this);
     this.viewRecord = this.viewRecord.bind(this);
 
@@ -99,7 +99,7 @@ retrieveRandomRecords = async () => {
 
         if (min < max) {
             const response = await medicalRecordContract.methods.viewRecord(min).call({from: accounts[0]});
-            if (response[3] === 0) { // unflagged
+            if (response[3] === '0') { // unflagged
                 const { patientData } = await this.retrievePatientData(response[0]);
                 console.log("patientData", patientData);
                 
@@ -160,18 +160,14 @@ render() {
                             >
                             <th>{record.recordId}</th>
                             <th>{record.patientData.first_name + " " + record.patientData.last_name}</th>
-                            <th>{(record.details.length > 10) ? record.details.substr(0, 9) + '&hellip;' : record.details}</th>
-                            {/* <th>{(() => {
-                                    return (record.details.length > 10) ? record.details.substr(0, 9) + '&hellip;' : record.details;
-                                })}
-                            </th> */}
+                            <th>{(record.details.length > 15) ? record.details.substr(0, 14) + '...' : record.details}</th>
                             <th>{(() => {
                                     switch(record.patientVerified) {
                                         case '0': return "Not Flagged";
                                         case '1': return "Verified";
                                         case '2': return "Flagged"
                                     }
-                                })}  
+                                })()}  
                             </th>
                             </tr>
                         ))}
