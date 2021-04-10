@@ -1,8 +1,5 @@
 import React, { Component } from "react";
-import { Redirect } from 'react-router-dom';
 import { connect } from "react-redux";
-
-import UserService from "../../services/user.service";
 
 // solidity
 import Users from "../../contracts/Users.json";
@@ -127,7 +124,6 @@ class PatientMedicalRecordList extends Component {
 
     flagRecord = async () => {
         const { accounts, medicalRecordContract } = this.state;
-        const { user: currentPatient } = this.props;
 
         const response = await medicalRecordContract.methods.patientReport(this.state.selectedRecordId).send({from: accounts[0]});
 
@@ -138,7 +134,7 @@ class PatientMedicalRecordList extends Component {
     }
 
     handleClick(e) {
-        this.state.selectedRecordId = e;
+        this.setState({selectedRecordId: e});
         console.log("Selected Record Id: ", this.state.selectedRecordId);
 
         this.flagRecord();        

@@ -178,8 +178,7 @@ class NewRecord extends Component {
     }
 
     render() {
-        const { message } = this.props;
-        const { patient } = this.state;
+        const { successful, nric, details, verified, patient, message, } = this.state;
         return (
             <Fragment>
                 <header className="jumbotron">
@@ -191,7 +190,7 @@ class NewRecord extends Component {
                         this.form = c;
                     }}
                 >
-                    {!this.state.successful && (
+                    {!successful && (
                         <div>
                             <div className="form-group">
                                 <label htmlFor="nric">NRIC</label>
@@ -199,7 +198,7 @@ class NewRecord extends Component {
                                     type="text"
                                     className="form-control"
                                     name="nric"
-                                    value={this.state.nric}
+                                    value={nric}
                                     onChange={this.onChangeNric}
                                     validations={[required]}
                                 />
@@ -207,7 +206,7 @@ class NewRecord extends Component {
                             <div className="form-group">
                                 <button type="button" className="btn btn-primary" onClick={this.verifyPatient}>Verify</button>
                             </div>
-                            {this.state.verified && (
+                            {verified && (
                                 <div className="form-group">
                                     <h4>Current Patient Information</h4>
                                     <br/>
@@ -232,7 +231,7 @@ class NewRecord extends Component {
                                     // type="textarea"
                                     className="form-control"
                                     name="details"
-                                    value={this.state.details}
+                                    value={details}
                                     onChange={this.onChangeDetails}
                                     validations={[required]}
                                 />
@@ -243,10 +242,10 @@ class NewRecord extends Component {
                         </div>
                     )}
 
-                    {this.state.message && (
+                    {message && (
                         <div className="form-group">
-                            <div className={this.state.successful ? "alert alert-success" : "alert alert-danger"} role="alert">
-                                {this.state.message}
+                            <div className={successful ? "alert alert-success" : "alert alert-danger"} role="alert">
+                                {message}
                             </div>
                         </div>
                     )}
