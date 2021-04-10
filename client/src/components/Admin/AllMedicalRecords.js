@@ -21,6 +21,7 @@ class AllMedicalRecords extends Component {
       userContract: null,
       medicalRecordContract: null,
       medicalRecords: null,
+      flagged: [],
       loading: false,
     };
   }
@@ -70,7 +71,6 @@ class AllMedicalRecords extends Component {
       );
       console.error(error);
     }
-
     this.getMedRecords();
   };
 
@@ -117,6 +117,7 @@ class AllMedicalRecords extends Component {
       .call();
     console.log(med);
 
+    // find all medical records
     for (let i = 0; i < med; i++) {
       const response = await medicalRecordContract.methods
         .viewRecordAdmin(i)
@@ -140,17 +141,32 @@ class AllMedicalRecords extends Component {
       await medRec.push(record);
     }
     this.setState({ medicalRecords: medRec, loading: true });
-    console.log(this.state.medicalRecords);
+
+    // get flagged medical records
+    const flagged = this.state.medicalRecords.filter((rec) => {
+      return rec.patientVerified === "2" || rec.doctorVerified === "2";
+    });
+    this.setState({ flagged: flagged });
+    console.log(this.state.flagged);
   };
 
+  handleWaive = async (medRecId) => {
+    const { accounts, medicalRecordContract } = this.state;
+    const waive = await medicalRecordContract.methods
+      .waive(medRecId)
+      .send({ from: accounts[0] });
+    console.log(waive);
+  };
   render() {
-    const { medicalRecords, loading } = this.state;
+    const { medicalRecords, flagged, loading } = this.state;
 
     return (
       <Fragment>
         <header className="jumbotron">
           <h1> All Medical Records </h1>
         </header>
+        <h2>All Medical Records</h2>
+
         {loading && medicalRecords.length !== 0 && (
           <Table hover responsive>
             {/* <table className="table table-hover table-responsive"> */}
@@ -185,6 +201,51 @@ class AllMedicalRecords extends Component {
           </Table>
         )}
         {/* {loading && medicalRecords.length === 0 && <h5>No medical records</h5>} */}
+
+        <h2>Flagged Medical Records</h2>
+        {flagged.length !== 0 && (
+          <Table hover responsive>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Detail</th>
+                <th>Patient</th>
+                <th>Doctor-in-Charge</th>
+                <th>Flagged by Patient</th>
+                <th>Flagged by Doctor</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {flagged.map((flag) => (
+                <tr key={flag.recordId}>
+                  <th> {flag.recordId}</th>
+                  <th>{flag.details}</th>
+                  <th>
+                    {flag.patientData.first_name +
+                      " " +
+                      flag.patientData.last_name}
+                  </th>
+                  <th>
+                    {flag.doctorData.first_name +
+                      " " +
+                      flag.doctorData.last_name}
+                  </th>
+                  <th>{flag.patientVerified === "2" ? "✓" : "✗"}</th>
+                  <th>{flag.doctorVerified === "2" ? "✓" : "✗"}</th>
+                  <th>
+                    <button
+                      className="btn btn-warning btn-block"
+                      onClick={() => this.handleWaive(flag.recordId)}
+                    >
+                      Waive
+                    </button>
+                  </th>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        )}
       </Fragment>
     );
   }
