@@ -78,7 +78,8 @@ exports.signup = (req, res) => {
   }
 
   // Save Patient to Database
-  else if (req.body.roleId === 2) {
+  else if (req.body.roleId === "2") {
+    console.log("patienttttt");
     User.create({
       username: req.body.username,
       email: req.body.email,
@@ -148,7 +149,9 @@ exports.signup = (req, res) => {
   }
 
   // Save User to Database
-  else if (req.body.roleId === 3) {
+  else if (req.body.roleId === "3") {
+    console.log("doctorrrrr");
+
     User.create({
       username: req.body.username,
       email: req.body.email,
