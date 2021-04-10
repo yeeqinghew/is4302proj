@@ -115,10 +115,14 @@ class AllMedicalRecords extends Component {
     const med = await medicalRecordContract.methods
       .getNumMedicalRecords()
       .call();
+    console.log(med);
+
     for (let i = 0; i < med; i++) {
       const response = await medicalRecordContract.methods
-        .viewRecord(i)
-        .call({ from: accounts[0] });
+        .viewRecordAdmin(i)
+        .call();
+      console.log(response);
+
       const { patientData, doctorData } = await this.retrieveUserData(
         response[0],
         response[2]

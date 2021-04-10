@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from "react";
 import UserService from "../../services/user.service";
+import Table from "react-bootstrap/Table";
 
 import ClipLoader from "react-spinners/ClipLoader";
 // solidity
@@ -8,7 +9,7 @@ import getWeb3 from "../../getWeb3";
 export default class AllDoctors extends Component {
   constructor(props) {
     super(props);
-    this.findAppraisalAndPenalty = this.findAppraisalAndPenalty.bind(this);
+    // this.findAppraisalAndPenalty = this.findAppraisalAndPenalty.bind(this);
     this.allDoctors = this.allDoctors.bind(this);
     this.allPendingDoctors = this.allPendingDoctors.bind(this);
 
@@ -69,39 +70,35 @@ export default class AllDoctors extends Component {
       console.error(error);
     }
     this.allDoctors();
-    this.findAppraisalAndPenalty();
     this.allPendingDoctors();
   };
 
   allDoctors = async () => {
+    const { contract } = this.state;
     const response = await fetch("http://localhost:8080/getAllDoctors");
     const jsonData = await response.json();
     this.setState({ doctors: jsonData });
-  };
 
-  findAppraisalAndPenalty = async () => {
-    const { contract } = this.state;
-    const newDoctorArr = [];
-    this.state.doctors.forEach(async (doctor) => {
+    var newDoctorArr = [];
+    for (let i = 0; i < this.state.doctors.length; i++) {
+      console.log(this.state.doctors[i]);
       const penaltyScore = await contract.methods
-        .getPenaltyScore(doctor.doctor.id)
+        .getPenaltyScore(this.state.doctors[i].doctor.id)
         .call();
 
       const appraisalScore = await contract.methods
-        .getAppraisalScore(doctor.doctor.id)
+        .getAppraisalScore(this.state.doctors[i].doctor.id)
         .call();
 
       var newRec = {
-        doctor: doctor,
+        doctor: this.state.doctors[i],
         appraisalScore: appraisalScore,
         penaltyScore: penaltyScore,
       };
       newDoctorArr.push(newRec);
-    });
+    }
     console.log(newDoctorArr);
     this.setState({ records: newDoctorArr, loading: true });
-    console.log(this.state.loading);
-    console.log(this.state.records);
   };
 
   allPendingDoctors = async () => {
@@ -151,62 +148,71 @@ export default class AllDoctors extends Component {
         <h1>Doctors</h1>
 
         {loading && records.length !== 0 && (
-          <table className="table table-hover table-responsive">
+          <Table hover responsive>
             <thead>
               <tr>
                 <th>Name</th>
                 <th>Appraisal Score</th>
                 <th>Penalty Score</th>
+                <th>Blacklist</th>
               </tr>
             </thead>
             <tbody>
-              {records.map((rec) => {
+              {records.map((rec) => (
                 <tr key={rec.doctor.userId}>
                   <th>
-                    {rec.doctor.first_name} + {rec.doctor.last_name}
+                    {rec.doctor.first_name} {rec.doctor.last_name}
                   </th>
                   <th>{rec.appraisalScore}</th>
                   <th>{rec.penaltyScore}</th>
-                </tr>;
-              })}
+                  <th>
+                    <button className="btn btn-warning btn-block">
+                      Blacklist
+                    </button>
+                  </th>
+                </tr>
+              ))}
             </tbody>
-          </table>
+          </Table>
         )}
         {loading && records.length === 0 && <h5>No records to display</h5>}
+
         <h1>Pending doctors</h1>
-        <table className="table table-hover table-responsive">
-          <thead>
-            <tr>
-              <th>Username</th>
-              <th>Name</th>
-              <th>Specialty</th>
-              <th>Healthcare Institution</th>
-              <th>Address</th>
-            </tr>
-          </thead>
-          <tbody>
-            {pendingDoctors.map((doctor) => (
-              <tr key={doctor.userId}>
-                <th>{doctor.username}</th>
-                <th>{doctor.first_name + " " + doctor.last_name}</th>
-                <th>{doctor["doctor"].specialty}</th>
-                <th>{doctor["doctor"].healthcare_institution}</th>
-                <th>{doctor.bc_address}</th>
-                <th>
-                  <button
-                    type="submit"
-                    onClick={() => this.handleApprove(doctor)}
-                  >
-                    Approve
-                  </button>
-                </th>
-                <th>
-                  <button>Reject</button>
-                </th>
+        {pendingDoctors.length !== 0 && (
+          <Table hover responsive>
+            <thead>
+              <tr>
+                <th>Username</th>
+                <th>Name</th>
+                <th>Specialty</th>
+                <th>Healthcare Institution</th>
+                <th>Address</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {pendingDoctors.map((doctor) => (
+                <tr key={doctor.userId}>
+                  <th>{doctor.username}</th>
+                  <th>{doctor.first_name + " " + doctor.last_name}</th>
+                  <th>{doctor["doctor"].specialty}</th>
+                  <th>{doctor["doctor"].healthcare_institution}</th>
+                  <th>{doctor.bc_address}</th>
+                  <th>
+                    <button
+                      type="submit"
+                      onClick={() => this.handleApprove(doctor)}
+                    >
+                      Approve
+                    </button>
+                  </th>
+                  <th>
+                    <button>Reject</button>
+                  </th>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        )}
       </Fragment>
     );
   }
