@@ -89,15 +89,21 @@ export default class AllDoctors extends Component {
         .getAppraisalScore(this.state.doctors[i].doctor.id)
         .call();
 
+      const isBlacklisted = await contract.methods
+        .isBlacklisted(this.state.doctors[i].doctor.id)
+        .call();
+
       var newRec = {
         doctor: this.state.doctors[i],
         appraisalScore: appraisalScore,
         penaltyScore: penaltyScore,
+        isBlacklisted: isBlacklisted,
       };
       newDoctorArr.push(newRec);
     }
     console.log(newDoctorArr);
     this.setState({ records: newDoctorArr, loading: true });
+    console.log(this.state.records);
   };
 
   allPendingDoctors = async () => {
@@ -133,8 +139,17 @@ export default class AllDoctors extends Component {
     }
   };
 
+  handleBlacklist = async (doctor) => {
+    const { accounts, contract } = this.state;
+    console.log("blacklistttt");
+    const blacklist = await contract.methods
+      .blacklistDoctor(doctor.doctor.id)
+      .send({ from: accounts[0] });
+
+    console.log(blacklist);
+  };
   render() {
-    const { content, records, pendingDoctors, loading } = this.state;
+    const { records, pendingDoctors, loading } = this.state;
     if (!records) {
       return <ClipLoader loading={loading} size={150} />;
     }
@@ -142,7 +157,6 @@ export default class AllDoctors extends Component {
       <Fragment>
         <header className="jumbotron">
           <h1> All Doctor </h1>
-          <h3> {content} </h3>
         </header>
         <h1>Doctors</h1>
 
@@ -154,6 +168,7 @@ export default class AllDoctors extends Component {
                 <th>Appraisal Score</th>
                 <th>Penalty Score</th>
                 <th>Blacklist</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -164,8 +179,12 @@ export default class AllDoctors extends Component {
                   </th>
                   <th>{rec.appraisalScore}</th>
                   <th>{rec.penaltyScore}</th>
+                  <th>{String(rec.isBlacklisted)}</th>
                   <th>
-                    <button className="btn btn-warning btn-block">
+                    <button
+                      className="btn btn-warning btn-block"
+                      onClick={() => this.handleBlacklist(rec.doctor)}
+                    >
                       Blacklist
                     </button>
                   </th>
