@@ -400,4 +400,13 @@ contract MedicalRecords {
         return numMedicalRecords;
     }
 
+    // function to check if record is flagged
+    function checkIsFlaggedRecord(uint256 medicalRecordId) 
+        public 
+        view 
+        returns (bool) 
+    {
+        return isFlaggedRecords[medicalRecordId];
+    }
+
 }

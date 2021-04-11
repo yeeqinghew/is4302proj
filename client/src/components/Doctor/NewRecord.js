@@ -160,12 +160,12 @@ class NewRecord extends Component {
             .then((res) => {
                 this.setState({
                     successful: true,
-                    message: "Medical Record is created successfully!"
+                    message: "Medical record is created successfully!"
                 });
 
                 setTimeout(() => {
                     window.location.reload();
-                }, 5000);
+                }, 2500);
 
             }).catch((err) => {
                 var str = JSON.stringify(err);
@@ -175,10 +175,10 @@ class NewRecord extends Component {
                 if (err.code === -32603) {
                     var start = str.indexOf('reason');
                     var end = str.indexOf('stack');
-                    error = "Record cannot be created successfully: " + str.slice(start + 11, end - 7) + "!";
+                    error = "Medical record cannot be created successfully: " + str.slice(start + 11, end - 7) + "!";
                     console.log(error);
                 } else {
-                    error = "Record cannot be created successfully!"
+                    error = "Medical record cannot be created successfully!"
                 }
                 
                 this.setState({

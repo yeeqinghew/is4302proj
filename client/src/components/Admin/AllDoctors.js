@@ -134,13 +134,12 @@ export default class AllDoctors extends Component {
       await fetch(`http://localhost:8080/approveDoctorStatus/${doc.userId}`, {
         method: "PUT",
       }).then((response) => console.log(response));
-      window.location.reload();
     } else {
       await fetch(`http://localhost:8080/deleteDoctorAddress/${doc.userId}`, {
         method: "PUT",
       }).then((response) => console.log(response));
-      window.location.reload();
     }
+    window.location.reload();
   };
 
   handleBlacklist = async (doctor) => {
