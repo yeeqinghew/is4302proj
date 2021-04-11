@@ -144,13 +144,19 @@ class VerifyRecord extends Component {
                 console.log("Failed with error: ", err);
                 var str = JSON.stringify(err);
                 
-                var start = str.indexOf('reason');
-                var end = str.indexOf('stack');
-                var error = str.slice(start + 11, end - 7);
-                console.log(error);
+                var error;
+
+                if (err.code === -32603) {
+                    var start = str.indexOf('reason');
+                    var end = str.indexOf('stack');
+                    error = "Record cannot be verified: " + str.slice(start + 11, end - 7) + "!";
+                    console.log(error);
+                } else {
+                    error = "Record cannot be verified!"
+                }
                 
                 this.setState({
-                    message: "Record cannot be verified: " + error + "!"
+                    message: error
                 });
             }); 
         

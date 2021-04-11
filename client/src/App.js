@@ -4,7 +4,6 @@ import { Router, Switch, Route, Link } from "react-router-dom";
 
 // import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
-// import NavDropdown from 'react-bootstrap/NavDropdown';
 
 import Login from "./components/Login";
 import Register from "./components/Register";
@@ -133,13 +132,13 @@ class App extends Component {
               IS4302
             </Link>
             <div className="navbar-nav mr-auto">
-              {showPatientBoard && (
+              {/* {showPatientBoard && (
                 <li className="nav-item">
                   <Link to={"/patient"} className="nav-link">
                     Patient Board
                   </Link>
                 </li>
-              )}
+              )} */}
               {showAdminBoard && (
                 <Fragment>
                   {/* <li className="nav-item">
@@ -171,11 +170,11 @@ class App extends Component {
               )}
               {showDoctorBoard && (
                 <Fragment>
-                  <li className="nav-item">
+                  {/* <li className="nav-item">
                     <Link to={"/doctor"} className="nav-link">
                       Doctor Board
                     </Link>
-                  </li>
+                  </li> */}
                   <li className="nav-item">
                     <Link to={"/newRecord"} className="nav-link">
                       New Record
@@ -183,14 +182,9 @@ class App extends Component {
                   </li>
                   <li className="nav-item">
                     <Link to={"/randomRecords"} className="nav-link">
-                      Verify Records
+                      Check Records
                     </Link>
                   </li>
-                  {/* <NavDropdown title="Medical Records" id="nav-dropdown">
-                    <NavDropdown.Item eventKey="4.1">Flagged Records</NavDropdown.Item>
-                    <NavDropdown.Divider />
-                    <NavDropdown.Item eventKey="4.2">New Record</NavDropdown.Item>
-                  </NavDropdown> */}
                 </Fragment>
               )}
             </div>
