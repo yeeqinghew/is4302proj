@@ -13,15 +13,15 @@ import Users from "../../contracts/Users.json";
 import MedicalRecords from "../../contracts/MedicalRecords.json";
 
 const customModalStyle = {
-  content : {
-    top                   : '50%',
-    left                  : '50%',
-    right                 : 'auto',
-    bottom                : 'auto',
-    width                 : '30%',
-    height                : '30%',
-    transform             : 'translate(-50%, -50%)'
-  }
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    width: "30%",
+    height: "30%",
+    transform: "translate(-50%, -50%)",
+  },
 };
 
 const required = (value) => {
@@ -52,7 +52,7 @@ class AllMedicalRecords extends Component {
       loading: false,
       selectedId: null,
       score: null,
-      showModal: false
+      showModal: false,
     };
   }
 
@@ -179,7 +179,7 @@ class AllMedicalRecords extends Component {
         doctorVerified: response[4],
         patientData: patientData,
         doctorData: doctorData,
-        isFlagged: isFlagged
+        isFlagged: isFlagged,
       };
       await medRec.push(record);
     }
@@ -188,7 +188,10 @@ class AllMedicalRecords extends Component {
     // get flagged medical records
     const flagged = this.state.medicalRecords.filter((rec, i) => {
       // console.log("isFlagged " + i + ": " + rec.isFlagged);
-      return (rec.patientVerified === "2" || rec.doctorVerified === "2") && rec.isFlagged === true;
+      return (
+        (rec.patientVerified === "2" || rec.doctorVerified === "2") &&
+        rec.isFlagged === true
+      );
     });
     this.setState({ flagged: flagged });
     console.log(this.state.flagged);
@@ -204,7 +207,7 @@ class AllMedicalRecords extends Component {
 
   punishModal = (medRecId) => {
     console.log("punishModal", medRecId);
-    this.setState({ showModal: true, selectedId: medRecId, score: null  });
+    this.setState({ showModal: true, selectedId: medRecId, score: null });
   };
 
   closeModal = () => {
@@ -226,7 +229,6 @@ class AllMedicalRecords extends Component {
       window.location.reload();
       console.log("punish", punish);
     }
-    
   };
 
   render() {
@@ -272,7 +274,9 @@ class AllMedicalRecords extends Component {
             </tbody>
           </Table>
         )}
-        {/* {loading && medicalRecords.length === 0 && <h5>No medical records</h5>} */}
+        {loading && medicalRecords.length === 0 && (
+          <h5>No medical records to view</h5>
+        )}
 
         <h2>Flagged Medical Records</h2>
         {flagged.length !== 0 && (
@@ -326,6 +330,8 @@ class AllMedicalRecords extends Component {
             </tbody>
           </Table>
         )}
+        {flagged.length === 0 && <h5>No flagged medical records to view</h5>}
+
         <Modal
           isOpen={this.state.showModal}
           onRequestClose={this.closeModal}
@@ -333,7 +339,7 @@ class AllMedicalRecords extends Component {
           contentLabel="Punish Doctor Modal"
         >
           <h3>Do you want to punish?</h3>
-          <br/>
+          <br />
           <Form
             onSubmit={this.handlePunish}
             ref={(c) => {
@@ -346,7 +352,7 @@ class AllMedicalRecords extends Component {
                 type="number"
                 className="form-control"
                 name="score"
-                min='1'
+                min="1"
                 value={this.state.score}
                 onChange={this.onChangeScore}
                 validations={[required]}
@@ -354,14 +360,14 @@ class AllMedicalRecords extends Component {
             </div>
             <button
               className="btn btn-secondary"
-              style={{position: 'absolute', bottom: 35, left: '15%'}}
+              style={{ position: "absolute", bottom: 35, left: "15%" }}
               onClick={() => this.closeModal()}
             >
               Cancel
             </button>
             <button
               className="btn btn-primary"
-              style={{position: 'absolute', bottom: 35, right: '15%'}}
+              style={{ position: "absolute", bottom: 35, right: "15%" }}
               type="submit"
             >
               Confirm

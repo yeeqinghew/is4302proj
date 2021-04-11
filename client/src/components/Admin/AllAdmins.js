@@ -286,7 +286,9 @@ class AllAdmins extends Component {
           <h1> All Admins </h1>
           <h3> {this.state.content} </h3>
         </header>
-        <button onClick={this.addNew}>Add new admin</button>
+        <button className="btn btn-primary " onClick={this.addNew}>
+          Add new admin
+        </button>
 
         <Modal
           isOpen={this.state.showModal}
