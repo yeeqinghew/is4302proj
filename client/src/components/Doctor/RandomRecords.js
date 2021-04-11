@@ -12,7 +12,7 @@ class RandomRecords extends Component {
   constructor(props) {
     super(props);
     this.getRandomInt = this.getRandomInt.bind(this);
-    this.retrieveUserData = this.retrieveUserData.bind(this);
+    this.retrievePatientData = this.retrievePatientData.bind(this);
     this.retrieveRandomRecords = this.retrieveRandomRecords.bind(this);
     this.viewRecord = this.viewRecord.bind(this);
 
@@ -65,9 +65,8 @@ class RandomRecords extends Component {
     return Math.floor(Math.random() * (max - min)) + min;
   }
 
-  retrieveUserData = async (patientId, doctorId) => {
+  retrievePatientData = async (patientId) => {
     var patient;
-    var doctor;
 
     await UserService.getPatientById(patientId).then(
       (response) => {
@@ -83,28 +82,11 @@ class RandomRecords extends Component {
         );
       }
     );
-    await UserService.getDoctorById(doctorId).then(
-      (response) => {
-        doctor = response.data;
-      },
-      (error) => {
-        console.log(
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-            error.message ||
-            error.toString()
-        );
-      }
-    );
-    return { patientData: patient, doctorData: doctor };
+    return { patientData: patient };
   };
 
   retrieveRandomRecords = async () => {
     const { web3, accounts, medicalRecordContract } = this.state;
-
-    const { user: currentDoctor } = this.props;
-    console.log("user", currentDoctor);
 
     const numRecords = await medicalRecordContract.methods
       .getNumMedicalRecords()
@@ -122,24 +104,20 @@ class RandomRecords extends Component {
         const response = await medicalRecordContract.methods
           .viewRecord(min)
           .call({ from: accounts[0] });
-        if (response[4] == 0 && response[2] != currentDoctor.doctorId) {
-          // unflagged, not owned by current doctor
-          const { patientData, doctorData } = await this.retrieveUserData(
-            response[0],
-            response[2]
+        // not verified or flagged
+        if (response[3] === 0) {
+          const { patientData } = await this.retrieveUserData(
+            response[0]
           );
           console.log("patientData", patientData);
-          console.log("doctorData", doctorData);
 
           var record = {
             recordId: min,
             patient: response[0],
             details: web3.utils.hexToAscii(response[1]),
-            doctorInCharge: response[2],
-            patientVerified: response[3],
-            doctorVerified: response[4],
-            patientData: patientData,
-            doctorData: doctorData,
+            patientVerified: response[2],
+            doctorVerified: response[3],
+            patientData: patientData
           };
           medicalRecords.push(record);
           // console.log("record:", record);
@@ -167,16 +145,14 @@ class RandomRecords extends Component {
         <header className="jumbotron">
           <h1> Medical Records </h1>
         </header>
-        {loading && medicalRecords.length != 0 && (
+        {loading && medicalRecords.length !== 0 && (
           <Table hover responsive striped>
-            {/* <table className="table table-hover table-responsive" style={{width: '100%', margin: '0px'}}> */}
             <thead>
               <tr>
                 <th>Record ID</th>
                 <th>Patient</th>
-                <th>Doctor-in-Charge</th>
-                <th>Specialty</th>
-                <th>Healthcare Institution</th>
+                <th>Details</th>
+                <th>Patient Verified</th>
               </tr>
             </thead>
             <tbody>
@@ -194,13 +170,15 @@ class RandomRecords extends Component {
                       " " +
                       record.patientData.last_name}
                   </th>
-                  <th>
-                    {record.doctorData.first_name +
-                      " " +
-                      record.doctorData.last_name}
+                  <th>{(record.details.length > 15) ? record.details.substr(0, 14) + '...' : record.details}</th>
+                  <th>{(() => {
+                      switch(record.patientVerified) {
+                          case '0': return "Not Flagged";
+                          case '1': return "Verified";
+                          case '2': return "Flagged"
+                        }
+                      })()}  
                   </th>
-                  <th>{record.doctorData.specialty}</th>
-                  <th>{record.doctorData.healthcare_institution}</th>
                 </tr>
               ))}
             </tbody>
