@@ -4,8 +4,8 @@
 
 1. Make sure `node`, `npm`, `postgresql` are installed in your computer
 1. Run `npm install` in both your client and server directories
-1. postgresql `user: postgres`, `password: password`
-1. `database: is4302`: `CREATE DATABASE is4302` in your postgresql
+1. `CREATE DATABASE is4302` in your postgresql
+1. postgresql `user: postgres`, `password: password`, `database: is4302`
 1. Ensure Metamask is installed on your browser
 1. Change admin's bc_address to the correct adddress in `server.js` before you start
 1. Run `truffle networks --clean` > `truffle build` > `truffle compile` > `truffle migrate` (Do this to clear the data in truffle too)
