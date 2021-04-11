@@ -185,7 +185,7 @@ class RandomRecords extends Component {
             {/* </table> */}
           </Table>
         )}
-        {loading && medicalRecords.length == 0 && <h5>No records to verify</h5>}
+        {loading && medicalRecords.length === 0 && <h5>No records to verify</h5>}
       </Fragment>
     );
   }

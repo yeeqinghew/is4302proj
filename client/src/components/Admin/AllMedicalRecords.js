@@ -2,17 +2,44 @@ import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import UserService from "../../services/user.service";
 import Table from "react-bootstrap/Table";
+import Modal from "react-modal";
+import Form from "react-validation/build/form";
+import Input from "react-validation/build/input";
+import CheckButton from "react-validation/build/button";
 
 // solidity
 import getWeb3 from "../../getWeb3";
 import Users from "../../contracts/Users.json";
 import MedicalRecords from "../../contracts/MedicalRecords.json";
 
+const customModalStyle = {
+  content : {
+    top                   : '50%',
+    left                  : '50%',
+    right                 : 'auto',
+    bottom                : 'auto',
+    width                 : '30%',
+    height                : '30%',
+    transform             : 'translate(-50%, -50%)'
+  }
+};
+
+const required = (value) => {
+  if (!value) {
+    return (
+      <div className="alert alert-danger" role="alert">
+        Penalty score is required!
+      </div>
+    );
+  }
+};
+
 class AllMedicalRecords extends Component {
   constructor(props) {
     super(props);
     this.retrieveUserData = this.retrieveUserData.bind(this);
     this.getMedRecords = this.getMedRecords.bind(this);
+    this.onChangeScore = this.onChangeScore.bind(this);
 
     this.state = {
       content: "",
@@ -23,7 +50,16 @@ class AllMedicalRecords extends Component {
       medicalRecords: null,
       flagged: [],
       loading: false,
+      selectedId: null,
+      score: null,
+      showModal: false
     };
+  }
+
+  onChangeScore(e) {
+    this.setState({
+      score: e.target.value,
+    });
   }
 
   componentDidMount = async () => {
@@ -71,6 +107,8 @@ class AllMedicalRecords extends Component {
       );
       console.error(error);
     }
+
+    Modal.setAppElement("body");
     this.getMedRecords();
   };
 
@@ -124,6 +162,10 @@ class AllMedicalRecords extends Component {
         .call();
       console.log(response);
 
+      const isFlagged = await medicalRecordContract.methods
+        .checkIsFlaggedRecord(i)
+        .call();
+
       const { patientData, doctorData } = await this.retrieveUserData(
         response[0],
         response[2]
@@ -137,14 +179,16 @@ class AllMedicalRecords extends Component {
         doctorVerified: response[4],
         patientData: patientData,
         doctorData: doctorData,
+        isFlagged: isFlagged
       };
       await medRec.push(record);
     }
     this.setState({ medicalRecords: medRec, loading: true });
 
     // get flagged medical records
-    const flagged = this.state.medicalRecords.filter((rec) => {
-      return rec.patientVerified === "2" || rec.doctorVerified === "2";
+    const flagged = this.state.medicalRecords.filter((rec, i) => {
+      // console.log("isFlagged " + i + ": " + rec.isFlagged);
+      return (rec.patientVerified === "2" || rec.doctorVerified === "2") && rec.isFlagged === true;
     });
     this.setState({ flagged: flagged });
     console.log(this.state.flagged);
@@ -157,6 +201,34 @@ class AllMedicalRecords extends Component {
       .send({ from: accounts[0] });
     console.log(waive);
   };
+
+  punishModal = (medRecId) => {
+    console.log("punishModal", medRecId);
+    this.setState({ showModal: true, selectedId: medRecId, score: null  });
+  };
+
+  closeModal = () => {
+    this.setState({ showModal: false });
+  };
+
+  handlePunish = async (e) => {
+    e.preventDefault();
+    this.setState({ successful: false });
+    this.form.validateAll();
+
+    if (this.checkBtn.context._errors.length === 0) {
+      console.log("punishedId:", this.state.selectedId);
+      const { accounts, medicalRecordContract } = this.state;
+      const punish = await medicalRecordContract.methods
+        .punish(this.state.selectedId, this.state.score)
+        .send({ from: accounts[0] });
+
+      window.location.reload();
+      console.log("punish", punish);
+    }
+    
+  };
+
   render() {
     const { medicalRecords, flagged, loading } = this.state;
 
@@ -241,11 +313,67 @@ class AllMedicalRecords extends Component {
                       Waive
                     </button>
                   </th>
+                  <th>
+                    <button
+                      className="btn btn-danger btn-block"
+                      onClick={() => this.punishModal(flag.recordId)}
+                    >
+                      Punish
+                    </button>
+                  </th>
                 </tr>
               ))}
             </tbody>
           </Table>
         )}
+        <Modal
+          isOpen={this.state.showModal}
+          onRequestClose={this.closeModal}
+          style={customModalStyle}
+          contentLabel="Punish Doctor Modal"
+        >
+          <h3>Do you want to punish?</h3>
+          <br/>
+          <Form
+            onSubmit={this.handlePunish}
+            ref={(c) => {
+              this.form = c;
+            }}
+          >
+            <div>
+              <label htmlFor="score">Penalty Score</label>
+              <Input
+                type="number"
+                className="form-control"
+                name="score"
+                min='1'
+                value={this.state.score}
+                onChange={this.onChangeScore}
+                validations={[required]}
+              />
+            </div>
+            <button
+              className="btn btn-secondary"
+              style={{position: 'absolute', bottom: 35, left: '15%'}}
+              onClick={() => this.closeModal()}
+            >
+              Cancel
+            </button>
+            <button
+              className="btn btn-primary"
+              style={{position: 'absolute', bottom: 35, right: '15%'}}
+              type="submit"
+            >
+              Confirm
+            </button>
+            <CheckButton
+              style={{ display: "none" }}
+              ref={(c) => {
+                this.checkBtn = c;
+              }}
+            />
+          </Form>
+        </Modal>
       </Fragment>
     );
   }

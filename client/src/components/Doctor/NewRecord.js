@@ -160,18 +160,29 @@ class NewRecord extends Component {
             .then((res) => {
                 this.setState({
                     successful: true,
-                    message: "Medical Record is created successfully!"
+                    message: "Medical record is created successfully!"
                 });
 
                 setTimeout(() => {
                     window.location.reload();
-                }, 5000);
+                }, 2500);
 
             }).catch((err) => {
-                console.log("Failed!", err);
+                var str = JSON.stringify(err);
+                
+                var error;
+
+                if (err.code === -32603) {
+                    var start = str.indexOf('reason');
+                    var end = str.indexOf('stack');
+                    error = "Medical record cannot be created successfully: " + str.slice(start + 11, end - 7) + "!";
+                    console.log(error);
+                } else {
+                    error = "Medical record cannot be created successfully!"
+                }
+                
                 this.setState({
-                    successful: false,
-                    message: "Medical Record is not created successfully!"
+                    message: error
                 });
             })
         }
@@ -193,7 +204,7 @@ class NewRecord extends Component {
                     {!successful && (
                         <div>
                             <div className="form-group">
-                                <label htmlFor="nric">NRIC</label>
+                                <label htmlFor="nric">Patient's NRIC</label>
                                 <Input
                                     type="text"
                                     className="form-control"

@@ -81,25 +81,27 @@ export default class AllDoctors extends Component {
     var newDoctorArr = [];
     for (let i = 0; i < this.state.doctors.length; i++) {
       console.log(this.state.doctors[i]);
-      const penaltyScore = await contract.methods
-        .getPenaltyScore(this.state.doctors[i].doctor.id)
-        .call();
+      if (this.state.doctors[i].doctor.approved === true) {
+        const penaltyScore = await contract.methods
+          .getPenaltyScore(this.state.doctors[i].doctor.id)
+          .call();
 
-      const appraisalScore = await contract.methods
-        .getAppraisalScore(this.state.doctors[i].doctor.id)
-        .call();
+        const appraisalScore = await contract.methods
+          .getAppraisalScore(this.state.doctors[i].doctor.id)
+          .call();
 
-      const isBlacklisted = await contract.methods
-        .isBlacklisted(this.state.doctors[i].doctor.id)
-        .call();
+        const isBlacklisted = await contract.methods
+          .isBlacklisted(this.state.doctors[i].doctor.id)
+          .call();
 
-      var newRec = {
-        doctor: this.state.doctors[i],
-        appraisalScore: appraisalScore,
-        penaltyScore: penaltyScore,
-        isBlacklisted: isBlacklisted,
-      };
-      newDoctorArr.push(newRec);
+        var newRec = {
+          doctor: this.state.doctors[i],
+          appraisalScore: appraisalScore,
+          penaltyScore: penaltyScore,
+          isBlacklisted: isBlacklisted,
+        };
+        newDoctorArr.push(newRec);
+      }
     }
     console.log(newDoctorArr);
     this.setState({ records: newDoctorArr, loading: true });
@@ -137,6 +139,7 @@ export default class AllDoctors extends Component {
         method: "PUT",
       }).then((response) => console.log(response));
     }
+    window.location.reload();
   };
 
   handleBlacklist = async (doctor) => {
@@ -147,6 +150,7 @@ export default class AllDoctors extends Component {
       .send({ from: accounts[0] });
 
     console.log(blacklist);
+    window.location.reload();
   };
   render() {
     const { records, pendingDoctors, loading } = this.state;
