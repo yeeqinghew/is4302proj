@@ -138,7 +138,7 @@ class VerifyRecord extends Component {
                 setTimeout(() => {
                     this.props.history.push('/randomRecords');
                     localStorage.removeItem("recordId");
-                }, 5000);
+                }, 3500);
 
             }).catch((err) => {
                 console.log("Failed with error: ", err);
@@ -176,7 +176,7 @@ class VerifyRecord extends Component {
                 setTimeout(() => {
                     this.props.history.push('/randomRecords');
                     localStorage.setItem('recordId', null);
-                }, 5000);
+                }, 3500);
 
             }).catch((err) => {
                 console.log("Failed with error: ", err);

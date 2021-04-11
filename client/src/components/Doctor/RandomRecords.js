@@ -105,8 +105,8 @@ class RandomRecords extends Component {
           .viewRecord(min)
           .call({ from: accounts[0] });
         // not verified or flagged
-        if (response[3] === 0) {
-          const { patientData } = await this.retrieveUserData(
+        if (response[3] === '0') {
+          const { patientData } = await this.retrievePatientData(
             response[0]
           );
           console.log("patientData", patientData);
