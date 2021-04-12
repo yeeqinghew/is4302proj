@@ -35,7 +35,7 @@ checkDuplicateUsernameOrEmail = (req, res, next) => {
     });
 };
 
-checkDuplicateContactNum = (req, res) => {
+checkDuplicateContactNum = (req, res, next) => {
     // Contact Number
     User.findOne({
         where: {
