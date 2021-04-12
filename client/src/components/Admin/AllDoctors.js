@@ -184,7 +184,7 @@ export default class AllDoctors extends Component {
                   <th>{rec.appraisalScore}</th>
                   <th>{rec.penaltyScore}</th>
                   <th>{String(rec.isBlacklisted) === "true" ? "✓" : "✗"}</th>
-                  <th>
+                  {/* <th>
                     {String(rec.isBlacklisted) === "false" && (
                       <button
                         className="btn btn-warning btn-block"
@@ -193,7 +193,7 @@ export default class AllDoctors extends Component {
                         Blacklist
                       </button>
                     )}
-                  </th>
+                  </th> */}
                 </tr>
               ))}
             </tbody>
@@ -201,7 +201,7 @@ export default class AllDoctors extends Component {
         )}
         {loading && records.length === 0 && <h5>No records to display</h5>}
 
-        <h1>Pending doctors</h1>
+        <h1>Pending Doctors</h1>
         {pendingDoctors.length !== 0 && (
           <Table hover responsive>
             <thead>

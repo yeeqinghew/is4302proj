@@ -88,7 +88,7 @@ class PatientMedicalRecordList extends Component {
     }
 
     retrieveMedicalRecords = async () => {
-        const { accounts, medicalRecordContract } = this.state;
+        const { accounts, medicalRecordContract, recordIds } = this.state;
         const { user: currentPatient } = this.props;
         console.log("user", currentPatient);
 
@@ -99,11 +99,13 @@ class PatientMedicalRecordList extends Component {
 
         var list = [];
 
-        for (const index in this.state.recordIds) {
-            const response = await medicalRecordContract.methods.viewRecord(index).call({from: accounts[0]});
+        var i;
+        for (i = 0; i < recordIds.length; i++) {
+            console.log("index", i);
+            const response = await medicalRecordContract.methods.viewRecord(recordIds[i]).call({from: accounts[0]});
 
             var record = {
-                recordId: index,
+                recordId: recordIds[i],
                 patient: response[0],
                 details: web3.utils.hexToUtf8(response[1]),
                 patientVerified: response[2],
@@ -114,7 +116,7 @@ class PatientMedicalRecordList extends Component {
             
             list.push(record);
 
-            console.log(record.details);
+            console.log(recordIds[i] + ": " + record.details);
 
         }
 
