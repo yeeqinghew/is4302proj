@@ -183,7 +183,7 @@ export default class AllDoctors extends Component {
                   </th>
                   <th>{rec.appraisalScore}</th>
                   <th>{rec.penaltyScore}</th>
-                  <th>{String(rec.isBlacklisted)}</th>
+                  <th>{String(rec.isBlacklisted) === "true" ? "✓" : "✗"}</th>
                   <th>
                     {String(rec.isBlacklisted) === "false" && (
                       <button
@@ -223,6 +223,7 @@ export default class AllDoctors extends Component {
                   <th>{doctor.bc_address}</th>
                   <th>
                     <button
+                      className="btn btn-warning btn-block"
                       type="submit"
                       onClick={() => this.handleApprove(doctor)}
                     >
@@ -230,7 +231,7 @@ export default class AllDoctors extends Component {
                     </button>
                   </th>
                   <th>
-                    <button>Reject</button>
+                    <button className="btn btn-danger btn-block">Reject</button>
                   </th>
                 </tr>
               ))}
