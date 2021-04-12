@@ -27,10 +27,16 @@ module.exports = function (app) {
         controller.doctorBoard
     );
 
+    // app.post(
+    //     "/api/test/patientByNric",
+    //     // [authjwt.verifyToken],
+    //     controller.patientByNric
+    // );
+
     app.post(
-        "/api/test/patientByNric",
+        "/api/test/patientByContactNum",
         // [authjwt.verifyToken],
-        controller.patientByNric
+        controller.patientByContactNum
     );
 
     app.post(

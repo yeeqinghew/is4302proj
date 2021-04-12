@@ -16,8 +16,12 @@ class UserService {
         return axios.get(API_URL + "doctor", { headers: authHeader() });
     };
 
-    getPatientByNric(nric) {
-        return axios.post(API_URL + "patientByNric", { nric });
+    // getPatientByNric(nric) {
+    //     return axios.post(API_URL + "patientByNric", { nric });
+    // };
+
+    getPatientByContactNum(contactNum) {
+        return axios.post(API_URL + "patientByContactNum", { contactNum });
     };
 
     getPatientById(id) {

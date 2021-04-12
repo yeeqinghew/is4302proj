@@ -35,6 +35,24 @@ checkDuplicateUsernameOrEmail = (req, res, next) => {
     });
 };
 
+checkDuplicateContactNum = (req, res) => {
+    // Contact Number
+    User.findOne({
+        where: {
+            contact_num: req.body.contactNum
+        }
+    }).then(user => {
+        if (user) {
+            res.status(400).send({
+                message: "Failed! Contact number is already in use!"
+            });
+            return;
+        }
+
+        next();
+    });
+};
+
 checkRoleExisted = (req, res, next) => {
     if (req.body.Id) {
         if (!Role.findOne({ id: req.body.roleId })) {
@@ -49,6 +67,7 @@ checkRoleExisted = (req, res, next) => {
 
 const signup = {
     checkDuplicateUsernameOrEmail: checkDuplicateUsernameOrEmail,
+    checkDuplicateContactNum: checkDuplicateContactNum,
     checkRoleExisted: checkRoleExisted
 };
 
