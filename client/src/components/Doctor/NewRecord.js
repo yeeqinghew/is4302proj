@@ -27,7 +27,8 @@ class NewRecord extends Component {
         super(props);
         this.verifyPatient = this.verifyPatient.bind(this);
         this.handleRecord = this.handleRecord.bind(this);
-        this.onChangeNric = this.onChangeNric.bind(this);
+        // this.onChangeNric = this.onChangeNric.bind(this);
+        this.onChangeContactNum = this.onChangeContactNum.bind(this);
         this.onChangeDetails = this.onChangeDetails.bind(this);
         this.onChangeId = this.onChangeId.bind(this);
 
@@ -38,7 +39,8 @@ class NewRecord extends Component {
             successful: false,
             message: "",
             patient: null,
-            nric: "",
+            // nric: "",
+            contactNum: "",
             verified: false,
             details: ""
         };
@@ -76,9 +78,16 @@ class NewRecord extends Component {
         }
     }
 
-    onChangeNric(e) {
+    // onChangeNric(e) {
+    //     this.setState({
+    //         nric: e.target.value,
+    //         verified: false,
+    //     });
+    // }
+
+    onChangeContactNum(e) {
         this.setState({
-            nric: e.target.value,
+            contactNum: e.target.value,
             verified: false,
         });
     }
@@ -96,7 +105,28 @@ class NewRecord extends Component {
     }
 
     verifyPatient() {
-        UserService.getPatientByNric(this.state.nric).then(
+        // UserService.getPatientByNric(this.state.nric).then(
+        //     response => {
+        //         this.setState({
+        //             patient: response.data,
+        //             verified: true,
+        //             message: ""
+        //         });
+        //         console.log("patient", response.data);
+        //     },
+        //     error => {
+        //         this.setState({
+        //             message: "Patient cannot be verified"
+        //         });
+        //         console.log(
+        //             (error.response &&
+        //                 error.response.data &&
+        //                 error.response.data.message) ||
+        //             error.message ||
+        //             error.toString())
+        //     }
+        // );
+        UserService.getPatientByContactNum(this.state.contactNum).then(
             response => {
                 this.setState({
                     patient: response.data,
@@ -189,7 +219,7 @@ class NewRecord extends Component {
     }
 
     render() {
-        const { successful, nric, details, verified, patient, message, } = this.state;
+        const { successful, contactNum, details, verified, patient, message, } = this.state;
         return (
             <Fragment>
                 <header className="jumbotron">
@@ -204,7 +234,7 @@ class NewRecord extends Component {
                     {!successful && (
                         <div>
                             <div className="form-group">
-                                <label htmlFor="nric">Patient's NRIC</label>
+                                {/* <label htmlFor="nric">Patient's NRIC</label>
                                 <Input
                                     type="text"
                                     className="form-control"
@@ -212,14 +242,23 @@ class NewRecord extends Component {
                                     value={nric}
                                     onChange={this.onChangeNric}
                                     validations={[required]}
+                                /> */}
+                                <label htmlFor="contactNum">Patient's Contact Number</label>
+                                <Input
+                                    type="text"
+                                    className="form-control"
+                                    name="contactNum"
+                                    value={contactNum}
+                                    onChange={this.onChangeContactNum}
+                                    validations={[required]}
                                 />
                             </div>
                             <div className="form-group">
-                                <button type="button" className="btn btn-primary" onClick={this.verifyPatient}>Verify</button>
+                                <button type="button" className="btn btn-primary" onClick={this.verifyPatient}>Verify Patient</button>
                             </div>
                             {verified && (
                                 <div className="form-group">
-                                    <h4>Current Patient Information</h4>
+                                    <h4>Patient Information</h4>
                                     <br/>
                                     <p> <strong>First Name: </strong>
                                         {patient.first_name}
@@ -230,14 +269,14 @@ class NewRecord extends Component {
                                     <p> <strong>Date of Birth: </strong>
                                         {patient.dob}
                                     </p>
-                                    <p> <strong>Contact Number: </strong>
+                                    {/* <p> <strong>Contact Number: </strong>
                                         {patient.contact_num}
-                                    </p>
+                                    </p> */}
                                     <br/>
                                 </div>
                             )}
                             <div className="form-group">
-                                <label htmlFor="details">Details</label>
+                                <label htmlFor="details">Record Details</label>
                                 <TextArea
                                     // type="textarea"
                                     className="form-control"
