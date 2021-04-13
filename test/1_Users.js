@@ -13,18 +13,19 @@ contract("Users", accounts => {
         usersInstance = await Users.deployed({from:masterAdmin});
     });
 
-    it('Test 1: Registering admins, validating admin identity', async() => {
-        // Test 1A: Invalid registration of new admin
+    it('Test 1: Invalid Registration of new admin', async() => {
         try {
-            result = await usersInstance.registerAdmin(admin2, {from: outsider});
+            result = await usersInstance.registerAdmin(admin2, 
+                {from: outsider});
         } catch(error) {
             assert.include(error.message, "Only admin can perform this function.");
         }
+    });
 
+    it('Test 2: Assertion of isAdmin() function before and after valid registration of new admin', async() => {
         let beforeRegister = await usersInstance.isAdmin(admin2);
         assert.strictEqual(beforeRegister, false, "Registered invalid admin");
 
-        // Test 1B: Valid registration of new admin
         let result = await usersInstance.registerAdmin(admin2, {from: masterAdmin});
         truffleAssertions.eventEmitted(result, 'registeredAdmin', (ev) => {
             return ev.admin == admin2
@@ -34,42 +35,48 @@ contract("Users", accounts => {
         assert.strictEqual(afterRegister, true, "Failed to register admin");
     });
 
-    it('Test 2: Registering doctors, validating doctors identity', async() => {
-        // Test 2A: Admin can't register
+    it('Test 3: Invalid Registration of new doctor', async() => {
         try {
             result = await usersInstance.registerDoctor(doctor, {from: outsider});
         } catch(error) {
             assert.include(error.message, "Only admin can perform this function.");
         }
+    });
+
+    it('Test 4: Assertion of isDoctor() function before and after valid registration of new doctor', async() => {
 
         let beforeRegister = await usersInstance.isDoctor(doctor);
         assert.strictEqual(beforeRegister, false, "Registered invalid doctor");
 
-        // Test 2B: Successful registration
-        let result = await usersInstance.registerDoctor(doctor, {from: masterAdmin});
+        let result = await usersInstance.registerDoctor(doctor, 
+            {from: masterAdmin});
+
         truffleAssertions.eventEmitted(result, 'registeredDoctor', (ev) => {
             return ev.doctor == doctor
         }); 
 
         let afterRegister = await usersInstance.isDoctor(doctor);
         assert.strictEqual(afterRegister, true, "Failed to register doctor");
+    });
 
+    it('Test 5: Cross-checking existing doctors identity', async() => {
         result = await usersInstance.isExistingDoctor(1);
-        assert.strictEqual(result, true, "Invalid registration of doctor identity");
+        assert.strictEqual(result, true, "There isn't a doctor with id = 1");
 
         result = await usersInstance.getDoctorAddress(1);
-        assert.strictEqual(result, doctor, "Invalid doctor's address");
+        assert.strictEqual(result, doctor, "Invalid address for doctorId = 1");
+    
+    });
 
-        // Test 2C: Doctors should start off with 0 penalty and appraisal score
+    it('Test 6: Ensuring that new doctors always starts with 0 penalty and appraisal score', async() => {
         result = await usersInstance.getPenaltyScore(1);
-        assert.strictEqual(result.toNumber(), 0, "Wrong penalty score");
+        assert.strictEqual(result.toNumber(), 0, "Wrong penalty score for doctorId = 1");
 
         result = await usersInstance.getAppraisalScore(1);
-        assert.strictEqual(result.toNumber(), 0, "Wrong appraisal score");    
+        assert.strictEqual(result.toNumber(), 0, "Wrong appraisal score for doctorId = 1");    
     }); 
 
-    it('Test 3: Registering patient, validating patient identity', async() => {
-        // Test 3A: Register patient
+    it('Test 7: Assertion of isPatient() before and after valid registration of patients', async() => {
         let result = await usersInstance.registerPatient({from: patient1});
         truffleAssertions.eventEmitted(result, 'registeredPatient', (ev) => {
             return ev.patient == patient1
@@ -85,27 +92,31 @@ contract("Users", accounts => {
 
         let afterRegister = await usersInstance.isPatient(patient2);
         assert.strictEqual(afterRegister, true, "Failed to register patient2");
+    
+    }); 
 
-        // Test 3B: Validating patient identity
+    it('Test 8: Cross-checking the respective patient identity', async() => {
         result = await usersInstance.getPatientAddress(1);
         assert.strictEqual(result, patient1, "Invalid patient1's address");
 
         result = await usersInstance.getPatientAddress(2);
         assert.strictEqual(result, patient2, "Invalid patient2's address");
+    });
 
-        // Test 3C: Getting patient record
+    it('Test 9: Invalid Retrieval of patient record', async() => {
         try {
             result = await usersInstance.getRecordNumber(1, {from: outsider});
         } catch(error) {
             assert.include(error.message, "Not authorised to view.");
         }
+    });
 
+    it('Test 10: Retrieval of patient record', async() => {
         result = await usersInstance.getRecordNumber(1, {from:patient1});
-        assert.strictEqual(result.toNumber(), 0, "Invalid patient1's record number");
+        assert.strictEqual(result.toNumber(), 0, "Incorrect total medical record number for patientId = 1");
         
-        // Test 3D: Adding and checking record number
         await usersInstance.addRecordCount(1)
         result = await usersInstance.getRecordNumber(1, {from:patient1});
-        assert.strictEqual(result.toNumber(), 1, "Invalid patient1's record number");
+        assert.strictEqual(result.toNumber(), 1, "Incorrect total medical record number for patientId = 1");
     });
 });
